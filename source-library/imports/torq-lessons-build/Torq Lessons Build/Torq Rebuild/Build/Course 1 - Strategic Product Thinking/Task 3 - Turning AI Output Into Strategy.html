@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turning AI Output Into Strategy — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TORQ BRAND TOKENS — inlined from Torq Work/brandkit/tokens.css
+   ============================================================ */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* Prompt steps */
+.step {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  margin: var(--sp-6) 0;
+  overflow: hidden;
+}
+.step-head {
+  padding: var(--sp-4) var(--sp-6) var(--sp-3);
+  border-bottom: 1px solid var(--rule-hair);
+}
+.step-head .num {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.step-head h3 { font-size: var(--fs-lg); margin: 0 0 var(--sp-2); }
+.step-head p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.prompt {
+  background: var(--torq-dark-ink);
+  padding: var(--sp-4) var(--sp-6);
+  position: relative;
+}
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono);
+  font-size: var(--fs-sm);
+  color: #E8EFFF;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+.step-foot { padding: var(--sp-4) var(--sp-6); }
+.step-foot .ask { font-weight: 600; display: block; margin-bottom: var(--sp-2); }
+.step-foot p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.canvas {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow-lg);
+  overflow: hidden;
+  margin: var(--sp-4) 0;
+}
+.canvas-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  align-items: center; justify-content: space-between;
+}
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-1);
+  min-height: 44px; cursor: pointer;
+}
+.check-list input[type="checkbox"] {
+  flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0;
+  accent-color: var(--torq-blue); cursor: pointer;
+}
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn {
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--torq-white); background: var(--torq-blue);
+  border: 0; border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); min-height: 44px;
+  cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .btn, .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .canvas, .step { box-shadow: none; break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 1 &middot; Task 3 of 5</p>
+    <h1>Turning AI output into strategy</h1>
+    <p class="standfirst">Ask an AI for a roadmap and it'll hand you a clean-looking list in seconds. Whether any of it deserves engineering time is a separate question, and it's the one you're actually paid to answer.</p>
+    <div class="meta">
+      <span><b>Course</b> Strategic Product Thinking</span>
+      <span><b>Hands-on</b> ~15 min</span>
+      <span><b>Artifact</b> Three-Prompt Escalation + reflections</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Run the same request through an AI three times, escalating the context you give it. The output evolves from a generic feature list into something you could actually defend in a roadmap conversation. The point isn't the mindmap — it's seeing exactly where your judgment is doing the work.</p>
+
+  <div class="callout">
+    <span class="label">Before you start</span>
+    <p>Confirm your engagement's AI policy and approved tools before putting any client specifics into an AI tool. If client detail is off-limits here, run this on a consumer product you know well instead — the lesson is about prompt structure and your judgment, not the subject matter.</p>
+  </div>
+
+  <section id="lab">
+    <h2>The three-prompt escalation</h2>
+    <p>Run each prompt in a <b>fresh chat</b> so the AI doesn't build on earlier context. Swap the bracketed placeholders for your own product.</p>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 1 &middot; The shallow ask</span>
+        <h3>Generate the baseline</h3>
+        <p>Give it almost nothing. This is what an order-taker's prompt looks like.</p>
+      </div>
+      <div class="prompt">
+        <button class="copy-prompt" type="button" data-prompt="p1">Copy</button>
+        <pre><code id="p1">Create a mindmap for <span class="ph">[your product]</span>.</code></pre>
+      </div>
+      <div class="step-foot">
+        <span class="ask">Now find the weak spot.</span>
+        <p>Find one item on that map you couldn't defend if an engineer asked "why this, this quarter?" No answer tied to a real customer or a real number means you'd be shipping the AI's guess as if it were your own call.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 2 &middot; Add structure</span>
+        <h3>Give it a role and real context</h3>
+        <p>Now the output will look organised. Watch what that does and doesn't fix.</p>
+      </div>
+      <div class="prompt">
+        <button class="copy-prompt" type="button" data-prompt="p2">Copy</button>
+        <pre><code id="p2">You are a product manager. Create a mindmap for <span class="ph">[your product]</span>,
+which helps <span class="ph">[who]</span> accomplish <span class="ph">[what]</span>.
+Include features, user needs, and potential problems.</code></pre>
+      </div>
+      <div class="step-foot">
+        <span class="ask">Find the plausible-but-empty one.</span>
+        <p>Name a feature that looks entirely <em>correct</em> for this product but carries zero strategic weight — you have no idea whether it helps the business or whether a single real user has ever asked for it. Organisation is not strategy. The AI can group things; that doesn't mean it knows what's a good use of engineering's time.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 3 &middot; Strategic framing</span>
+        <h3>Layer in the judgment</h3>
+        <p>This is where you supply what the model can't: the frames a product decision actually gets made against.</p>
+      </div>
+      <div class="prompt">
+        <button class="copy-prompt" type="button" data-prompt="p3">Copy</button>
+        <pre><code id="p3">You are a senior product manager preparing for a discovery sprint on
+<span class="ph">[your product]</span>, used by <span class="ph">[specific user]</span> who <span class="ph">[specific behaviour or friction]</span>.
+
+Create a structured brainstorm mindmap organised around:
+1. Core user jobs-to-be-done
+2. Key friction points in current behaviour
+3. Feature ideas ranked by effort vs. impact
+4. Monetisation or business-value paths, with the trade-off each carries
+5. Retention risks, and how each could be addressed
+
+Flag any area where there is a real strategic tension worth debating.</code></pre>
+      </div>
+      <div class="step-foot">
+        <span class="ask">Find the tension.</span>
+        <p>Point at one place where the output surfaces a genuine trade-off — two things that can't both be optimised. That tension is the actual raw material of a strategy conversation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="compare">
+    <h2>Compare V1 to V3</h2>
+    <p>Line up the first output against the third and be honest about the source of the improvement: <b>did the model do that, or did the context you fed it do the actual work?</b></p>
+    <p>Nothing changed about the model between step one and step three. What changed is that you supplied jobs-to-be-done, effort versus impact, monetisation trade-offs, and retention risk. You converted a feature-generating tool into a strategic one by knowing which frames to hand it.</p>
+    <div class="callout">
+      <span class="label">The pattern</span>
+      <p>The more specific your product context, the better the output. <b>AI organisation is not the same as strategy.</b> Just because a model can create tidy groups doesn't mean it knows what's a good use of engineering's time. The AI executed — you thought.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the reflections</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">Short, but worth writing down — these are the observations that make the next AI-assisted task faster.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Three-Prompt Escalation — reflections</h3>
+          <p>Torq Product Practice &middot; run on your own product</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">V1: the feature I couldn't defend to an engineer.</span>
+            <span class="why">Name it and note why the justification wasn't there.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">V2: the feature that looked right but carried no strategic weight.</span>
+            <span class="why">Plausible output is the harder failure mode to catch.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">V3: the real strategic tension worth debating.</span>
+            <span class="why">Two things that can't both be optimised — that's a strategy conversation.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">Did the AI get smarter, or did my context force it to be useful?</span>
+            <span class="why">One sentence. This is the whole lesson.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q5">
+            <span class="txt"><span class="q">Which frame did the most work — JTBD, effort/impact, monetisation, or retention?</span>
+            <span class="why">Worth knowing which lever to reach for first next time.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Organisation isn't strategy.</b> A model that can group ideas neatly still has no idea what's worth the team's time.</li>
+      <li><b>The frames you supply are the value you add.</b> Jobs-to-be-done, effort vs. impact, monetisation trade-offs, retention risk — that's product knowledge, and it's what turns generic output into something defensible.</li>
+      <li><b>Plausible output is the dangerous kind.</b> An obviously wrong suggestion gets caught. A reasonable-looking feature nobody asked for gets shipped.</li>
+      <li><b>The AI executes; you think.</b> Speed on the grind is real — the judgment call stays yours.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 4 — The Product Development Life Cycle.</p>
+    <p>Torq Product Practice &middot; Course 1: Strategic Product Thinking</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () {
+      btn.textContent = originalLabel;
+      btn.removeAttribute("data-state");
+    }, 2000);
+  }
+
+  function copyText(text, btn, originalLabel) {
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () {
+        flash(btn, "Copied", originalLabel);
+      }, function () {
+        flash(btn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", originalLabel);
+      });
+    } else {
+      flash(btn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", originalLabel);
+    }
+  }
+
+  // --- Per-prompt copy buttons
+  Array.prototype.forEach.call(document.querySelectorAll(".copy-prompt"), function (btn) {
+    btn.addEventListener("click", function (evt) {
+      var el = evt.currentTarget;
+      var target = document.getElementById(el.getAttribute("data-prompt"));
+      if (target) { copyText(target.textContent, el, "Copy"); }
+    });
+  });
+
+  // --- Reflection checklist
+  var KEY = "torq.c1t3.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+
+  function readState() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function writeState(state) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* no-op */ }
+  }
+
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+
+  function canvasAsText() {
+    var out = ["THREE-PROMPT ESCALATION — REFLECTIONS", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    out.push("");
+    out.push("--- The prompts ---");
+    ["p1", "p2", "p3"].forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el) { out.push("", "Step " + (i + 1) + ":", el.textContent.trim()); }
+    });
+    return out.join("\n");
+  }
+
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function (evt) {
+    copyText(canvasAsText(), evt.currentTarget, "Copy as text");
+  });
+
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function (evt) {
+    var el = evt.currentTarget;
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "ai-prompt-escalation-reflections.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(el, "Downloaded", "Download as .md");
+    } catch (e) {
+      flash(el, "Use Copy instead", "Download as .md");
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

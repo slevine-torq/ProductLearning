@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4: Build High-Velocity Product Roadmaps · Product Management</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', -apple-system, sans-serif;
+  background: #07162C;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  padding: 80px 60px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.25) 0%, #07162C 60%);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+section.visible { opacity: 1; transform: translateY(0); }
+section.skipped { display: none; }
+
+.nav-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 6px; z-index: 100;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #333; border: none; cursor: pointer;
+  transition: all 0.3s; position: relative;
+}
+.nav-dot.active { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.5); transform: scale(1.4); }
+.nav-dot:hover { background: rgba(59,130,246,0.7); }
+.nav-dot .tooltip {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  background: #0c2244; color: #ffffff; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; border: 1px solid rgba(59,130,246,0.2);
+}
+.nav-dot:hover .tooltip { opacity: 1; }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 100;
+  background: linear-gradient(90deg, #1241B0, #3b82f6);
+  transition: width 0.3s ease;
+}
+
+h1, h2 { font-family: 'Poppins', sans-serif; }
+h1 { font-size: 56px; font-weight: 900; color: #fff; line-height: 1.1; }
+h2 { font-size: 40px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+h3 { font-size: 22px; font-weight: 700; color: #ffffff; }
+p, li { font-size: 17px; line-height: 1.7; color: #ffffff; }
+.subtitle { font-size: 20px; color: #ffffff; margin-top: 8px; margin-bottom: 32px; }
+.section-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
+  color: rgba(255,255,255,0.7); margin-bottom: 12px; font-weight: 700;
+}
+strong { color: #fff; font-weight: 700; }
+em { color: #60a5fa; font-style: normal; font-weight: 600; }
+code {
+  background: rgba(18,65,176,0.15); padding: 2px 8px; border-radius: 4px;
+  font-size: 14px; color: #60a5fa; font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+}
+ul { list-style: none; padding: 0; }
+ul li { padding: 6px 0; padding-left: 24px; position: relative; }
+ul li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 8px; height: 8px; border-radius: 2px; background: #1241B0;
+}
+
+.inner { max-width: 880px; width: 100%; text-align: left; }
+section.centered { text-align: center; }
+section.centered .inner { text-align: center; }
+section.centered ul li { padding-left: 0; }
+section.centered ul li::before { display: none; }
+
+/* HERO */
+.hero { align-items: center; text-align: center; }
+.hero h1 { font-size: 64px; margin-bottom: 4px; }
+.hero h1 span { color: #60a5fa; }
+.hero .subtitle { font-size: 22px; max-width: 660px; margin: 12px auto 28px; color: #60a5fa; }
+.hero .scroll-hint { font-size: 13px; color: #ffffff; margin-top: 32px; animation: pulse 2s ease infinite; }
+.hero .scroll-hint span { display: block; margin-top: 8px; font-size: 20px; }
+.hero-logo { position: absolute; top: 32px; left: 50%; transform: translateX(-50%); }
+.hero-logo img { height: 40px; width: auto; opacity: 0.95; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* TAGS */
+.demo-tag {
+  display: inline-block; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 6px; margin-bottom: 18px;
+}
+.tag-provocation { background: rgba(248,81,73,0.12); color: #ff7b72; }
+.tag-lecture { background: rgba(88,166,255,0.12); color: #79c0ff; }
+.tag-case { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-exercise { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-activity { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+.tag-build { background: rgba(255,123,182,0.12); color: #ff7b72; }
+.tag-break { background: rgba(100,116,139,0.12); color: #ffffff; }
+.tag-framework { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-complete { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-debrief { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+
+.lab-timer {
+  position: absolute; top: 24px; right: 32px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px 18px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600;
+  color: #60a5fa; z-index: 10;
+}
+
+/* WAYPOINTS */
+.waypoints { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 720px; }
+.waypoint {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 12px; padding: 18px 24px;
+  transition: all 0.3s ease; text-align: left;
+}
+.waypoint:hover { transform: translateX(4px); border-color: rgba(59,130,246,0.3); }
+.waypoint-num {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff; background: #1241B0;
+}
+.waypoint-text { flex: 1; }
+.waypoint-text .wt-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.waypoint-text .wt-desc { font-size: 14px; color: #ffffff; line-height: 1.5; }
+
+/* CARDS */
+.cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin: 24px 0;
+}
+.card-item {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 22px; text-align: left;
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.card-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--card-accent, #3b82f6);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.card-item:hover { border-color: var(--card-accent, #3b82f6); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.card-item:hover::before { transform: scaleX(1); }
+.card-item .card-icon { font-size: 26px; margin-bottom: 10px; }
+.card-item .card-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.card-item .card-desc { font-size: 13px; color: #ffffff; line-height: 1.5; }
+
+/* EXPECT GRID */
+.expect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.expect-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 18px; text-align: center; transition: all 0.3s ease;
+}
+.expect-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.expect-icon { font-size: 26px; margin-bottom: 8px; }
+.expect-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.expect-desc { font-size: 12.5px; color: #ffffff; line-height: 1.45; }
+
+/* ARC FLOW */
+.arc-flow { display: flex; gap: 8px; align-items: center; margin: 28px 0; flex-wrap: wrap; justify-content: center; }
+.arc-node {
+  padding: 12px 16px; border-radius: 10px; text-align: center;
+  font-size: 13px; font-weight: 700; color: #fff; min-width: 130px;
+  transition: all 0.3s ease;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+}
+.arc-node:hover { transform: scale(1.05); }
+.arc-node.active-node { box-shadow: 0 0 20px rgba(59,130,246,0.3); background: rgba(59,130,246,0.2); border: 2px solid #3b82f6; }
+.arc-arrow { color: #333; font-size: 18px; }
+.arc-node .ad-num { font-size: 10px; opacity: 0.5; margin-bottom: 2px; }
+
+/* TABLE */
+.ref-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.ref-table th {
+  text-align: left; padding: 12px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff;
+  border-bottom: 1px solid rgba(59,130,246,0.15);
+}
+.ref-table td {
+  padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px; color: #ffffff; line-height: 1.4;
+}
+.ref-table td:first-child { font-weight: 700; color: #ffffff; white-space: nowrap; }
+.ref-table tr:hover td { background: rgba(59,130,246,0.04); }
+
+/* SECTION BREAK */
+section.section-break { padding: 0; }
+section.section-break .section-break-inner {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(59,130,246,0.25) 0%, rgba(59,130,246,0.08) 35%, #07162C 75%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 80px; text-align: left;
+}
+.section-break-inner .section-num { font-family: 'Poppins', sans-serif; font-size: 90px; font-weight: 900; color: rgba(96,165,250,0.18); line-height: 1; }
+.section-break-inner .lab-title {
+  font-size: 13px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.16em; color: rgba(255,255,255,0.5); margin-bottom: 16px;
+}
+.section-break-inner .lab-name { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.1; max-width: 820px; font-family: 'Poppins', sans-serif; }
+.section-break-inner .lab-desc { font-size: 18px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-top: 16px; max-width: 680px; }
+
+/* COMPLETION / TAKEAWAYS */
+.takeaway-list { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 880px; }
+.takeaway-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 22px; transition: all 0.3s; text-align: left; }
+.takeaway-item:hover { border-color: rgba(59,130,246,0.3); transform: translateX(4px); }
+.takeaway-item p { font-size: 15px; color: #ffffff; line-height: 1.6; }
+
+.artifact-preview {
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 14px; padding: 24px; margin: 20px auto; max-width: 760px; text-align: left;
+}
+.artifact-preview .ap-title {
+  font-size: 14px; font-weight: 800; color: #60a5fa; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.artifact-preview p { font-size: 14.5px; color: #ffffff; line-height: 1.6; }
+
+/* TAKEAWAY (shareable) */
+.takeaway {
+  background: rgba(34,211,238,0.05); border-left: 3px solid #22d3ee;
+  border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 22px auto 0;
+  text-align: left; max-width: 760px;
+}
+.takeaway h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: #22d3ee; margin: 0 0 6px; }
+.takeaway p { font-size: 14px; color: #ffffff; line-height: 1.55; }
+
+/* PROMPT BLOCK */
+.prompt {
+  background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px;
+  padding: 16px 18px; margin: 16px auto 0; max-width: 760px; text-align: left;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6;
+  color: #9fd0ff; white-space: pre-wrap; overflow-x: auto;
+}
+.prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #60a5fa; display: block; margin-bottom: 8px; }
+
+/* Help hint, skip badge, sorter */
+.help-hint {
+  position: fixed; bottom: 14px; right: 18px;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  font-family: 'IBM Plex Mono', monospace; z-index: 90;
+}
+.skip-badge {
+  position: fixed; bottom: 14px; left: 18px;
+  background: rgba(248,113,113,0.2); color: #fca5a5;
+  border: 1px solid rgba(248,113,113,0.3);
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  cursor: pointer; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; z-index: 90;
+}
+.skip-badge.visible { opacity: 1; pointer-events: auto; }
+.slide-sorter {
+  position: fixed; inset: 0; background: rgba(7,22,44,0.95);
+  z-index: 200; padding: 60px; overflow-y: auto; display: none; flex-direction: column;
+}
+.slide-sorter.visible { display: flex; }
+.sorter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.sorter-title { font-size: 28px; font-weight: 800; color: #fff; font-family: 'Poppins', sans-serif; }
+.sorter-subtitle { font-size: 14px; color: #ffffff; margin-top: 4px; }
+.sorter-close { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 18px; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.sorter-close:hover { background: rgba(255,255,255,0.05); }
+.sorter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.sorter-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: all 0.2s ease; }
+.sorter-item:hover { border-color: #3b82f6; transform: translateY(-2px); }
+.sorter-item.sorter-active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
+.sorter-item.sorter-skipped { opacity: 0.4; }
+.sorter-num { font-size: 11px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.1em; }
+.sorter-label { font-size: 14px; color: #fff; margin: 4px 0 8px; font-weight: 600; }
+.sorter-skip-btn { font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; border: 0; }
+.sorter-skip-btn.skip-on { background: rgba(248,113,113,0.2); color: #fca5a5; }
+.sorter-skip-btn.skip-off { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+
+@media (max-width: 768px) {
+  section { padding: 40px 24px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .hero h1 { font-size: 40px; }
+  .cards-grid, .expect-grid { grid-template-columns: 1fr; }
+  .nav-dots { display: none; }
+}
+
+/* ============================================================
+   MODULE 1, Autonomous AI Agents · visual specifics
+   ============================================================ */
+
+/* VS split (Generators vs Orchestrators) */
+.vs-split { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; margin: 24px 0; }
+.vs-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; text-align: left; }
+.vs-panel.gen { border-color: rgba(136,153,187,0.3); }
+.vs-panel.orch { border-color: rgba(59,130,246,0.4); background: rgba(59,130,246,0.06); }
+.vs-kicker { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
+.vs-panel.gen .vs-kicker { color: #ffffff; }
+.vs-panel.orch .vs-kicker { color: #60a5fa; }
+.vs-panel h3 { font-size: 20px; color: #fff; margin-bottom: 10px; }
+.vs-panel p { font-size: 14px; line-height: 1.6; }
+.vs-example { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 13px; color: #ffffff; }
+.vs-example .vse-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff; display: block; margin-bottom: 4px; }
+.vs-badge { display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 18px; color: #60a5fa; padding: 0 22px; }
+
+/* Anatomy of an agent, white infographic card (matches source slide) */
+.agent-diagram { position: relative; width: 880px; max-width: 100%; aspect-ratio: 880 / 460; margin: 16px auto 6px;
+  background: #fbfcfe; border: 1px solid #e3e8f0; border-radius: 22px; box-shadow: 0 22px 55px rgba(0,0,0,0.4); }
+.agent-diagram .ad-loop { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; }
+.ad-el { position: absolute; z-index: 2; transform: translate(-50%,-50%); }
+.ad-title { font-family: 'Poppins', sans-serif; font-weight: 800; color: #1241B0; font-size: 17px; line-height: 1.15; }
+.ad-sub { font-family: 'Lato', sans-serif; color: #ffffff; font-size: 11.5px; line-height: 1.4; margin-top: 4px; }
+.ad-left-text { width: 150px; text-align: right; }
+.ad-right-text { width: 178px; text-align: left; }
+.ad-center-text { width: 360px; text-align: center; }
+.ad-brain { width: 12.5%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 42% 34%, #5b97ff, #1240b0 58%, #0a2a78);
+  box-shadow: 0 0 34px rgba(37,99,235,0.6), inset 0 0 20px rgba(173,206,255,0.45);
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
+  outline: 2px dashed #9cb4e6; outline-offset: 7px; }
+.ad-pill { display: inline-flex; align-items: center; gap: 6px; justify-content: center; flex-wrap: nowrap; }
+.ad-pill span { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; color: #27407a;
+  background: #eef3fc; border: 1px solid #cdddf5; border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
+.ad-pill i { color: #ffffff; font-style: normal; font-size: 12px; }
+.ad-tools { display: flex; align-items: center; gap: 14px; }
+.ad-badges { display: flex; flex-direction: column; gap: 12px; }
+.ad-badge { width: 40px; height: 40px; border-radius: 50%; border: 1.5px dashed #9cb4e6; background: #f1f6fe;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.ad-mem-icons { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; opacity: 0.78; }
+
+/* LLM vs Agent, structured comparison matrix */
+.va-matrix { display: grid; grid-template-columns: 190px 30px 1fr 32px 1fr; align-items: stretch;
+  row-gap: 11px; column-gap: 0; max-width: 1000px; margin: 18px auto 14px; }
+.va-h { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 12.5px; letter-spacing: 0.07em;
+  text-transform: uppercase; padding: 12px 10px; border-radius: 999px; }
+.va-h-feature { background: rgba(255,255,255,0.07); color: #ffffff; }
+.va-h-llm { background: #1b2c48; color: #ffffff; border: 1px solid rgba(255,255,255,0.08); }
+.va-h-agent { background: linear-gradient(135deg, #2f6bff, #1240b0); color: #fff; box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
+.va-feat { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; color: #ffffff;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(120,150,210,0.32); border-radius: 999px; padding: 11px 12px; }
+.va-cell { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12.5px; line-height: 1.4; border-radius: 16px; padding: 11px 16px; }
+.va-cell-llm { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); color: #ffffff; }
+.va-cell-agent { background: rgba(47,107,255,0.13); border: 1px solid rgba(96,165,250,0.38); color: #ffffff; }
+.va-conn { display: flex; align-items: center; justify-content: center; }
+.va-conn-dash { width: 60%; border-top: 2px dashed rgba(120,150,210,0.45); }
+.va-conn-arrow { color: #ffffff; font-size: 16px; font-weight: 700; line-height: 1; }
+.va-strategic { max-width: 1000px; margin: 4px auto 0; display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, rgba(47,107,255,0.2), rgba(12,35,64,0.55));
+  border: 1px solid rgba(96,165,250,0.3); border-radius: 12px; padding: 13px 20px;
+  font-size: 12.5px; line-height: 1.45; color: #ffffff; text-align: left; }
+.va-strategic .vs-ico { font-size: 17px; }
+.va-strategic b { color: #fff; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 0.04em; }
+
+/* Evolving role of an AI PM, layers + iceberg */
+.pm-split { display: grid; grid-template-columns: 1fr 0.92fr; gap: 30px; align-items: center; max-width: 980px; margin: 20px auto 0; }
+.pm-layers { display: flex; flex-direction: column; gap: 13px; }
+.pm-layer { display: flex; align-items: center; gap: 14px; text-align: left; }
+.pm-lnum { flex: none; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: #fff; border: 1.5px solid; }
+.pm-lbox { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 11px 16px; }
+.pm-lbox .pl-t { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; color: #fff; }
+.pm-lbox .pl-d { font-size: 12.5px; color: #ffffff; margin-top: 2px; line-height: 1.4; }
+.pm-iceberg { position: relative; }
+.pm-iceberg svg { width: 100%; height: auto; display: block; border-radius: 16px; box-shadow: 0 18px 44px rgba(0,0,0,0.45); }
+.pm-cap { margin-top: 12px; font-size: 12px; color: #ffffff; text-align: center; line-height: 1.45; }
+.pm-cap b { color: #ffffff; }
+
+/* Core Responsibility, 4 columns (description → dashed line → label pill) + Example callout */
+.cr-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; max-width: 1000px; margin: 20px auto 16px; align-items: stretch; }
+.cr-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cr-desc { font-size: 12.5px; color: #ffffff; line-height: 1.5; }
+.cr-conn { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 8px 0; min-height: 36px; }
+.cr-dot { width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; }
+.cr-dash { width: 0; border-left: 2px dashed rgba(120,150,210,0.5); flex: 1 1 auto; min-height: 22px; margin: 4px 0; }
+.cr-pill { width: 100%; background: linear-gradient(135deg, #1d2f52, #131f38); border: 1px solid rgba(96,165,250,0.42);
+  color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12.5px; border-radius: 11px; padding: 12px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+.cr-example { display: flex; align-items: center; gap: 16px; max-width: 1000px; margin: 0 auto; text-align: left;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 15px 20px; }
+.cr-ex-icon { flex: none; width: 46px; height: 46px; border-radius: 11px; background: #fff; color: #15233f;
+  display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; box-shadow: 0 4px 14px rgba(0,0,0,0.28); }
+.cr-ex-icon img { width: 30px; height: 30px; object-fit: contain; display: block; }
+.cr-ex-text { font-size: 13px; color: #ffffff; line-height: 1.5; }
+.cr-ex-text b { color: #fff; }
+
+/* Lab outcome, framed Langflow screenshot + workflow strip */
+.lab-shot { max-width: 900px; margin: 16px auto 0; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 24px 60px rgba(0,0,0,0.55); background: #0d1117; }
+.lab-shot-bar { display: flex; align-items: center; gap: 7px; padding: 9px 14px; background: #11161f; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.lab-shot-bar .lsb-dot { width: 11px; height: 11px; border-radius: 50%; }
+.lab-shot-bar .lsb-title { margin-left: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #ffffff; }
+.lab-shot img { display: block; width: 100%; height: auto; }
+.lab-flow { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin: 16px auto 0; max-width: 900px; }
+.lab-flow .lf-node { background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.4); color: #ffffff;
+  border-radius: 10px; padding: 8px 14px; font-size: 12.5px; font-weight: 700; font-family: 'Poppins', sans-serif; }
+.lab-flow .lf-tool { background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.42); color: #fde68a; }
+.lab-flow .lf-arr { color: #ffffff; font-weight: 800; font-size: 15px; }
+.lab-walkthrough { display: inline-flex; align-items: center; gap: 9px; margin-top: 18px; padding: 12px 24px;
+  background: linear-gradient(135deg, #2f6bff, #1240b0); color: #fff; font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 14px; border-radius: 10px; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.4); transition: transform 0.15s, box-shadow 0.15s; }
+.lab-walkthrough:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(37,99,235,0.5); }
+
+/* Before / After 3-column (Salesforce) */
+.ba-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 22px 0; }
+.ba-col { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; text-align: left; }
+.ba-dim { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; padding: 12px 16px; background: linear-gradient(135deg, rgba(59,130,246,0.22), transparent 80%); border-bottom: 1px solid rgba(59,130,246,0.25); }
+.ba-state { padding: 14px 16px; }
+.ba-state + .ba-state { border-top: 1px solid rgba(255,255,255,0.06); }
+.ba-state .bas-label { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+.ba-state.before .bas-label { color: #ffffff; }
+.ba-state.after .bas-label { color: #6ee7b7; }
+.ba-state p { font-size: 12.5px; color: #ffffff; line-height: 1.55; }
+
+/* Responsibility cards (3 domains + sub-items) */
+.resp-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 22px 0; text-align: left; }
+.resp-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; overflow: hidden; }
+.resp-head { padding: 16px 20px; background: linear-gradient(135deg, rgba(59,130,246,0.2), transparent 75%); border-bottom: 1px solid rgba(59,130,246,0.25); }
+.resp-head .rh-num { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 900; color: #60a5fa; line-height: 1; }
+.resp-head .rh-title { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin-top: 4px; }
+.resp-head .rh-sub { font-size: 12.5px; color: #ffffff; margin-top: 4px; line-height: 1.5; }
+.resp-body { padding: 14px 20px; }
+.resp-item { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.resp-item:last-child { border-bottom: none; }
+.resp-item b { color: #ffffff; font-weight: 700; font-size: 13.5px; }
+.resp-item span { display: block; font-size: 12.5px; color: #ffffff; line-height: 1.5; margin-top: 2px; }
+.resp-eg { background: rgba(34,211,238,0.05); border-left: 3px solid #22d3ee; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px auto 0; text-align: left; max-width: 820px; font-size: 13px; color: #ffffff; line-height: 1.55; }
+
+/* Agent spectrum ladder */
+.spectrum { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 24px 0; align-items: end; }
+.spec-step { background: rgba(255,255,255,0.03); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px 12px 0 0; border-bottom: 3px solid var(--spec, #3b82f6); padding: 16px; text-align: left; position: relative; }
+.spec-step .ss-lvl { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--spec, #60a5fa); }
+.spec-step .ss-name { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: #fff; margin: 4px 0 6px; }
+.spec-step .ss-desc { font-size: 12px; color: #ffffff; line-height: 1.5; }
+.spec-step .ss-focus { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11.5px; color: #ffffff; line-height: 1.5; }
+.spec-step .ss-focus b { color: var(--spec, #60a5fa); font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 3px; }
+.spec-rail { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #475569, #3b82f6, #60a5fa, #22d3ee); margin: 6px 0 0; }
+.spec-rail-labels { display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #ffffff; margin-top: 8px; }
+
+/* Level deep-dive card (3 labeled blocks) */
+.level-blocks { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 22px 0; text-align: left; }
+.lvl-block { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; }
+.lvl-block .lb-label { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; color: #60a5fa; margin-bottom: 8px; }
+.lvl-block p { font-size: 13px; color: #ffffff; line-height: 1.6; }
+.lvl-badge { display:inline-flex; align-items:center; gap:10px; background: rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); border-radius:999px; padding:8px 18px; margin-bottom: 14px; }
+.lvl-badge .lvb-num { font-family:'Poppins',sans-serif; font-weight:900; font-size:18px; color:#60a5fa; }
+.lvl-badge .lvb-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.04em; }
+/* Level deep-dive, visual two-column layout with product logos */
+.lvl-grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; text-align:left; margin:22px 0; align-items:stretch; }
+.lvl-col { display:flex; flex-direction:column; gap:14px; }
+.lvl-card { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px 20px; flex:1; }
+.lvl-card .lc-label { font-size:11px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:9px; display:flex; align-items:center; gap:7px; }
+.lvl-card p { font-size:13.5px; color:#ffffff; line-height:1.6; margin:0; }
+.lvl-examples { position:relative; background: linear-gradient(165deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px 20px; display:flex; flex-direction:column; overflow:hidden; }
+.lvl-examples::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--lvl-accent,#60a5fa); }
+.lvl-examples .lc-label { font-size:11px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+.lvl-logos { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 14px; }
+.lvl-chip { background:#fff; border-radius:10px; height:48px; padding:0 16px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(0,0,0,0.30); transition:transform .25s; }
+.lvl-chip:hover { transform:translateY(-2px); }
+.lvl-chip img { height:26px; width:auto; max-width:130px; object-fit:contain; display:block; }
+.lvl-ex-text { font-size:12.5px; color:#ffffff; line-height:1.55; margin:auto 0 0; }
+
+/* Decision question grid */
+.q-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 22px 0; text-align: left; }
+.q-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 20px; transition: all .3s; }
+.q-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.q-card .qc-q { display: flex; align-items: center; gap: 11px; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.q-card .qc-logo { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; }
+.q-card .qc-a { font-size: 13px; color: #ffffff; line-height: 1.55; }
+/* Checklist (decision questions) */
+.checklist { display: flex; flex-direction: column; gap: 12px; margin: 22px 0; text-align: left; }
+.check-row { display: flex; align-items: flex-start; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; transition: all .3s; }
+.check-row:hover { border-color: rgba(59,130,246,0.35); transform: translateX(3px); }
+.check-box { flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; border: 2px solid #3b82f6; background: rgba(59,130,246,0.12); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.check-box svg { width: 17px; height: 17px; }
+.check-text .ct-q { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 4px; }
+.check-text .ct-a { font-size: 13px; color: #ffffff; line-height: 1.55; }
+
+/* Flow steps (lab) */
+.flow-steps { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin: 22px 0; text-align: left; }
+.flow-step { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; }
+.flow-step .fs-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.flow-step .fs-num { width: 26px; height: 26px; border-radius: 7px; background: #1241B0; color: #fff; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.flow-step .fs-icon { font-size: 18px; }
+.flow-step .fs-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.flow-step .fs-text { font-size: 11.5px; color: #ffffff; line-height: 1.5; }
+
+/* Reflection grid */
+.reflection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 16px; margin: 22px 0; text-align: left; }
+.ref-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; display: flex; gap: 14px; }
+.ref-card .ref-num { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 900; color: #60a5fa; line-height: 1; }
+.ref-card .ref-q { font-size: 14px; color: #ffffff; line-height: 1.6; }
+
+/* Video frame */
+.video-frame { position: relative; width: 100%; max-width: 760px; margin: 18px auto 0; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; border: 1px solid rgba(96,165,250,0.3); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-cta { margin-top: 14px; }
+.tool-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1241B0, #3b82f6); color: #fff; text-decoration: none; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; padding: 11px 20px; border-radius: 10px; border: 1px solid #3b82f6; transition: transform .2s, box-shadow .2s; }
+.tool-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(59,130,246,0.32); }
+
+/* Cameras on photo strip */
+section.cameras-section { padding: 0; overflow: hidden; }
+.cameras-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 60px; }
+.cameras-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; max-width: 1000px; width: 100%; }
+.cameras-left { text-align: left; }
+.cameras-logo { height: 36px; margin-bottom: 24px; opacity: 0.95; }
+.cameras-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(59,130,246,0.25); border-radius: 16px; padding: 28px; }
+.cameras-card h2 { font-size: 30px; }
+.cameras-arrow { font-family: 'Poppins', sans-serif; font-weight: 800; color: #60a5fa; font-size: 18px; margin: 10px 0; }
+.cameras-photo-strip { display: flex; align-items: center; justify-content: center; }
+.cameras-photo-strip img { max-height: 72vh; max-width: 100%; width: auto; object-fit: contain; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
+
+/* Next session bar */
+.next-arrow-bar { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-left: 4px solid #3b82f6; border-radius: 12px; padding: 20px 24px; margin: 18px auto 0; max-width: 820px; text-align: left; }
+.next-arrow-bar .nab-meta { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #60a5fa; }
+.next-arrow-bar .nab-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; color: #fff; margin: 4px 0 8px; }
+.next-arrow-bar .nab-desc { font-size: 14px; color: #ffffff; line-height: 1.6; }
+
+/* Extra practice */
+.ep-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin: 22px 0; text-align: left; }
+.ep-card { position: relative; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-top: 3px solid var(--xp,#60a5fa); border-radius: 16px; padding: 24px 22px; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.ep-card:hover { transform: translateY(-4px); border-color: var(--xp,#60a5fa); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.ep-card:nth-child(1) { --xp: #60a5fa; }
+.ep-card:nth-child(2) { --xp: #d2a8ff; }
+.ep-card:nth-child(3) { --xp: #6ee7b7; }
+.ep-card .ep-num { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 11px; font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; color: #fff; background: var(--xp,#60a5fa); margin-bottom: 15px; }
+.ep-card .ep-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 8px; }
+.ep-card .ep-desc { font-size: 13.5px; color: rgba(255,255,255,0.82); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .vs-split { grid-template-columns: 1fr; }
+  .vs-badge { padding: 10px 0; }
+  .ba-grid, .resp-grid, .spectrum, .level-blocks, .q-grid, .ep-grid, .lvl-grid { grid-template-columns: 1fr; }
+  .agent-diagram { transform: scale(0.62); transform-origin: top center; margin-bottom: -150px; }
+  .va-matrix { grid-template-columns: 110px 14px 1fr 18px 1fr; }
+  .va-h { font-size: 10px; letter-spacing: 0.03em; }
+  .va-feat { font-size: 11.5px; }
+  .va-cell { font-size: 11px; padding: 9px 10px; }
+  .pm-split { grid-template-columns: 1fr; gap: 18px; }
+  .pm-iceberg { max-width: 360px; margin: 0 auto; }
+  .cr-cols { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .flow-steps { grid-template-columns: 1fr 1fr; }
+  .cameras-layout { grid-template-columns: 1fr; }
+}
+
+/* Centering frame for inline SVG diagrams */
+.dgm{display:flex;justify-content:center;margin:18px auto 6px;max-width:620px;}
+.dgm svg{width:100%;height:auto;}
+.dgm.wide{max-width:760px;}
+
+/* White logo chip + text wordmark chip + horizontal row */
+.logochip{background:#fff;border-radius:10px;height:42px;min-width:54px;padding:0 13px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.3);}
+.logochip img{height:22px;width:auto;max-width:110px;object-fit:contain;display:block;}
+.wordchip{display:inline-flex;align-items:center;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:11.5px;color:#ffffff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:8px 12px;}
+.logorow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+
+/* Final project, goal/deliverable/timing + INCLUDE panel */
+.fp-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:20px;align-items:stretch;
+  max-width:1000px;margin:22px auto 0;text-align:left;}
+.fp-left{display:flex;flex-direction:column;gap:12px;}
+.fp-meta{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.fp-lab{display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;
+  font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac,#60a5fa);margin-bottom:6px;}
+.fp-lab .fp-ic{font-size:15px;}
+.fp-txt{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.fp-txt b{color:#fff;}
+.fp-include{position:relative;border-radius:16px;padding:20px 24px;
+  background:linear-gradient(160deg,rgba(34,211,238,.12),rgba(7,22,44,.4));
+  border:1.5px solid rgba(34,211,238,.4);box-shadow:0 16px 40px rgba(34,211,238,.12);}
+.fp-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:13px;
+  letter-spacing:.14em;text-transform:uppercase;color:#22d3ee;margin-bottom:13px;}
+.fp-items{display:flex;flex-direction:column;gap:8px;}
+.fp-item{display:flex;align-items:center;gap:12px;}
+.fp-num{flex:none;width:26px;height:26px;border-radius:8px;background:#0e7490;color:#fff;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.fp-iname{font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:#ffffff;}
+@media (max-width:900px){.fp-grid{grid-template-columns:1fr;}}
+
+/* Old way vs new way, Feature Factory vs Value Driver */
+.oldnew{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch;max-width:1000px;margin:22px auto 0;text-align:left;}
+.on-card{border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;}
+.on-old{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.26);}
+.on-new{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.3);}
+.on-kick{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.on-old .on-kick{color:#fda4af;}
+.on-new .on-kick{color:#6ee7b7;}
+.on-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:#fff;line-height:1.1;margin-top:-4px;}
+.on-li{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:18px;position:relative;}
+.on-old .on-li::before{content:'✕';position:absolute;left:0;top:0;color:#fb7185;font-weight:800;font-size:11px;}
+.on-new .on-li::before{content:'✓';position:absolute;left:0;top:0;color:#34d399;font-weight:800;font-size:11px;}
+.on-vs{align-self:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:#ffffff;
+  width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;flex:none;}
+@media (max-width:820px){.oldnew{grid-template-columns:1fr;}.on-vs{margin:0 auto;}}
+
+/* Pillars: venn diagram beside the three lenses */
+.pillar-grid{display:grid;grid-template-columns:1.02fr 0.98fr;gap:26px;align-items:center;max-width:1060px;margin:16px auto 0;}
+.pillar-list{display:flex;flex-direction:column;gap:11px;text-align:left;}
+.pillar{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  padding:13px 16px;border-left:3px solid var(--ac,#60a5fa);}
+.pillar h4{font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;color:#fff;margin-bottom:3px;}
+.pillar p{font-size:12px;color:#ffffff;line-height:1.5;}
+@media (max-width:900px){.pillar-grid{grid-template-columns:1fr;}}
+
+/* Skill stack, numbered rows */
+.skill-grid{display:flex;flex-direction:column;gap:11px;max-width:880px;margin:22px auto 0;text-align:left;}
+.skill-row{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.skill-n{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(96,165,250,.14);color:var(--ac,#60a5fa);
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.skill-t{font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-bottom:3px;}
+.skill-d{font-size:12.5px;color:#ffffff;line-height:1.5;}
+
+/* Hub: diagram beside arbiter note */
+.hub-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:24px;align-items:center;max-width:1080px;margin:14px auto 0;}
+.hub-note{display:flex;flex-direction:column;gap:13px;text-align:left;}
+@media (max-width:900px){.hub-grid{grid-template-columns:1fr;}}
+
+/* B2C / B2B two-column */
+.aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:980px;margin:20px auto 0;text-align:left;}
+.aud-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 22px;border-top:3px solid var(--ac,#60a5fa);}
+.aud-h{font-family:'Poppins',sans-serif;font-weight:800;font-size:15.5px;color:#fff;margin-bottom:4px;}
+.aud-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;margin-bottom:11px;}
+.aud-q{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:16px;position:relative;margin-bottom:8px;}
+.aud-q::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac,#60a5fa);}
+.aud-eg{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);}
+.aud-eg .logochip{height:30px;min-width:auto;padding:0 9px;}
+.aud-eg .logochip img{height:15px;}
+@media (max-width:760px){.aud-grid{grid-template-columns:1fr;}}
+
+/* PDLC stage cards (3-up) */
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.stage-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:10px;}
+.stage-kick{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;}
+.stage-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:18px;color:#fff;line-height:1.1;margin-top:-3px;}
+.stage-phases{font-size:11px;color:#ffffff;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;}
+.stage-li{font-size:12px;color:#ffffff;line-height:1.5;padding-left:15px;position:relative;}
+.stage-li::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:2px;background:var(--ac,#60a5fa);}
+.stage-goal{margin-top:auto;font-size:11.5px;color:#ffffff;line-height:1.45;background:rgba(255,255,255,.04);border-radius:9px;padding:9px 12px;}
+.stage-goal b{color:#fff;}
+.stage-eg{font-size:11px;color:#ffffff;font-style:italic;line-height:1.45;padding-top:8px;border-top:1px solid rgba(255,255,255,.07);}
+@media (max-width:900px){.stage-grid{grid-template-columns:1fr;}}
+
+/* AI lifecycle, human vs AI split rows */
+.ailc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.ailc-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:11px;}
+.ailc-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:17px;color:var(--ac,#60a5fa);}
+.ailc-split{display:flex;flex-direction:column;gap:8px;}
+.ailc-block{border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.45;}
+.ailc-human{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.24);color:#ffffff;}
+.ailc-ai{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.26);color:#ddd2f3;}
+.ailc-block .albl{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
+.ailc-human .albl{color:#7fb0ef;}
+.ailc-ai .albl{color:#b39ef5;}
+.ailc-out{font-size:11px;color:#ffffff;font-style:italic;line-height:1.4;}
+@media (max-width:900px){.ailc-grid{grid-template-columns:1fr;}}
+
+/* Scenario cards (final project) */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1000px;margin:22px auto 0;text-align:left;}
+.scn-card{position:relative;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:11px;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(7,22,44,.4));border:1px solid rgba(255,255,255,.1);
+  border-top:3px solid var(--ac,#60a5fa);}
+.scn-tag{display:inline-flex;align-self:flex-start;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--ac,#60a5fa);
+  background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.26);border-radius:999px;padding:5px 11px;}
+.scn-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:21px;color:#fff;line-height:1.1;}
+.scn-sub{font-size:12.5px;color:#ffffff;line-height:1.3;font-weight:700;}
+.scn-desc{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.scn-risk{margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  font-weight:700;color:#fcd34d;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.28);border-radius:8px;padding:8px 11px;}
+@media (max-width:760px){.scenario-grid{grid-template-columns:1fr;}}
+
+/* Tooling row, three categories of roadmap tools */
+.tools-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1000px;margin:20px auto 0;text-align:left;}
+.tool-col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;
+  padding:15px 16px;border-top:3px solid var(--ac,#60a5fa);}
+.tool-cat{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ac,#60a5fa);font-weight:700;margin-bottom:10px;}
+.tool-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.tool-chip{font-size:11.5px;font-weight:600;color:#ffffff;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:5px 10px;}
+@media (max-width:840px){.tools-row{grid-template-columns:1fr;}}
+
+/* MoSCoW, four priority cards */
+.moscow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:1080px;margin:20px auto 0;text-align:left;}
+.mos-card{border-radius:14px;padding:15px 15px;display:flex;flex-direction:column;gap:8px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-top:3px solid var(--ac);}
+.mos-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  font-weight:700;color:var(--ac);}
+.mos-name{font-family:'Poppins',sans-serif;font-weight:800;font-size:16px;color:#fff;}
+.mos-role{font-size:9.5px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;
+  color:#ffffff;}
+.mos-eg{font-size:11.5px;color:#ffffff;line-height:1.5;margin-top:2px;}
+.mos-eg b{color:#ffffff;}
+@media (max-width:840px){.moscow{grid-template-columns:1fr 1fr;}}
+@media (max-width:560px){.moscow{grid-template-columns:1fr;}}
+
+/* PRD compare, Traditional vs Simplified */
+.prd-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1000px;margin:20px auto 0;text-align:left;}
+.prd-col{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);}
+.prd-col.trad{border-top:3px solid #94a3b8;}
+.prd-col.simp{border-top:3px solid #22d3ee;}
+.prd-head{padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+.prd-kick{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#ffffff;}
+.prd-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-top:2px;}
+.prd-group{padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.05);}
+.prd-group:last-child{border-bottom:none;}
+.prd-gname{font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--gc,#60a5fa);font-weight:700;margin-bottom:5px;}
+.prd-items{font-size:12px;color:#ffffff;line-height:1.7;}
+.prd-items .new{color:#6ee7b7;font-weight:700;}
+@media (max-width:840px){.prd-compare{grid-template-columns:1fr;}}
+
+/* PRD-to-prototype mapping rows */
+.proto-map{max-width:980px;margin:20px auto 0;display:flex;flex-direction:column;gap:10px;text-align:left;}
+.pm-row{display:grid;grid-template-columns:1fr 30px 1fr;gap:12px;align-items:center;}
+.pm-side{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 15px;}
+.pm-side.logic{border-left:3px solid #22d3ee;}
+.pm-side.ui{border-left:3px solid #34d399;}
+.pm-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;
+  font-weight:700;margin-bottom:4px;}
+.pm-side.logic .pm-label{color:#22d3ee;}
+.pm-side.ui .pm-label{color:#34d399;}
+.pm-text{font-size:12px;color:#ffffff;line-height:1.45;}
+.pm-text b{color:#fff;}
+.pm-arrow{text-align:center;color:#ffffff;font-size:18px;}
+@media (max-width:760px){.pm-row{grid-template-columns:1fr;}.pm-arrow{transform:rotate(90deg);}}
+
+/* Alignment handshake, three stakeholders */
+.shake{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1000px;margin:20px auto 0;text-align:left;}
+.shake-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:17px 18px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:9px;}
+.shake-who{font-family:'Poppins',sans-serif;font-weight:800;font-size:15.5px;color:#fff;}
+.shake-do{font-size:12px;color:#ffffff;line-height:1.5;}
+.shake-goal{margin-top:auto;background:rgba(255,255,255,.05);border-radius:9px;padding:9px 11px;font-size:11.5px;
+  color:#ffffff;line-height:1.45;}
+.shake-goal b{display:block;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ac,#60a5fa);margin-bottom:3px;}
+@media (max-width:840px){.shake{grid-template-columns:1fr;}}
+
+/* Now/Next/Later mini lanes (example preview) */
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1000px;margin:20px auto 0;text-align:left;}
+.lane{border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);overflow:hidden;
+  border-top:3px solid var(--ac,#60a5fa);}
+.lane-head{padding:11px 15px;border-bottom:1px solid rgba(255,255,255,.07);}
+.lane-name{font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;color:#fff;}
+.lane-when{font-size:9.5px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--ac,#60a5fa);margin-top:1px;}
+.lane-card{margin:9px 11px;padding:9px 11px;background:rgba(255,255,255,.04);border-radius:9px;
+  font-size:11.5px;color:#ffffff;line-height:1.4;}
+.lane-card b{color:#fff;display:block;font-size:12px;margin-bottom:2px;}
+@media (max-width:840px){.lanes{grid-template-columns:1fr;}}
+
+/* Two lab links side by side */
+.lab-links{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+.lab-walkthrough.alt{background:linear-gradient(135deg,#0e9f6e,#0b7a54);box-shadow:0 8px 24px rgba(16,185,129,.35);}
+.lab-walkthrough.alt:hover{box-shadow:0 12px 30px rgba(16,185,129,.5);}
+
+/* Key Takeaways accents: color for emphasis, white body stays */
+.takeaway-list .takeaway-item { border-left: 3px solid var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item p strong { color: var(--tk-ac, #60a5fa) !important; }
+.takeaway-list .takeaway-item:hover { border-left-color: var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item:nth-child(3n+1) { --tk-ac: #34d399; }
+.takeaway-list .takeaway-item:nth-child(3n+2) { --tk-ac: #60a5fa; }
+.takeaway-list .takeaway-item:nth-child(3n+3) { --tk-ac: #fbbf24; }
+
+/* PS-READABILITY-PASS v1 - legibility + reduced-motion + print. Brand palette unchanged. */
+.card-item .card-desc, .expect-desc, .syl-card .syl-desc, .anat-card .anat-desc,
+.control-card .cc-feel, .flow-stage .flow-why, .diag-axis .da-q, .tf-body .tf-why,
+.waypoint-text .wt-desc, .lab-tip-text, .lab-deliverable, .loop-node .ln-sub,
+.res-card .rc-desc, .al-chip .al-chip-score, .sorter-subtitle,
+.case-act .ca-text, .two-col ul li { font-size: 13.5px; }
+.control-card .cc-who { font-size: 14.5px; }
+.ref-table td, .notice-table td { font-size: 15px; }
+.ref-table th, .notice-table th { font-size: 12px; }
+/* No grey text: decorative greys lifted straight to white. */
+.hero .scroll-hint { color: #ffffff; }
+.arc-arrow { color: #ffffff; }
+.section-break-inner .lab-desc { color: #ffffff; }
+.section-break-inner .lab-title { color: #ffffff; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  section { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+}
+
+@media print {
+  html { scroll-snap-type: none; scroll-behavior: auto; }
+  body { background: #ffffff !important; color: #24304d !important; }
+  section { min-height: auto !important; opacity: 1 !important; transform: none !important;
+            background: #ffffff !important; padding: 26px 30px !important;
+            page-break-after: always; border-bottom: 1px solid #d5dcec; }
+  .section-break-inner, .cameras-inner { position: static !important; background: #ffffff !important;
+            padding: 26px 30px !important; }
+  .section-break-inner .section-num, .section-break-inner .lab-name { color: #0b1f44 !important; }
+  .section-break-inner .lab-desc, .section-break-inner .lab-title { color: #3a4a6b !important; }
+  h1, h2, h3, strong, .card-title, .wt-title, .rc-title { color: #0b1f44 !important; }
+  p, li, .card-desc, .expect-desc, .ref-table td, .notice-table td { color: #26324f !important; }
+  .nav-dots, .progress-bar, .scroll-hint, .lab-timer { display: none !important; }
+}
+
+</style>
+<noscript><style>section{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="nav-dots" id="navDots"></div>
+<div class="skip-badge" id="skip-badge">SECTION SKIPPED · CLICK TO RESTORE</div>
+<div class="help-hint">↑ ↓ navigate · K skip section · M section sorter</div>
+<div class="slide-sorter" id="slide-sorter">
+  <div class="sorter-header">
+    <div><div class="sorter-title">Section sorter</div>
+    <div class="sorter-subtitle">Click a card to jump · skip what you don't need</div></div>
+    <button class="sorter-close" onclick="closeSorter()">✕ Close</button>
+  </div>
+  <div class="sorter-grid" id="sorter-grid"></div>
+</div>
+<section class="hero" data-title="Module 4"><div class="inner" style="text-align:center"><div class="hero-logo"><img src="../Design/Product-School-Logo.png" alt="Product School"></div><div class="section-label">Product Management · Module 4 of 6</div><h1>Build High-Velocity<br><span>Product Roadmaps</span></h1><p class="subtitle">Bridge the gap between vision and execution. Prioritize with an Effort vs. Value matrix, scope a lean MVP with MoSCoW, and master the transition to a Simplified PRD, then leverage AI for rapid prototyping to prove value at unprecedented speed.</p><div class="waypoints"><div class="waypoint"><div class="waypoint-num">1</div><div class="waypoint-text"><div class="wt-title">Build a strategic roadmap</div><div class="wt-desc">Prioritize high-leverage problems over a feature wish-list, score Impact vs. Effort and sequence a Now / Next / Later plan.</div></div></div><div class="waypoint"><div class="waypoint-num">2</div><div class="waypoint-text"><div class="wt-title">Scope ruthlessly with MoSCoW</div><div class="wt-desc">Define the thinnest MVP that still delivers value, separate the non-negotiable Must-Haves from polish.</div></div></div><div class="waypoint"><div class="waypoint-num">3</div><div class="waypoint-text"><div class="wt-title">PRD → prototype, fast</div><div class="wt-desc">Turn Must-Haves into a Simplified PRD, then run an AI rapid-validation loop to prove the logic before engineering touches it.</div></div></div></div><div class="scroll-hint">Individual format · two labs turn your data-backed bet into a roadmap and a clickable prototype<span>↓</span></div></div></section><section class="centered" data-title="Class Expectations"><div class="inner"><div class="section-label">Cohort Norms</div><h2>Class expectations</h2><p class="subtitle">A solo-format cohort runs best on a few shared habits.</p><div class="expect-grid"><div class="expect-card"><div class="expect-icon">📹</div><div class="expect-title">Cameras On</div><div class="expect-desc">Be present and visible to stay engaged and keep the session valuable.</div></div><div class="expect-card"><div class="expect-icon">⏰</div><div class="expect-title">Arrive On Time</div><div class="expect-desc">Respect everyone’s time by joining promptly, we start on schedule.</div></div><div class="expect-card"><div class="expect-icon">🤝</div><div class="expect-title">Engage to Network</div><div class="expect-desc">Join the labs and discussions to build your professional learning network.</div></div><div class="expect-card"><div class="expect-icon">🛠️</div><div class="expect-title">Tool Readiness</div><div class="expect-desc">Have your AI and prototyping accounts active before class, we won’t pause for setup.</div></div><div class="expect-card"><div class="expect-icon">🎓</div><div class="expect-title">Use Slack</div><div class="expect-desc">Keep questions, answers, and shares organised in the cohort Slack channel.</div></div><div class="expect-card"><div class="expect-icon">🎯</div><div class="expect-title">Class Momentum</div><div class="expect-desc">Deep-dive or individual questions move to after-class support to keep pace.</div></div></div></div></section><section class="centered" data-title="Syllabus"><div class="inner"><div class="section-label">Certification Syllabus</div><h2>Master the core skills to build products customers love</h2><p class="subtitle">Six modules take you from strategic thinking to a coordinated, measurable launch.</p><div class="cards-grid"><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 1</div><div class="card-title" style="margin-top:6px">Develop Strategic Product Thinking</div><div class="card-desc">Shift from executing tasks to driving outcomes, the core responsibilities, soft skills, and mindset of a modern PM.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 2</div><div class="card-title" style="margin-top:6px">Discover Product Opportunities via Qualitative Signals</div><div class="card-desc">Uncover high-value opportunities through advanced discovery and user research, balancing customer insight with business goals.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 3</div><div class="card-title" style="margin-top:6px">Use Analytics and Metrics for Data-Driven Decisions</div><div class="card-desc">Go from gut feelings to evidence, craft hypotheses, define success metrics, and leverage analytics to drive growth.</div></div><div class="card-item" style="--card-accent:#22d3ee"><div class="card-title" style="color:#22d3ee;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 4 · You are here</div><div class="card-title" style="margin-top:6px">Build High-Velocity Product Roadmaps</div><div class="card-desc">Bridge vision and execution, master the transition to PRDs and leverage AI for rapid prototyping and proof of value.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 5</div><div class="card-title" style="margin-top:6px">Run Effective Product Experimentation</div><div class="card-desc">Master A/B testing and evidence-based decisions to confidently ship, kill, or pivot based on what experiments reveal.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 6</div><div class="card-title" style="margin-top:6px">Launch Impactful GTM Plans</div><div class="card-desc">Orchestrate a launch checklist, coordinate cross-functional teams, define channels, and track post-launch metrics.</div></div></div></div></section><section class="centered" data-title="Agenda"><div class="inner"><div class="section-label">Agenda</div><h2>What we’ll cover today</h2><div class="waypoints" style="max-width:860px;margin:24px auto"><div class="waypoint"><div class="waypoint-num">01</div><div class="waypoint-text"><div class="wt-title">How to Build a Strategic Roadmap</div><div class="wt-desc">Why a roadmap is a strategic tool, not a wish-list, the build process and the Effort vs. Value matrix that protects engineering capacity.</div></div></div><div class="waypoint"><div class="waypoint-num">02</div><div class="waypoint-text"><div class="wt-title">Lab: Build a Dynamic, Clickable Feature Roadmap</div><div class="wt-desc">Score a backlog with AI, override with your M2/M3 evidence, and generate an interactive Now / Next / Later roadmap.</div></div></div><div class="waypoint"><div class="waypoint-num">03</div><div class="waypoint-text"><div class="wt-title">Foundations of Effective Scoping</div><div class="wt-desc">Define your MVP and slice it with MoSCoW, keep only what’s essential to the core outcome.</div></div></div><div class="waypoint"><div class="waypoint-num">04</div><div class="waypoint-text"><div class="wt-title">From Product Requirements to Functional Prototype</div><div class="wt-desc">The Simplified PRD as a functional prompt, the rapid validation loop, and the alignment handshake.</div></div></div><div class="waypoint"><div class="waypoint-num">05</div><div class="waypoint-text"><div class="wt-title">Lab: PRD-to-Prototype Sprint</div><div class="wt-desc">Scope one ‘Now’ feature with MoSCoW, write a Simplified PRD, and vibe-code a clickable prototype.</div></div></div></div></div></section><section class="section-break" data-title="How to Build a Strategic Roadmap"><div class="section-break-inner"><div class="section-num">01</div><div class="lab-title">Section 01</div><div class="lab-name">How to Build a Strategic Roadmap</div><div class="lab-desc">A roadmap isn’t a list of dates or a backlog of everything anyone ever asked for. It’s a visual strategy that earns alignment, protects focus, and points the team at problems worth solving.</div></div></section><section class="centered" data-title="Reflect · The Roadmap Reality Check"><div class="inner"><span class="demo-tag tag-activity">Reflect · 5 min</span><h2>The roadmap reality check</h2><p class="subtitle">Before we define it, take a position. Post your answer in <code>#cohort-channel</code> or jot it down, we’ll come back to it.</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:780px;margin:22px auto"><div class="ref-card"><div class="ref-num">🧭</div><div class="ref-q">In your opinion, what is the primary value of a product roadmap, is it a <strong>planning</strong> tool, a <strong>communication</strong> tool, or something else entirely?</div></div></div><div class="takeaway"><h4>It’s all three, and that’s the hard part</h4><p>For some it’s planning, for others communication or negotiation. The reality is it’s all three at once, and the tension between them is exactly what makes roadmaps hard: priorities shift, stakeholders push agendas, and last quarter’s agreement is suddenly up for debate. So we’ll build one that’s <strong>quick</strong> and cuts through the noise by prioritizing on <strong>effort vs. value</strong>: adapt fast without losing direction.</p></div></div></section><section class="centered" data-title="The Product Roadmap"><div class="inner"><span class="demo-tag tag-framework">The product roadmap</span><h2>Translating vision into velocity</h2><p class="subtitle">A roadmap is often mistaken for a static feature list. In high-growth environments it’s your primary strategic communication tool, the bridge between the vision you’ve built and the delivery your team executes.</p><div class="section-label" style="margin-top:6px">The What</div><div class="stage-grid" style="grid-template-columns:repeat(4,1fr)"><div class="stage-card" style="--ac:#22d3ee"><div class="stage-name">Visual Strategy</div><div class="stage-li">Shows <em>where</em> you’re going and in what order, not just what you’re building.</div></div><div class="stage-card" style="--ac:#22d3ee"><div class="stage-name">Prioritized Sequence</div><div class="stage-li">Every item earned its place on effort vs. value, not on who asked loudest.</div></div><div class="stage-card" style="--ac:#22d3ee"><div class="stage-name">Living Document</div><div class="stage-li">Only as good as its last update. Not reviewed this quarter? It’s already out of date.</div></div><div class="stage-card" style="--ac:#22d3ee"><div class="stage-name">Outcome Map</div><div class="stage-li">The goal isn’t to ship code, it’s to solve problems. The roadmap keeps that visible.</div></div></div><div class="section-label" style="margin-top:18px">The Why</div><div class="stage-grid" style="grid-template-columns:repeat(4,1fr)"><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Forces Alignment</div><div class="stage-li">Gets stakeholders to agree on direction, not just dates.</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Protects Focus</div><div class="stage-li">Gives you the data to say “No” to low-value distractions.</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Manages Change</div><div class="stage-li">Lets you pivot on new data without churning the team.</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Drives Impact</div><div class="stage-li">Shifts the goal from “shipping code” to “solving problems.”</div></div></div></div></section><section class="centered" data-title="How to Build a Roadmap"><div class="inner"><span class="demo-tag tag-framework">Step-by-step</span><h2>How to build a roadmap</h2><p class="subtitle">The roadmap bridges your strategy and your team’s actual capacity. Three steps turn a pile of requests into a sequenced plan the whole org supports.</p><div class="stage-grid"><div class="stage-card" style="--ac:#60a5fa"><div class="stage-kick">Step 01</div><div class="stage-name">Ideate &amp; Collect</div><div class="stage-li">Align leadership early on the core vision.</div><div class="stage-li">Gather cross-team inputs (design + eng reality check).</div><div class="stage-li">Centralize product concepts in one source.</div></div><div class="stage-card" style="--ac:#22d3ee"><div class="stage-kick">Step 02</div><div class="stage-name">Prioritize &amp; Sequence</div><div class="stage-li">Score opportunities as Impact vs. Effort.</div><div class="stage-li">Balance growth with a 70 / 20 / 10 split.</div><div class="stage-li">De-risk technical dependencies.</div></div><div class="stage-card" style="--ac:#34d399"><div class="stage-kick">Step 03</div><div class="stage-name">Communicate &amp; Manage</div><div class="stage-li">Review with key stakeholders (Sales, Compliance).</div><div class="stage-li">Publish a central source of truth.</div><div class="stage-li">Iterate on a cadence as new evidence emerges.</div></div></div><div class="section-label" style="margin-top:18px">🛠️ Tools</div><div class="tools-row"><div class="tool-col" style="--ac:#60a5fa"><div class="tool-cat">Dedicated SaaS</div><div class="tool-chips"><span class="tool-chip">ProductBoard</span><span class="tool-chip">Aha!</span><span class="tool-chip">Airfocus</span><span class="tool-chip">Roadmunk</span><span class="tool-chip">ProductPlan</span></div></div><div class="tool-col" style="--ac:#22d3ee"><div class="tool-cat">Vibecoding Tools</div><div class="tool-chips"><span class="tool-chip">AI Studio</span><span class="tool-chip">Lovable</span><span class="tool-chip">Bolt</span></div></div><div class="tool-col" style="--ac:#94a3b8"><div class="tool-cat">Generic Productivity</div><div class="tool-chips"><span class="tool-chip">Airtable</span><span class="tool-chip">Keynote &amp; Sheets</span><span class="tool-chip">Excel &amp; PowerPoint</span></div></div></div></div></section><section class="centered" data-title="Example · High-Velocity Roadmap"><div class="inner"><span class="demo-tag tag-case">Example · interactive</span><h2>A high-velocity product roadmap</h2><p class="subtitle">Here’s what “good” looks like, a StreamLine roadmap sorted into Now / Next / Later by effort vs. value, with the time-sinkers cut. Open it, click through the cards, and notice how every item traces back to a metric.</p><a class="lab-walkthrough" href="Module 4 - Example Roadmap.html" target="_blank" rel="noopener">🕹️ Interact with the example roadmap →</a><div class="takeaway"><h4>What to look for</h4><p>The <strong>Now</strong> lane is short and ruthless, only quick wins that move the core metric this sprint. <strong>Next</strong> holds the big bets, <strong>Later</strong> holds the cheap nice-to-haves, and the <strong>Cut List</strong> makes the “no” decisions visible so they don’t creep back in.</p></div></div></section><section class="centered" data-title="Effort vs. Value Matrix"><div class="inner"><span class="demo-tag tag-framework">Prioritization</span><h2>The Effort vs. Value matrix</h2><p class="subtitle">Your reality filter for the backlog. Value is the anticipated lift on the success metric you defined in Module 3; Effort is the technical cost you size with your engineering leads. As the gatekeeper of engineering time, your job is to isolate the quick wins and kill the time-sinkers.</p><div style="margin:18px auto 0;max-width:760px"><svg viewBox="0 0 720 470" width="100%" role="img" aria-label="Effort vs. Value matrix with the Spotify backlog plotted across four quadrants" style="max-width:760px;font-family:'Poppins',sans-serif"><rect x="96" y="30" width="296.0" height="181.0" fill="rgba(52,211,153,.10)"/><text x="110" y="56" fill="#dfe6f2" font-size="13" font-weight="800" letter-spacing=".06em" text-anchor="start">QUICK WINS</text><text x="110" y="72" fill="#8da0c0" font-size="10.5" font-family="'IBM Plex Mono',monospace" text-anchor="start">Now · build first</text><rect x="392.0" y="30" width="296.0" height="181.0" fill="rgba(96,165,250,.10)"/><text x="674" y="56" fill="#dfe6f2" font-size="13" font-weight="800" letter-spacing=".06em" text-anchor="end">MAJOR PROJECTS</text><text x="674" y="72" fill="#8da0c0" font-size="10.5" font-family="'IBM Plex Mono',monospace" text-anchor="end">Next · big bets</text><rect x="96" y="211.0" width="296.0" height="181.0" fill="rgba(148,163,184,.08)"/><text x="110" y="376" fill="#dfe6f2" font-size="13" font-weight="800" letter-spacing=".06em" text-anchor="start">FILL-INS</text><text x="110" y="392" fill="#8da0c0" font-size="10.5" font-family="'IBM Plex Mono',monospace" text-anchor="start">Later · spare capacity</text><rect x="392.0" y="211.0" width="296.0" height="181.0" fill="rgba(251,113,133,.10)"/><text x="674" y="376" fill="#dfe6f2" font-size="13" font-weight="800" letter-spacing=".06em" text-anchor="end">TIME SINKERS</text><text x="674" y="392" fill="#8da0c0" font-size="10.5" font-family="'IBM Plex Mono',monospace" text-anchor="end">Defer / kill</text><line x1="96" y1="30" x2="96" y2="392" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/><line x1="96" y1="392" x2="688" y2="392" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/><line x1="392.0" y1="30" x2="392.0" y2="392" stroke="rgba(255,255,255,.10)" stroke-dasharray="4 5"/><line x1="96" y1="211.0" x2="688" y2="211.0" stroke="rgba(255,255,255,.10)" stroke-dasharray="4 5"/><text x="392.0" y="422" fill="#aab4cc" font-size="12.5" font-weight="700" text-anchor="middle">EFFORT  →  (engineering cost)</text><text x="66" y="211.0" fill="#aab4cc" font-size="12.5" font-weight="700" text-anchor="middle" transform="rotate(-90 66 211.0)">VALUE  →  (lift on M3 metric)</text><circle cx="250" cy="113" r="11" fill="#34d399" stroke="rgba(7,22,44,.9)" stroke-width="2.5"/><text x="250" y="88" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Search</text><text x="250" y="101" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Optimization</text><circle cx="528" cy="102" r="11" fill="#60a5fa" stroke="rgba(7,22,44,.9)" stroke-width="2.5"/><text x="528" y="77" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Personalized</text><text x="528" y="90" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Recommendations</text><circle cx="587" cy="149" r="11" fill="#60a5fa" stroke="rgba(7,22,44,.9)" stroke-width="2.5"/><text x="587" y="124" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Offline</text><text x="587" y="137" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Listening</text><circle cx="244" cy="305" r="11" fill="#94a3b8" stroke="rgba(7,22,44,.9)" stroke-width="2.5"/><text x="244" y="280" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Lyrics</text><text x="244" y="293" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Integration</text><circle cx="555" cy="311" r="11" fill="#fb7185" stroke="rgba(7,22,44,.9)" stroke-width="2.5"/><text x="555" y="286" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Social API</text><text x="555" y="299" fill="#eef3fb" font-size="11" font-weight="700" text-anchor="middle">Expansion</text></svg></div><div class="takeaway"><h4>Spotify, filtering for retention</h4><p><strong>Quick Win:</strong> Search Optimization, high value, moderate effort, your 70% core. <strong>Major Projects:</strong> Personalized Recommendations &amp; Offline Listening, big bets for the 20 / 10. <strong>Fill-in:</strong> Lyrics Integration, only when capacity frees up. <strong>Time Sinker:</strong> Social API Expansion, high complexity, rarely moves retention. Kill it before it touches the roadmap.</p></div></div></section><section class="section-break" data-title="Build a Dynamic, Clickable Feature Roadmap"><div class="section-break-inner"><div class="section-num">02</div><div class="lab-title">Hands-On Lab · 25 min</div><div class="lab-name">Build a Dynamic, Clickable Feature Roadmap</div><div class="lab-desc">Trust, but verify. Use AI to score a backlog at speed, then apply your own M2/M3 evidence to override the numbers and ship a defensible Now / Next / Later roadmap.</div></div></section><section class="centered" data-title="Lab · Build a Feature Roadmap"><div class="inner"><div class="lab-timer">⏱ 25 min</div><span class="demo-tag tag-exercise">Individual Exercise</span><h2>Build a dynamic, clickable feature roadmap</h2><p class="subtitle">Apply Effort vs. Value scoring to your scenario’s backlog, use an LLM for a baseline, then apply strategic PM judgment to decide which features actually move your M3 metric. Convert the result into a dynamic Now / Next / Later roadmap.</p><div class="flow-steps"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">📌</div></div><div class="fs-title">Anchor your scoring criteria</div><div class="fs-text">Pull your persona and M3 metrics from your pre-work, these are your “North Star” for scoring Value.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">👀</div></div><div class="fs-title">Set a human baseline</div><div class="fs-text">Scan the backlog for a few minutes and flag 2 to 3 features that look like instinctive “quick wins.”</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">🤖</div></div><div class="fs-title">Prompt your AI baseline</div><div class="fs-text">Paste your scenario’s scoring prompt into Claude to generate the initial Effort vs. Value data.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">⚖️</div></div><div class="fs-title">Audit &amp; override</div><div class="fs-text">Check the AI’s logic against your research, finalize the scores and decide Now / Next / Later.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">🕹️</div></div><div class="fs-title">Generate your roadmap</div><div class="fs-text">Paste your finalized table back into your LLM to build the interactive map. Screenshot it for your deliverables.</div></div></div><div class="takeaway"><h4>Your judgment beats the AI’s generic scoring</h4><p>The AI gives you speed; you give it evidence. Override any Value score the AI inflated, and make sure your <strong>Now</strong> lane reflects your real priorities while the <strong>Cut List</strong> correctly hides the time-sinkers.</p></div><div class="lab-links"><a class="lab-walkthrough" href="Module 4 - Exercise 1 Guide.html">📘 Open the Lab 1 guide, backlog &amp; prompts →</a><a class="lab-walkthrough alt" href="Module 4 - Roadmap Builder.html">🛠️ Open the interactive Roadmap Builder →</a></div></div></section><section class="section-break" data-title="Foundations of Effective Scoping"><div class="section-break-inner"><div class="section-num">03</div><div class="lab-title">Section 03</div><div class="lab-name">Foundations of Effective Scoping</div><div class="lab-desc">A prioritized roadmap tells you what to build first. Scoping tells you how much of it to build. The MVP and MoSCoW keep you from over-building before you’ve even launched.</div></div></section><section class="centered" data-title="MVP Execution"><div class="inner"><span class="demo-tag tag-framework">MVP execution</span><h2>Mapping your minimum viable product</h2><p class="subtitle">An MVP is the most pared-down version of a solution that still delivers the core value proposition. It’s the bridge between discovery and the build, the shortest line between a user’s “moment of misery” and their “moment of value.”</p><div class="aud-grid" style="grid-template-columns:1fr 1fr"><div class="aud-card" style="--ac:#22d3ee"><div class="aud-tag">Step 1</div><div class="aud-h">Define the core value</div><div class="aud-q">What is the primary result the user achieves with this version?</div><div class="resp-eg" style="margin-top:12px">Choose one clear outcome tied to your research. Anchoring scope in a single high-value outcome stops feature creep before development starts.</div></div><div class="aud-card" style="--ac:#34d399"><div class="aud-tag">Step 2</div><div class="aud-h">Map the essential flow</div><div class="aud-q">What is the shortest user path to reach that value?</div><div class="resp-eg" style="margin-top:12px">Map the “happy path”, the smallest number of steps. If a step isn’t 100% necessary to reach the goal, it doesn’t belong in the MVP.</div></div></div><div class="takeaway"><h4>Experience over interface</h4><p>Focus on the journey, not the feature list. Get the logic sound first, strip out polish and non-critical edge cases until design and engineering are aligned on a build that’s lean, functional, and ready for the real world.</p></div></div></section><section class="centered" data-title="Slicing the MVP with MoSCoW"><div class="inner"><span class="demo-tag tag-framework">The “cut to value” filter</span><h2>Slicing the MVP with MoSCoW</h2><p class="subtitle">Your MVP exists to provide value, not to impress with a deep feature list. A surgical way to slice scope: <strong>Must, Should, Could, Won’t</strong>.</p><div class="stage-grid"><div class="stage-card" style="--ac:#fbbf24"><div class="stage-kick">Step 01</div><div class="stage-name">Identify the nice-to-haves</div><div class="stage-li">Review your core flow and flag features that add polish but aren’t required to function. In MoSCoW, these are your <b>Could-Haves</b>.</div></div><div class="stage-card" style="--ac:#fb7185"><div class="stage-kick">Step 02</div><div class="stage-name">Apply the “kill” logic</div><div class="stage-li">Ask: “If we remove this, can the user still achieve the primary outcome?” If yes → <b>Won’t-Have</b> (now). If no → <b>Must-Have</b>.</div></div><div class="stage-card" style="--ac:#34d399"><div class="stage-kick">Step 03</div><div class="stage-name">Focus on the foundation</div><div class="stage-li">Everything you keep should exist only because it’s essential to the solution’s integrity. These <b>Should</b> and <b>Must-Haves</b> are your build scope.</div></div></div><div class="takeaway"><h4>The PM’s rule</h4><p>If a feature doesn’t directly enable the core outcome, it doesn’t belong in the first build. Stripping the non-essentials delivers a high-quality functional core instead of a wide, buggy mess.</p></div></div></section><section class="centered" data-title="Example · MoSCoW Scoping"><div class="inner"><span class="demo-tag tag-case">Example · Spotify Search Optimization</span><h2>MoSCoW scoping in action</h2><p class="subtitle">We already tagged Search Optimization a “Quick Win.” Now scope the actual build so it doesn’t suffer scope creep, slice the one initiative across four priority buckets.</p><div class="moscow"><div class="mos-card" style="--ac:#fb7185"><div class="mos-tag">Ship Blocker</div><div class="mos-name">Must-Have</div><div class="mos-eg"><b>Core Keyword Matching.</b> The engine must return accurate artists/songs for exact text. Without it, search is fundamentally broken.</div></div><div class="mos-card" style="--ac:#fbbf24"><div class="mos-tag">High Priority</div><div class="mos-name">Should-Have</div><div class="mos-eg"><b>Auto-Suggest / Typeahead.</b> Real-time suggestions as you type, high value for speed, but search still works via Enter without it.</div></div><div class="mos-card" style="--ac:#60a5fa"><div class="mos-tag">Next Sprint</div><div class="mos-name">Could-Have</div><div class="mos-eg"><b>Voice-to-Text Search.</b> Improves accessibility and hands-free UX, but minimal impact on the core retention goal vs. text accuracy.</div></div><div class="mos-card" style="--ac:#94a3b8"><div class="mos-tag">Backlog</div><div class="mos-name">Won’t-Have (Now)</div><div class="mos-eg"><b>Social Search (friends’ playlists).</b> High architectural complexity to index private data, out of scope to protect the core launch.</div></div></div><div class="takeaway"><h4>Highest value, shortest time</h4><p>Slicing a quick win this way means the team ships the highest-value core fast, even if the project looks “small.” The Won’t-Have label prevents late-stage arguments and keeps engineering focused.</p></div></div></section><section class="centered" data-title="Break"><div class="inner"><span class="demo-tag tag-break">Break · 5 min</span><h2 style="font-size:64px">Take a beat ☕</h2><p class="subtitle">Five-minute break, you’ve earned it.</p></div></section><section class="cameras-section" data-title="Cameras On"><div class="cameras-inner"><div class="cameras-layout"><div class="cameras-left"><img class="cameras-logo" src="../Design/Product-School-Logo.png" alt="Product School"><div class="cameras-card"><h2>Reminder! 🚨</h2><div class="cameras-arrow">→ Cameras On</div><p>It’s always better to see your smiling face. Be present and visible to stay engaged and keep interactions valuable.</p></div></div><div class="cameras-photo-strip"><img src="../Design/cameras-on.png" alt="Cameras On"></div></div></div></section><section class="section-break" data-title="From Product Requirements to Functional Prototype"><div class="section-break-inner"><div class="section-num">04</div><div class="lab-title">Section 04</div><div class="lab-name">From Product Requirements to Functional Prototype</div><div class="lab-desc">Your roadmap and scoping become the inputs for an AI-accelerated build. No more 50-page docs and a months-long wait, a lean PRD feeds a rapid validation loop that proves the logic in minutes.</div></div></section><section class="centered" data-title="The New Development Cycle"><div class="inner"><span class="demo-tag tag-framework">The new development cycle</span><h2>Simplified PRDs get rapid validation</h2><p class="subtitle">The build is moving away from “waterfall”, write a massive doc, wait months, into a rapid validation loop. You take Must-Have requirements, translate them into a Simplified PRD, and feed that into an AI prototyping tool to visualize the requirements instantly.</p><div style="margin:18px auto 0;max-width:760px"><svg viewBox="0 0 720 250" width="100%" role="img" aria-label="Rapid validation loop across Discover, Design, and Deliver phases" style="max-width:760px;font-family:'Poppins',sans-serif"><rect x="15" y="56" width="210" height="120" rx="14" fill="rgba(255,255,255,.03)" stroke="#60a5fa" stroke-width="1.2"/><text x="120" y="86" fill="#60a5fa" font-size="17" font-weight="800" text-anchor="middle">Discover</text><text x="120" y="110" fill="#e6ecf7" font-size="11.5" font-weight="700" text-anchor="middle">Hypothesis</text><text x="120" y="132" fill="#9aa6c0" font-size="10" text-anchor="middle">Bring data-backed hypothesis</text><text x="120" y="146" fill="#9aa6c0" font-size="10" text-anchor="middle">&amp; the “why.”</text><rect x="255" y="56" width="210" height="120" rx="14" fill="rgba(34,211,238,.10)" stroke="#22d3ee" stroke-width="2.5"/><text x="360" y="40" fill="#22d3ee" font-size="10.5" font-weight="800" letter-spacing=".08em" text-anchor="middle">▼ YOU ARE HERE</text><text x="360" y="86" fill="#22d3ee" font-size="17" font-weight="800" text-anchor="middle">Design</text><text x="360" y="110" fill="#e6ecf7" font-size="11.5" font-weight="700" text-anchor="middle">Simplified PRD → AI Prototype</text><text x="360" y="132" fill="#9aa6c0" font-size="10" text-anchor="middle">Prompt, test the build,</text><text x="360" y="146" fill="#9aa6c0" font-size="10" text-anchor="middle">update the PRD, repeat.</text><rect x="495" y="56" width="210" height="120" rx="14" fill="rgba(255,255,255,.03)" stroke="#34d399" stroke-width="1.2"/><text x="600" y="86" fill="#34d399" font-size="17" font-weight="800" text-anchor="middle">Deliver</text><text x="600" y="110" fill="#e6ecf7" font-size="11.5" font-weight="700" text-anchor="middle">Experiment → GTM Launch</text><text x="600" y="132" fill="#9aa6c0" font-size="10" text-anchor="middle">Validate live, then scale</text><text x="600" y="146" fill="#9aa6c0" font-size="10" text-anchor="middle">into market.</text><line x1="221" y1="116.0" x2="259" y2="116.0" stroke="#5f6f8c" stroke-width="2" marker-end="url(#m4arrow)"/><line x1="461" y1="116.0" x2="499" y2="116.0" stroke="#5f6f8c" stroke-width="2" marker-end="url(#m4arrow)"/><path d="M 430 176 C 456 230, 264 230, 290 176" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#m4arrow2)"/><text x="360" y="240" fill="#22d3ee" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'IBM Plex Mono',monospace">rapid validation loop</text><defs><marker id="m4arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5f6f8c"/></marker><marker id="m4arrow2" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#22d3ee"/></marker></defs></svg></div><div class="takeaway"><h4>Iterate in minutes, not sprints</h4><p>Prompt the tool, test the functional output, find the logic gaps, update the PRD, repeat until the logic is bulletproof. No waiting on engineering to validate. <em>(Want to go deep on prototyping? That’s the Vibe Coding Certification.)</em></p></div></div></section><section class="centered" data-title="Your Product Blueprint · The PRD"><div class="inner"><span class="demo-tag tag-framework">Your product blueprint</span><h2>The Product Requirements Document (PRD)</h2><p class="subtitle">A PRD is the central communication tool that aligns your team on the purpose, functionality, and success of a feature, a living blueprint that guides design and development.</p><div class="stage-grid"><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Centralizes the “Why”</div><div class="stage-li">One source of truth for the project background and goals, so an AI tool understands the Who, What, and Why immediately.</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Forces Clarity</div><div class="stage-li">Translates vague ideas into a concrete, vettable plan. If you can’t describe a flow in plain English, the AI will hallucinate the gaps.</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-name">Bridges the Gap</div><div class="stage-li">Moves the product from high-level strategy to technical execution, an iteration tool, not a hand-off document.</div></div></div><div class="takeaway"><h4>Remember</h4><p>PRDs are never “finished.” In the rapid loop the PRD <em>is</em> the functional prompt, you update it as you learn and re-run the loop, keeping your doc and your prototype perfectly synced.</p></div></div></section><section class="centered" data-title="The Evolution of a PRD"><div class="inner"><span class="demo-tag tag-framework">The evolution of a PRD</span><h2>Traditional vs. Simplified</h2><p class="subtitle">We aren’t throwing away the discipline of a PRD, we’re optimizing it for speed. The Traditional PRD aligns big teams over months. The Simplified PRD is your blueprint for the rapid validation loop. <span style="color:#6ee7b7">Green = new in the simplified build doc.</span></p><div class="prd-compare"><div class="prd-col trad"><div class="prd-head"><div class="prd-kick">Traditional PRD</div><div class="prd-title">The Alignment Doc</div></div><div class="prd-group"><div class="prd-gname" style="--gc:#94a3b8">The Big Picture</div><div class="prd-items">Overview &amp; Objectives · Target Persona · Success Metrics · Messaging</div></div><div class="prd-group"><div class="prd-gname" style="--gc:#94a3b8">The Details</div><div class="prd-items">User Scenarios for Eng · Functional Requirements · Design Assets &amp; Wireframes · User Stories</div></div><div class="prd-group"><div class="prd-gname" style="--gc:#94a3b8">The Logistics</div><div class="prd-items">Features In/Out · Timeline · Open Issues · Change History</div></div></div><div class="prd-col simp"><div class="prd-head"><div class="prd-kick">Simplified PRD</div><div class="prd-title">The Build Doc</div></div><div class="prd-group"><div class="prd-gname" style="--gc:#22d3ee">The Big Picture</div><div class="prd-items">Vision · <span class="new">Press Release</span> · Success Metrics</div></div><div class="prd-group"><div class="prd-gname" style="--gc:#22d3ee">The Details</div><div class="prd-items">User Stories · Functional Requirements · <span class="new">Smart Behaviors</span></div></div><div class="prd-group"><div class="prd-gname" style="--gc:#22d3ee">The Logistics</div><div class="prd-items">Features Out · <span class="new">Edge Cases</span> · Decision Log · <span class="new">Eval</span></div></div></div></div><div class="takeaway"><h4>Logic over logistics</h4><p>The <strong>Press Release</strong> defines user value in one punchy paragraph, a perfect high-level prompt. <strong>Smart Behaviors</strong> &amp; <strong>Edge Cases</strong> give the AI the rules to build correct logic. <strong>Light Eval</strong> defines how you measure if the AI output is actually accurate.</p></div></div></section><section class="centered" data-title="Example · From PRD to Prototype"><div class="inner"><span class="demo-tag tag-case">Example · PulseAI check-in copilot</span><h2>From PRD to prototype</h2><p class="subtitle">Every design decision in the working prototype traces directly to structured logic in the Simplified PRD. You’re coding the <em>behavior</em> of the prototype through structured language.</p><div class="proto-map"><div class="pm-row"><div class="pm-side logic"><div class="pm-label">PRD logic</div><div class="pm-text"><b>Vision → system prompt</b><br>“Eliminate failure guilt through empathetic dialogue.”</div></div><div class="pm-arrow">→</div><div class="pm-side ui"><div class="pm-label">UI tone</div><div class="pm-text">Tired user gets “Hey, that’s totally okay, rest IS training,” not a cold error.</div></div></div><div class="pm-row"><div class="pm-side logic"><div class="pm-label">PRD logic</div><div class="pm-text"><b>User Story → functional flow</b><br>On fatigue signal, acknowledge + offer two recovery options.</div></div><div class="pm-arrow">→</div><div class="pm-side ui"><div class="pm-label">Screen</div><div class="pm-text">Chat shows <b>Mobility Flow</b> + <b>De-stress Stretch</b> cards immediately.</div></div></div><div class="pm-row"><div class="pm-side logic"><div class="pm-label">PRD logic</div><div class="pm-text"><b>Smart Behavior → logic gate</b><br>“Don’t ask a follow-up, suggest immediately.”</div></div><div class="pm-arrow">→</div><div class="pm-side ui"><div class="pm-label">Bias to action</div><div class="pm-text">No clarifying questions; a default suggestion always beats a question.</div></div></div><div class="pm-row"><div class="pm-side logic"><div class="pm-label">PRD logic</div><div class="pm-text"><b>Safety Guard → hard constraint</b><br>If user mentions injury/pain, halt all suggestions.</div></div><div class="pm-arrow">→</div><div class="pm-side ui"><div class="pm-label">Safety screen</div><div class="pm-text">Navigates to the Safety screen, “Your safety comes first.”</div></div></div><div class="pm-row"><div class="pm-side logic"><div class="pm-label">PRD logic</div><div class="pm-text"><b>North Star → success metric</b><br>Consistency Rate; guardrail: response latency &lt; 1.5s.</div></div><div class="pm-arrow">→</div><div class="pm-side ui"><div class="pm-label">What counts</div><div class="pm-text">Success = completing <i>any</i> activity, even a 10-min stretch.</div></div></div></div><a class="lab-walkthrough" href="Module 4 - Sample PRD.html" target="_blank" rel="noopener" style="margin-top:18px">📄 Read the full sample Simplified PRD →</a></div></section><section class="centered" data-title="The Alignment Handshake"><div class="inner"><span class="demo-tag tag-framework">The alignment handshake</span><h2>Shopping the PRD &amp; prototype</h2><p class="subtitle">Your PRD and prototype are an alignment pair, never show one without the other. The PRD gives the reason and rules; the prototype gives the feeling and the flow. Use both to get a green light from your three key stakeholders.</p><div class="shake"><div class="shake-card" style="--ac:#60a5fa"><div class="shake-who">Gut-check the Manager 💼</div><div class="shake-do">Use the prototype to show how this moves department goals. If they don’t buy the <em>why</em>, the how doesn’t matter.</div><div class="shake-goal"><b>The goal</b>Secure a “green light” on the problem and success metrics before involving the broader team.</div></div><div class="shake-card" style="--ac:#22d3ee"><div class="shake-who">Consult the Eng Lead 🖥️</div><div class="shake-do">Stress-test your Smart Behaviors, how hard is this to ship in production? They’re your partners in scoping.</div><div class="shake-goal"><b>The goal</b>Find technical feasibility and simpler paths to the same functional logic.</div></div><div class="shake-card" style="--ac:#34d399"><div class="shake-who">Engage the Design Lead 🎨</div><div class="shake-do">Hand over a validated logic map, not a finished product. Show the happy path you’ve identified.</div><div class="shake-goal"><b>The goal</b>Transition from a functional logic map to a high-fidelity, user-centric experience.</div></div></div><div class="takeaway"><h4>React to a working model</h4><p>Shopping both pieces together moves you from abstract arguments to concrete decisions, you’re asking stakeholders to react to something real, not imagine it.</p></div></div></section><section class="section-break" data-title="Run a PRD-to-Prototype Rapid Validation Loop"><div class="section-break-inner"><div class="section-num">05</div><div class="lab-title">Hands-On Lab · 30 min</div><div class="lab-name">Run a PRD-to-Prototype Rapid Validation Loop</div><div class="lab-desc">Zoom into one “Now” feature from your Lab 1 roadmap. Scope its DNA with MoSCoW, write a Simplified PRD, and vibe-code a clickable prototype that proves your “moment of misery” solution works.</div></div></section><section class="centered" data-title="Lab · PRD-to-Prototype Sprint"><div class="inner"><div class="lab-timer">⏱ 30 min</div><span class="demo-tag tag-exercise">Individual Exercise</span><h2>Run a PRD-to-prototype rapid validation loop</h2><p class="subtitle">Select one high-priority “Now” feature and zoom in to define its internal DNA. Use MoSCoW to isolate the critical Must-Haves, convert them into a Simplified PRD, and feed it into a vibe-coding tool to output a functional, clickable prototype.</p><div class="flow-steps"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">🎯</div></div><div class="fs-title">Anchor your scope</div><div class="fs-text">Pick the top “Now” quick-win from your Lab 1 roadmap, the one feature that most directly kills your persona’s moment of misery.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">🔪</div></div><div class="fs-title">Scope with MoSCoW</div><div class="fs-text">Run the MoSCoW prompt in the same chat to categorize sub-features. Audit: is the Must-Have list actually lean enough to ship?</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">📄</div></div><div class="fs-title">Generate your Simplified PRD</div><div class="fs-text">Run the PRD prompt, it synthesizes your persona, metric, and finalized MoSCoW list into a build-ready blueprint.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">🤖</div></div><div class="fs-title">Prompt-to-prototype</div><div class="fs-text">Paste your PRD + builder hook into Lovable or Bolt. Focus on whether the core solution functions, not pixel-perfect polish.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">🔗</div></div><div class="fs-title">Ship a shareable link</div><div class="fs-text">Hit Share / Publish to get your prototype URL, you’ll add it to your final project repo.</div></div></div><div class="takeaway"><h4>A V1 is enough</h4><p>On a free tool tier you may run out of credits after a couple of prompts, that’s fine. Reference PRD sections by name when fixing issues (“Functional requirement 3 isn’t met…”) and prioritize a working flow over visual complexity.</p></div><div class="lab-links"><a class="lab-walkthrough" href="Module 4 - Exercise 2 Guide.html">📘 Open the Lab 2 guide &amp; prompts →</a><a class="lab-walkthrough alt" href="Module 4 - PRD Builder.html">🛠️ Open the interactive PRD Builder →</a></div></div></section><section class="centered" data-title="Quick Debrief"><div class="inner"><span class="demo-tag tag-debrief">Quick debrief · 2 min</span><h2>Your key learning statement</h2><p class="subtitle">In one sentence, unmute or post in <code>#cohort-channel</code>:</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:760px;margin:22px auto"><div class="ref-card"><div class="ref-num">💡</div><div class="ref-q">What was your biggest aha moment from the PRD-to-Prototype sprint, and what did you find <strong>most challenging</strong>?</div></div></div><div class="takeaway"><h4>What to listen for</h4><p>The win is realizing you <strong>no longer need to wait</strong> for design or engineering to bring an idea to life. You can prove the logic yourself, then bring partners a working model.</p></div></div></section><section class="centered" data-title="Key Takeaways"><div class="inner"><span class="demo-tag tag-complete">Key takeaways</span><h2>Module 4 in four lines</h2><div class="takeaway-list"><div class="takeaway-item"><p><strong>Roadmaps prioritize problems, not features.</strong> A strategic roadmap aligns the team on delivering continuous, validated value, scored on effort vs. value, not on who asked loudest.</p></div><div class="takeaway-item"><p><strong>Scoping prevents mission creep.</strong> Ruthlessly define the minimum viable requirements with MoSCoW, separate non-negotiables from enhancements to protect the launch timeline.</p></div><div class="takeaway-item"><p><strong>The Simplified PRD is a functional blueprint.</strong> Not a bureaucratic document, it bridges abstract strategy and technical execution to drive an automated build.</p></div><div class="takeaway-item"><p><strong>Rapid prototyping de-risks before you commit eng.</strong> AI loops turn theoretical requirements into clickable realities you can test, override, and align on in minutes.</p></div></div></div></section><section class="centered" data-title="Extra Practice &amp; Next Session"><div class="inner"><span class="demo-tag tag-debrief">Extra practice · Optional</span><h2>Dig deeper on your own</h2><div class="ep-grid"><div class="ep-card"><div class="ep-num">01</div><div class="ep-title">The “real-world” blueprint</div><div class="ep-desc">Apply the MoSCoW-to-PRD cycle to a live feature from your own backlog. Use the MoSCoW and Universal PRD prompts to generate a build-ready blueprint.</div></div><div class="ep-card"><div class="ep-num">02</div><div class="ep-title">Stress-test your prototype</div><div class="ep-desc">Return to your lab project and promote a “Should-Have” to “Must-Have.” Ask the AI to build a more complex flow to see how much of the product you can functionalize.</div></div></div><div class="next-arrow-bar"><div class="nab-meta">⏩ Next session · Module 5</div><div class="nab-title">Run Effective Product Experimentation</div><div class="nab-desc">Adopt an experimentation mindset that prioritizes rapid hypothesis testing over high-stakes gambles, master the mechanics of A/B testing to turn raw experiment data into decisive product actions: ship, kill, or iterate.</div></div><div class="takeaway"><h4>📍 Project deliverable check</h4><p>Add your <strong>Now / Next / Later roadmap</strong> and your <strong>clickable prototype link</strong> to your project repo, both come straight out of today’s labs.</p></div></div></section><section class="centered" data-title="Resources &amp; Templates"><div class="inner"><span class="demo-tag tag-lecture">Resources &amp; Templates</span><h2>Everything from today, in one place</h2><p class="subtitle">Deepen what we covered and feed your final-project deliverables.</p><div class="cards-grid" style="grid-template-columns:repeat(2,1fr);max-width:760px;margin-left:auto;margin-right:auto"><a class="card-item" href="../Final Project Brief.html" style="--card-accent:#22d3ee;text-decoration:none;display:block"><div class="card-icon">📋</div><div class="card-title">Final Project Brief &amp; Deliverables</div><div class="card-desc">The StreamLine / RouteLogic scenarios, repo template, and FAQs for your project.</div></a><a class="card-item" href="Product Management Repo Template.html" style="--card-accent:#2dd4bf;text-decoration:none;display:block"><div class="card-icon">🗄️</div><div class="card-title">Project Repo Template</div><div class="card-desc">Fork the template repo, README dashboard + one folder per module. Your M4 work lives in <code>04-roadmap/</code>.</div></a><a class="card-item" href="Module 4 - Exercise 1 Guide.html" style="--card-accent:#60a5fa;text-decoration:none;display:block"><div class="card-icon">🗺️</div><div class="card-title">Lab 1 Guide + Roadmap Builder</div><div class="card-desc">The full roadmap walkthrough, backlogs, scoring prompts, and the interactive Effort×Value → Now/Next/Later builder.</div></a><a class="card-item" href="Module 4 - Exercise 2 Guide.html" style="--card-accent:#34d399;text-decoration:none;display:block"><div class="card-icon">🛠️</div><div class="card-title">Lab 2 Guide + PRD Builder</div><div class="card-desc">MoSCoW + Simplified PRD prompts and the interactive PRD Builder that exports a build-ready blueprint.</div></a><a class="card-item" href="Module 4 - Example Roadmap.html" style="--card-accent:#a78bfa;text-decoration:none;display:block"><div class="card-icon">🕹️</div><div class="card-title">Example Roadmap &amp; Sample PRD</div><div class="card-desc">The high-velocity example roadmap and the PulseAI sample Simplified PRD for reference.</div></a><a class="card-item" href="Module 4 - Pre-Read.html" style="--card-accent:#fbbf24;text-decoration:none;display:block"><div class="card-icon">📖</div><div class="card-title">Pre-Read, Notes, Glossary &amp; Reference Card</div><div class="card-desc">A 10-minute primer plus shareable notes, the glossary, and the roadmap &amp; PRD reference card.</div></a></div></div></section><section class="centered" data-title="Q&amp;A"><div class="inner"><span class="demo-tag tag-activity">Q&amp;A</span><h2>Questions?</h2><p class="subtitle">A chance to dive deeper into anything we covered today. Async learners: drop your questions in <code>#cohort-channel</code> and the instructor responds in-thread.</p></div></section>
+<script>
+const sections = Array.from(document.querySelectorAll('section'));
+const navDotsContainer = document.getElementById('navDots');
+let currentIdx = 0;
+let sorterVisible = false;
+
+const STORAGE_KEY = 'skip-sections-' + document.title.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 60);
+const skippedSections = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+
+function saveSkips() { localStorage.setItem(STORAGE_KEY, JSON.stringify([...skippedSections])); }
+
+function applySkips() {
+  sections.forEach((sec, i) => sec.classList.toggle('skipped', skippedSections.has(i)));
+  rebuildDots();
+}
+
+function rebuildDots() {
+  navDotsContainer.innerHTML = '';
+  sections.forEach((sec, i) => {
+    if (skippedSections.has(i)) return;
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    const title = sec.dataset.title || 'Section';
+    dot.innerHTML = `<span class="tooltip">${title}</span>`;
+    dot.dataset.idx = i;
+    dot.onclick = () => sections[i].scrollIntoView({ behavior: 'smooth' });
+    navDotsContainer.appendChild(dot);
+  });
+}
+
+function getActiveSections() { return sections.map((s, i) => i).filter(i => !skippedSections.has(i)); }
+
+function updateProgress(idx) {
+  currentIdx = idx;
+  const active = getActiveSections();
+  const posInActive = active.indexOf(idx);
+  const progress = posInActive >= 0 ? (posInActive + 1) / active.length * 100 : 0;
+  document.getElementById('progressBar').style.width = progress + '%';
+  const dots = navDotsContainer.querySelectorAll('.nav-dot');
+  dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.idx) === idx));
+  document.getElementById('skip-badge').classList.toggle('visible', skippedSections.has(idx));
+}
+
+function toggleSkip(idx) {
+  if (skippedSections.has(idx)) skippedSections.delete(idx);
+  else skippedSections.add(idx);
+  saveSkips();
+  applySkips();
+  updateProgress(currentIdx);
+  if (sorterVisible) renderSorter();
+}
+
+function nextActive(from, dir) {
+  let i = from + dir;
+  while (i >= 0 && i < sections.length) {
+    if (!skippedSections.has(i)) return i;
+    i += dir;
+  }
+  return -1;
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const idx = sections.indexOf(entry.target);
+      updateProgress(idx);
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(sec => observer.observe(sec));
+
+function renderSorter() {
+  const grid = document.getElementById('sorter-grid');
+  grid.innerHTML = '';
+  sections.forEach((sec, i) => {
+    const isSkipped = skippedSections.has(i);
+    const isCurrent = i === currentIdx;
+    const div = document.createElement('div');
+    div.className = 'sorter-item' + (isSkipped ? ' sorter-skipped' : '') + (isCurrent ? ' sorter-active' : '');
+    const title = sec.dataset.title || 'Section';
+    div.innerHTML = `
+      <div class="sorter-num">Section ${i + 1}</div>
+      <div class="sorter-label">${title}</div>
+      <button class="sorter-skip-btn ${isSkipped ? 'skip-on' : 'skip-off'}"
+              onclick="event.stopPropagation(); toggleSkip(${i})">
+        ${isSkipped ? '↩ Unskip' : '⊘ Skip'}
+      </button>`;
+    div.addEventListener('click', () => { sections[i].scrollIntoView({ behavior: 'smooth' }); closeSorter(); });
+    grid.appendChild(div);
+  });
+}
+function openSorter() { sorterVisible = true; renderSorter(); document.getElementById('slide-sorter').classList.add('visible'); }
+function closeSorter() { sorterVisible = false; document.getElementById('slide-sorter').classList.remove('visible'); }
+
+document.getElementById('skip-badge').addEventListener('click', () => toggleSkip(currentIdx));
+
+document.addEventListener('keydown', (e) => {
+  if (sorterVisible) {
+    if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') { e.preventDefault(); closeSorter(); }
+    return;
+  }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, 1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, -1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'k' || e.key === 'K') { toggleSkip(currentIdx); }
+  else if (e.key === 'm' || e.key === 'M') { openSorter(); }
+});
+
+applySkips();
+sections[0].classList.add('visible');
+</script>
+<!-- deck-sync: links an instructor deck with its (Shareable) twin in the same browser -->
+<script>
+/* Presenter sync: same-browser, same-module instructor + (Shareable) decks scroll
+   together, so notes can be read privately while the clean deck is screen-shared.
+   Deck-agnostic and self-contained; does nothing if no peer window is open. */
+(function () {
+  if (!('BroadcastChannel' in window)) return;
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section'));
+  if (sections.length < 2) return;
+  var path = location.pathname;
+  var dir = path.slice(0, path.lastIndexOf('/'));
+  var name = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1))
+    .replace(/\.html?$/i, '')
+    .replace(/\(shareable\)/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  var ch;
+  try { ch = new BroadcastChannel('deck-sync::' + dir + '::' + name); }
+  catch (e) { return; }
+  var current = 0, suppressUntil = 0, raf = 0;
+  function currentIndex() {
+    var mid = window.innerHeight / 2, best = 0, bestDist = Infinity;
+    for (var i = 0; i < sections.length; i++) {
+      var r = sections[i].getBoundingClientRect();
+      if (r.bottom <= 0 || r.top >= window.innerHeight) continue;
+      var d = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (d < bestDist) { bestDist = d; best = i; }
+    }
+    return best;
+  }
+  window.addEventListener('scroll', function () {
+    if (raf) return;
+    raf = requestAnimationFrame(function () {
+      raf = 0;
+      if (Date.now() < suppressUntil) return;
+      var idx = currentIndex();
+      if (idx !== current) { current = idx; ch.postMessage({ t: 'goto', i: idx }); }
+    });
+  }, { passive: true });
+  ch.onmessage = function (e) {
+    var m = e.data || {};
+    if (m.t === 'hello') { ch.postMessage({ t: 'goto', i: current }); return; }
+    if (m.t === 'goto' && typeof m.i === 'number' && m.i !== current) {
+      current = Math.max(0, Math.min(sections.length - 1, m.i));
+      suppressUntil = Date.now() + 900;
+      var el = sections[current];
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+  setTimeout(function () { current = currentIndex(); ch.postMessage({ t: 'hello' }); }, 300);
+})();
+</script>
+</body>
+</html>

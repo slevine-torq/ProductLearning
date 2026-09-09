@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<!-- Built from _TASK-TEMPLATE-TIERED.html. Tokens inlined, not @import'ed.
+     #43A8FF is 2.5:1 on white — rules, dividers and gradient stops only, never text. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What tier am I? — Technical Fluency for Transform Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CANONICAL TOKENS — do not edit values ===== */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient: linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* DERIVED — canonical dark-ink at alpha, not new brand hexes.
+     The kit has no muted-text token; muted passes 5.3:1 on white. */
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+/* ===== A11Y (required — do not remove) ===== */
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+/* ===== LAYOUT + HERO ===== */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* ===== TABLES ===== */
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th { font-weight: 700; color: var(--torq-dark-ink); border-bottom: 2px solid var(--torq-blue); }
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 22%; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* ===== CALLOUT (regulated-client note, key framing) ===== */
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+
+/* ===== TAKEAWAYS (every Task ends with these) ===== */
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ===== TIER READS (required — every Task carries one) =====
+   Three labeled reads, all visible, never gated. The sky-blue rule
+   between tiers is a DIVIDER, never text — #43A8FF is 2.5:1 on white
+   and fails for type. Labels use #2D53F2 (5.8:1). */
+.tiers {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  overflow: hidden;
+  margin: var(--sp-6) 0;
+}
+.tiers-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+}
+.tiers-head .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-1);
+}
+.tiers-head p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.tier { padding: var(--sp-4) var(--sp-6); border-top: 2px solid var(--torq-sky-blue); }
+.tier:first-of-type { border-top: 0; }
+.tier .tier-label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.tier p { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+.tier p:last-child { margin-bottom: 0; }
+.tier .move { display: block; margin-top: var(--sp-2); color: var(--ink-muted); }
+.tier .move b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ============================================================
+   OPTIONAL COMPONENTS — delete any you don't use.
+   ============================================================ */
+
+/* OPTIONAL · numbered list with big numerals (skill stacks, step lists) */
+.numbered { list-style: none; margin: var(--sp-4) 0 0; padding: 0; counter-reset: sk; }
+.numbered li {
+  counter-increment: sk; position: relative;
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.numbered li:first-child { border-top: 0; }
+.numbered li::before {
+  content: counter(sk);
+  position: absolute; left: 0; top: var(--sp-4);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+.numbered .name { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+
+/* OPTIONAL · plain divided list (definitions, lenses, checks) */
+.plain-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.plain-list li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); }
+.plain-list li:first-child { border-top: 0; padding-top: 0; }
+.plain-list b { color: var(--torq-dark-ink); }
+
+/* OPTIONAL · formula box (fill-in-the-blank sentence patterns) */
+.formula {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0;
+  box-shadow: var(--torq-shadow);
+  font-size: var(--fs-lg); font-weight: 600; line-height: 1.6;
+}
+.formula .tag {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  color: var(--torq-blue); background: var(--torq-soft-bg);
+  padding: 2px 8px; border-radius: 6px; margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · not-this / this comparison */
+.compare { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.compare li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); font-size: var(--fs-sm); }
+.compare li:first-child { border-top: 0; }
+.compare .bad, .compare .good { display: block; }
+.compare .bad { color: var(--ink-muted); }
+.compare .bad::before {
+  content: "Not this"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-red); margin-right: var(--sp-2);
+}
+.compare .good { margin-top: var(--sp-2); font-weight: 600; }
+.compare .good::before {
+  content: "This"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-green); margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · copyable prompt block (AI exercises) */
+.prompt { background: var(--torq-dark-ink); padding: var(--sp-4) var(--sp-6); position: relative; }
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono); font-size: var(--fs-sm);
+  color: #E8EFFF; line-height: 1.7; white-space: pre-wrap;
+  word-break: break-word; display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22); border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3); min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+
+/* OPTIONAL · bordered example / stage card */
+.card {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow); padding: var(--sp-6); margin-bottom: var(--sp-4);
+}
+.card .kicker {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.card .example {
+  background: var(--torq-soft-bg); border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.card .example b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* OPTIONAL · dashed optional-extra box */
+.optional {
+  border: 1px dashed var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-6) 0 0;
+}
+.optional .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-2);
+}
+
+/* ===== RESPONSIVE / MOTION / PRINT ===== */
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .card, .formula, .tiers { box-shadow: none; break-inside: avoid; }
+  .tier { break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Technical Fluency &middot; Course 0 &middot; Task&nbsp;2&nbsp;of&nbsp;4</p>
+    <h1>What tier am I?</h1>
+    <p class="standfirst">Three dials &mdash; scope, autonomy, impact &mdash; that place you honestly, and one thing the tier model is not.</p>
+    <div class="meta">
+      <span><b>Course</b> Before You Start</span>
+      <span><b>Read time</b> ~8 min</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Every task in this program presents three tier reads, so it's worth ten minutes to know which one is yours. Tiers here don't split on years served or on a checklist of skills &mdash; they split on <b>what the client sees you produce and defend.</b></p>
+
+  <section id="client-room">
+    <h2>What the client room asks of each tier</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Roles</th><th scope="col">What the client room asks of them</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Tier 1</th><td>Associate / Sr. Associate</td><td>Produces the artifact. Someone else defends it. Needs to not be the bottleneck in week one.</td></tr>
+          <tr><th scope="row">Tier 2</th><td>Consultant / Sr. Consultant</td><td>Owns a workstream end to end. Writes the spec, defends the roadmap, runs the readout, survives the client's pushback in the room.</td></tr>
+          <tr><th scope="row">Tier 3</th><td>Principal / AD / Director</td><td>Shapes the engagement. Scopes it, sells the next phase, sponsors the deliverable, carries the risk and the money conversation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="dials">
+    <h2>The three dials</h2>
+    <p>That table is a description. These are the dials underneath it &mdash; the same conclusion <i>Cracking the PM Career</i> (Bavaro &amp; McDowell) reaches independently: <b>level is set by scope, autonomy, and impact, not by a checklist of demonstrable skills.</b></p>
+    <ul class="plain-list">
+      <li><b>Scope</b> &mdash; how big the territory is, and how much of it arrives undefined.</li>
+      <li><b>Autonomy</b> &mdash; how much support you need to get through that territory.</li>
+      <li><b>Impact</b> &mdash; what came out the other end, and what it changed.</li>
+    </ul>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Scope</th><th scope="col">Autonomy</th><th scope="col">Impact</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Tier 1</th><td>A defined slice, with the hard questions already settled by someone else</td><td>Runs on supplied rails &mdash; a template to follow and a reviewer before it ships</td><td>The deliverable is correct and lands on schedule</td></tr>
+          <tr><th scope="row">Tier 2</th><td>A whole workstream, unsettled parts included</td><td>Given an objective rather than instructions, and holds the output up under client pushback</td><td>Something the client was going to do got done differently</td></tr>
+          <tr><th scope="row">Tier 3</th><td>The engagement itself &mdash; its boundaries and what it costs</td><td>Draws the lines other people work within; the person the client negotiates with</td><td>The relationship grew, or how the client operates changed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note">The dials often disagree, and that's the useful part. Full autonomy on a scope someone handed you is a real, common position &mdash; and it tells you which dial is lagging.</p>
+  </section>
+
+  <section id="not-depth">
+    <h2>Tier 3 is not a deeper technical level</h2>
+    <p>This is the misreading that would break the rest of the program, so it's worth being blunt about. Tier 3 does <b>not</b> mean more engineering depth than Tier 2. A Principal reading a client's architecture is working from the <em>same</em> facts a Senior Consultant has &mdash; they are attaching a different question to them.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">Given the same fact</th><th scope="col">Tier 2 asks</th><th scope="col">Tier 3 asks</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">"We're on a Java monolith, no CI/CD."</th><td>What does that do to release cadence, and what would it take to change?</td><td>What does that do to the estimate, the hiring plan, and what phase two can credibly promise?</td></tr>
+          <tr><th scope="row">"Everything goes through one vendor's API."</th><td>What breaks if it's slow or down, and is there a fallback?</td><td>What's the lock-in, the renewal leverage, and who carries that risk in the SOW?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note"><b>A different axis, not a higher one.</b> Neither Tier 3 column requires knowing more about the JVM than the Tier 2 column does. It means connecting the same L3 facts to money, time, and risk. If you ever find yourself thinking "I'll get the commercial read once I'm technical enough," that's the misreading talking &mdash; the commercial read is a separate thing to learn, and you can start on it now.</p>
+  </section>
+
+  <section id="promotion">
+    <h2>How the dials move</h2>
+    <p>The mechanism that follows: <b>you reach the next tier by demonstrating autonomy and impact at your current scope</b>, which earns the trust to be handed a larger one. Not by collecting skills off a rubric. Scope is granted; autonomy and impact are demonstrated. That's why waiting for a bigger scope to prove you deserve a bigger scope goes nowhere.</p>
+  </section>
+
+  <div class="callout">
+    <span class="label">One level up:</span>
+    <p>Scoping this into a phased SOW is usually an AD/Director call rather than yours. Knowing how the decision gets made is what lets you feed it good input now &mdash; and make it yourself later.</p>
+  </div>
+
+  <!-- ===== TIER READS — required on every Task. Never gate or collapse. ===== -->
+  <section id="tiers">
+    <h2>The same content, read three ways</h2>
+    <div class="tiers">
+      <div class="tiers-head">
+        <span class="label">All three reads, always visible</span>
+        <p>Find yours, then read the other two anyway &mdash; that's how you know what the conversation above you sounds like.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 1 &mdash; a level deeper</span>
+        <p>Place yourself honestly, then read the Tier 2 column as a description of the job you're moving toward &mdash; not as a verdict on you. Most consultants underplace themselves on impact because they're counting deliverables rather than decisions changed.</p>
+        <p class="move"><b>The move:</b> ask your lead which dial they'd move first if it were their call.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 2 &mdash; the trade-off you can discuss</span>
+        <p>Check the dials against your current staffing, not your title. Being handed a pre-scoped slice on one engagement and owning ambiguity on the next is normal, and the tier that matters is the one this engagement is asking for this week.</p>
+        <p class="move"><b>The move:</b> name the ambiguity you're carrying out loud, so the client knows it's owned.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 3 &mdash; strategic &amp; risk read</span>
+        <p>The dials are a staffing instrument. Reading them across a team tells you who can be left alone with an ambiguous workstream and who needs the scope cut cleaner &mdash; which is a delivery-risk question before it's a development one.</p>
+        <p class="move"><b>The move:</b> staff against the autonomy dial rather than the rate card.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Tiers split on what the client sees you produce and defend.</b> Not years served, not a skills checklist.</li>
+      <li><b>Scope, autonomy, impact are the three dials.</b> They frequently disagree, and the disagreement is the useful signal.</li>
+      <li><b>Tier 3 is not a deeper technical level than Tier 2.</b> Same facts, attached to money, time, and risk &mdash; a different axis.</li>
+      <li><b>You don't need to be "technical enough" to start the commercial read.</b> It's a separate thing to learn, available now.</li>
+      <li><b>Scope is granted; autonomy and impact are demonstrated.</b> Which is why you move by proving them at the scope you already have.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 3 &mdash; What moving up takes.</p>
+    <p>Technical Fluency for Transform Practice &middot; Course 0: Before You Start</p>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hypothesis Builder, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', sans-serif; background: #07162C; color: #ffffff; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  strong { color: #fff; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 7px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 36px 26px 120px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 32px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 16px; }
+  h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 900; color: #fff; line-height: 1.12; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  .lead { font-size: 16px; color: #ffffff; max-width: 760px; margin: 16px 0 4px; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 12px; margin: 26px 0 8px; }
+  .pbar { flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .pfill { height: 100%; width: 0%; background: linear-gradient(90deg, #0e7490, #22d3ee); transition: width .35s ease; }
+  .pcount { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; white-space: nowrap; }
+
+  .card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px 26px; margin: 18px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 12px; color: #07162C; background: var(--acc, #22d3ee); padding: 4px 11px; border-radius: 999px; }
+  .card-head h2 { font-size: 19px; color: #fff; }
+  .card > p.hint { font-size: 13.5px; color: #ffffff; margin: 2px 0 14px; }
+
+  .field { margin: 16px 0; }
+  .field label { display: block; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; color: #ffffff; margin-bottom: 7px; }
+  .field .sub { font-weight: 400; color: #ffffff; font-size: 12.5px; }
+  textarea, input[type=text] { width: 100%; background: rgba(8,18,36,0.7); border: 1px solid rgba(96,165,250,0.22); border-radius: 10px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 14.5px; padding: 12px 14px; resize: vertical; transition: border-color .2s; }
+  textarea:focus, input[type=text]:focus { outline: none; border-color: #22d3ee; }
+  textarea { min-height: 64px; }
+  .iftf-grid { display: grid; grid-template-columns: 150px 1fr; gap: 10px; align-items: center; }
+  .iftf-grid .k { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 12px; color: #22d3ee; }
+  @media (max-width: 640px) { .iftf-grid { grid-template-columns: 1fr; } .iftf-grid .k { margin-top: 6px; } }
+
+  .opts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .opt { flex: 1; min-width: 130px; }
+  .opt input { position: absolute; opacity: 0; }
+  .opt label { display: block; text-align: center; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; color: #ffffff; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 11px 10px; transition: all .2s; margin: 0; }
+  .opt input:checked + label { color: #fff; border-color: var(--acc, #22d3ee); background: rgba(34,211,238,0.14); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+  .opt label small { display:block; font-weight:400; font-size:11px; color:#ffffff; margin-top:3px; }
+  .opt input:checked + label small { color:#bfeefc; }
+
+  .preview { background: linear-gradient(160deg, rgba(34,211,238,0.08), rgba(7,22,44,0.5)); border: 1px solid rgba(34,211,238,0.3); border-radius: 16px; padding: 22px 24px; margin: 22px 0; }
+  .preview h3 { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #22d3ee; margin-bottom: 12px; }
+  .preview .pv-line { font-size: 15px; color: #ffffff; line-height: 1.6; margin-bottom: 12px; }
+  .preview .pv-line:last-child { margin-bottom: 0; }
+  .preview .pv-line b { color: #fff; }
+  .preview .pv-empty { color: #ffffff; font-style: italic; }
+  .pv-statement { font-size: 16px; color: #ffffff; line-height: 1.7; background: rgba(8,18,36,0.45); border: 1px solid rgba(34,211,238,0.22); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .pv-statement b { color: #22d3ee; }
+
+  .toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 16px; margin: 26px -26px -120px; background: linear-gradient(0deg, #07162C 70%, transparent); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s; }
+  .btn-primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .btn-alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; align-self: center; opacity: 0; transition: opacity .3s; }
+  .saved.show { opacity: 1; }
+  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="#" class="back-link" role="button" aria-label="Go back to the previous page" data-ps-qa-back onclick="if(history.length>1){history.back();}return false;">← Back</a>
+      <a href="Module 3 - Exercise Guide.html" class="back-link">← Exercise guide</a>
+    </div>
+    <a href="Module 3 - Slides (Shareable).html" class="back-link">Module 3 deck →</a>
+  </div>
+
+  <span class="section-label">Module 3 · Interactive Builder</span>
+  <h1>Hypothesis <span>Builder</span></h1>
+  <p class="lead">Reconcile your qualitative evidence (M1 &amp; M2) with the quantitative data you analysed today, then assemble a formal, data-backed hypothesis, with a success metric, a guardrail, and a decision window. Everything autosaves to this browser; when you’re done, copy or download it as Markdown for your project repo (03-analytics/).</p>
+
+  <div class="progress-wrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 6 complete</div>
+  </div>
+
+  <!-- SCENARIO -->
+  <div class="card" style="--acc:#22d3ee;">
+    <div class="card-head"><span class="badge">Step 1 · Path</span><h2>Your project path</h2></div>
+    <p class="hint">Use the same scenario you committed to in Modules 1 &amp; 2, every lab builds on it.</p>
+    <div class="field">
+      <div class="opts" data-radio="scenario" style="--acc:#22d3ee;">
+        <span class="opt"><input type="radio" name="scenario" id="s-sl" value="StreamLine Spotlight (B2C)"><label for="s-sl">StreamLine · B2C</label></span>
+        <span class="opt"><input type="radio" name="scenario" id="s-rl" value="RouteLogic Velocity (B2B)"><label for="s-rl">RouteLogic · B2B</label></span>
+        <span class="opt"><input type="radio" name="scenario" id="s-own" value="My own initiative"><label for="s-own">My own initiative</label></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BET TYPE -->
+  <div class="card" style="--acc:#60a5fa;">
+    <div class="card-head"><span class="badge">Step 2 · Bet</span><h2>Where is your bet?</h2></div>
+    <p class="hint">This dictates the metrics you chase, and stops you measuring a blue-sky idea with optimization expectations.</p>
+    <div class="field">
+      <div class="opts" data-radio="bettype" style="--acc:#60a5fa;">
+        <span class="opt"><input type="radio" name="bettype" id="b-opt" value="Optimizing the existing"><label for="b-opt">Optimizing the existing<small>fix friction · chase Retention / Conversion</small></label></span>
+        <span class="opt"><input type="radio" name="bettype" id="b-blue" value="Exploring the blue sky"><label for="b-blue">Exploring the blue sky<small>prove new value · chase Activation</small></label></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVIDENCE -->
+  <div class="card" style="--acc:#fbbf24;">
+    <div class="card-head"><span class="badge">Step 3 · Evidence</span><h2>Reconcile qual + quant</h2></div>
+    <p class="hint">Anchor the bet in proof: the qualitative pain you found, confirmed (or pivoted) by a hard number.</p>
+    <div class="field">
+      <label>Qualitative evidence <span class="sub">, quote the friction / moment of misery from your M2 persona</span></label>
+      <textarea data-k="ev_qual" placeholder="“…”, from the interviews / research"></textarea>
+    </div>
+    <div class="field">
+      <label>Quantitative evidence <span class="sub">, the metric or data point that confirms it; cite the number</span></label>
+      <textarea data-k="ev_quant" placeholder="e.g. “only 11% reach 30+ min sessions, down from 19%”"></textarea>
+    </div>
+  </div>
+
+  <!-- PERSONA + PROBLEM -->
+  <div class="card" style="--acc:#34d399;">
+    <div class="card-head"><span class="badge">Step 4 · Persona &amp; problem</span><h2>Who, and what you’re solving</h2></div>
+    <p class="hint">The exact persona you confirmed in the reconciliation steps, and the single friction this initiative removes.</p>
+    <div class="field">
+      <div class="iftf-grid">
+        <span class="k">ROLE (WHO)</span><input type="text" data-k="role" placeholder="the specific user segment you’re solving for">
+        <span class="k">GOAL</span><input type="text" data-k="goal" placeholder="what they’re ultimately trying to achieve">
+        <span class="k">FRICTION</span><input type="text" data-k="friction" placeholder="the confirmed pain blocking that goal">
+      </div>
+    </div>
+    <div class="field">
+      <label>Problem you are solving <span class="sub">, one sentence describing the specific friction the initiative removes</span></label>
+      <textarea data-k="problem" placeholder="Solving X, the friction this bet eliminates…"></textarea>
+    </div>
+  </div>
+
+  <!-- OUTCOME + METRICS -->
+  <div class="card" style="--acc:#a78bfa;">
+    <div class="card-head"><span class="badge">Step 5 · Outcome &amp; metrics</span><h2>Define the win, and the guardrail</h2></div>
+    <p class="hint">The behaviour change you expect, the leading indicator that proves it, the metric that must not drop, and your decision window.</p>
+    <div class="field">
+      <label>Strategic outcome <span class="sub">, the behaviour change; how it maps to retention / revenue / churn</span></label>
+      <textarea data-k="outcome" placeholder="e.g. reduced setup friction → higher 7-day onboarding completion"></textarea>
+    </div>
+    <div class="field">
+      <label>Primary success metric <span class="sub">, the leading indicator + a target % change</span></label>
+      <input type="text" data-k="success" placeholder="e.g. +25% in 7-day onboarding completion rate">
+    </div>
+    <div class="field">
+      <label>Guardrail metric <span class="sub">, the number that must NOT drop; it protects your base</span></label>
+      <input type="text" data-k="guardrail" placeholder="e.g. integration error rate must not increase">
+    </div>
+    <div class="field">
+      <label>Decision window <span class="sub">, how much time / data before you scale, pivot, or kill</span></label>
+      <input type="text" data-k="window" placeholder="e.g. 4 weeks, or 2 full cohorts">
+    </div>
+  </div>
+
+  <!-- LIVE PREVIEW -->
+  <div class="preview">
+    <h3>📄 Your slide 1, live preview</h3>
+    <div class="pv-statement" id="pv-statement"><span class="pv-empty">your hypothesis statement will assemble here as you fill in the fields…</span></div>
+    <div class="pv-line"><b>Bet type:</b> <span id="pv-bettype" class="pv-empty">choose above…</span></div>
+    <div class="pv-line"><b>Evidence:</b> <span id="pv-evidence" class="pv-empty">qual + quant proof…</span></div>
+    <div class="pv-line"><b>Success metric:</b> <span id="pv-success" class="pv-empty">your leading indicator…</span></div>
+    <div class="pv-line"><b>Guardrail:</b> <span id="pv-guardrail" class="pv-empty">what must not drop…</span></div>
+    <div class="pv-line"><b>Decision window:</b> <span id="pv-window" class="pv-empty">scale / pivot / kill after…</span></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="copyMd()">📋 Copy as Markdown</button>
+    <button class="btn btn-alt" onclick="downloadMd()">⬇ Download .md</button>
+    <button class="btn btn-alt" onclick="resetAll()">↺ Reset</button>
+    <span class="saved" id="saved">✓ Saved</span>
+  </div>
+</div>
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+const KEY = 'pm-m3-hypothesis-builder';
+const fields = Array.from(document.querySelectorAll('[data-k]'));
+const radios = Array.from(document.querySelectorAll('[data-radio]'));
+
+function load() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  fields.forEach(f => { if (data[f.dataset.k] != null) f.value = data[f.dataset.k]; });
+  radios.forEach(g => {
+    const name = g.dataset.radio;
+    if (data['_' + name]) {
+      const el = g.querySelector(`input[value="${CSS.escape(data['_' + name])}"]`);
+      if (el) el.checked = true;
+    }
+  });
+  render();
+}
+
+function gather() {
+  const data = {};
+  fields.forEach(f => data[f.dataset.k] = f.value);
+  radios.forEach(g => {
+    const sel = g.querySelector('input:checked');
+    data['_' + g.dataset.radio] = sel ? sel.value : '';
+  });
+  return data;
+}
+
+let savedTimer;
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(gather()));
+  const s = document.getElementById('saved');
+  s.classList.add('show');
+  clearTimeout(savedTimer);
+  savedTimer = setTimeout(() => s.classList.remove('show'), 1200);
+  render();
+}
+
+const esc = s => (s || '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+
+function render() {
+  const d = gather();
+  const evidenceDone = d.ev_qual && d.ev_quant;
+  const personaDone = d.role && d.goal && d.friction && d.problem;
+  const metricsDone = d.outcome && d.success && d.guardrail && d.window;
+  const checks = [d._scenario, d._bettype, evidenceDone, personaDone, metricsDone, (d.success && d.outcome)];
+  const done = checks.filter(Boolean).length;
+  const total = checks.length;
+  document.getElementById('pfill').style.width = (done / total * 100) + '%';
+  document.getElementById('pcount').textContent = done + ' / ' + total + ' complete';
+
+  const set = (id, val, fallback) => {
+    const el = document.getElementById(id);
+    if (val && val.trim()) { el.textContent = val.trim(); el.classList.remove('pv-empty'); }
+    else { el.textContent = fallback; el.classList.add('pv-empty'); }
+  };
+
+  // assembled hypothesis statement
+  const personaTxt = d.role ? d.role : '[persona]';
+  const ph = x => `<b>${esc(x)}</b>`;
+  const stEl = document.getElementById('pv-statement');
+  const anyFilled = d.ev_qual || d.ev_quant || d.problem || d.outcome || d.success || d.guardrail || d.window || d.role;
+  if (anyFilled) {
+    const evidence = (d.ev_quant || d.ev_qual) ? `${esc(d.ev_quant || d.ev_qual)}` : '[evidence]';
+    stEl.innerHTML = `Based on ${ph(evidence)}, we believe that solving ${ph(d.problem || '[problem X]')} ` +
+      `for ${ph(personaTxt)} will result in ${ph(d.outcome || '[strategic outcome]')}, as measured by ` +
+      `${ph(d.success || '[% change in success metric]')}. We will protect ${ph(d.guardrail || '[guardrail metric]')} ` +
+      `and make a go/no-go decision after ${ph(d.window || '[decision window]')}.`;
+    stEl.classList.remove('pv-empty');
+  } else {
+    stEl.innerHTML = '<span class="pv-empty">your hypothesis statement will assemble here as you fill in the fields…</span>';
+  }
+
+  set('pv-bettype', d._bettype, 'choose above…');
+  let ev = '';
+  if (d.ev_qual || d.ev_quant) ev = `${d.ev_qual || '[qual]'} · ${d.ev_quant || '[quant]'}`;
+  set('pv-evidence', ev, 'qual + quant proof…');
+  set('pv-success', d.success, 'your leading indicator…');
+  set('pv-guardrail', d.guardrail, 'what must not drop…');
+  set('pv-window', d.window, 'scale / pivot / kill after…');
+}
+
+function md() {
+  const d = gather();
+  const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+  const persona = d.role ? d.role : '[persona]';
+  const statement = `Based on ${v(d.ev_quant || d.ev_qual)}, we believe that solving ${v(d.problem)} for ${persona} ` +
+    `will result in ${v(d.outcome)}, as measured by ${v(d.success)}. We will protect ${v(d.guardrail)} ` +
+    `and make a go/no-go decision after ${v(d.window)}.`;
+  return `# Data-Backed Hypothesis, Module 3
+
+- **Scenario:** ${v(d._scenario)}
+- **Bet type:** ${v(d._bettype)}
+
+## The hypothesis
+> ${statement}
+
+## Evidence
+- **Qualitative (M2):** ${v(d.ev_qual)}
+- **Quantitative (M3):** ${v(d.ev_quant)}
+
+## Persona & problem
+- **Role:** ${v(d.role)}
+- **Goal:** ${v(d.goal)}
+- **Friction:** ${v(d.friction)}
+- **Problem you are solving:** ${v(d.problem)}
+
+## Outcome & metrics
+- **Strategic outcome:** ${v(d.outcome)}
+- **Primary success metric:** ${v(d.success)}
+- **Guardrail metric:** ${v(d.guardrail)}
+- **Decision window:** ${v(d.window)}
+`;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+async function copyMd() {
+  try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+  catch (e) { toast('Copy failed, try download'); }
+}
+
+function downloadMd() {
+  const blob = new Blob([md()], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'hypothesis-and-metrics.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Downloaded hypothesis-and-metrics.md ✓');
+}
+
+function resetAll() {
+  if (!confirm('Clear everything in this builder?')) return;
+  localStorage.removeItem(KEY);
+  fields.forEach(f => f.value = '');
+  radios.forEach(g => g.querySelectorAll('input').forEach(i => i.checked = false));
+  render();
+  toast('Builder reset');
+}
+
+fields.forEach(f => f.addEventListener('input', save));
+radios.forEach(g => g.addEventListener('change', save));
+load();
+</script>
+</body>
+</html>

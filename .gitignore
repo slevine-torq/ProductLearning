@@ -1,0 +1,19 @@
+# Operating-system and editor artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+~$*
+
+# Tool-local configuration and caches
+**/.claude/settings.local.json
+.codex/
+.cursor/
+.cache/
+
+# Generated validation and bootstrap scratch directories
+.validation-work/
+
+# Nested repositories are never source material
+**/.git/

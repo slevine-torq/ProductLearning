@@ -1,0 +1,234 @@
+<title>Torq Product Practice Fact Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-status-green: #00B050;
+  --torq-hero-gradient: linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --bg:         #FFFFFF;
+  --bg-raised:  var(--torq-soft-bg);
+  --text:       var(--torq-dark-ink);
+  --text-muted: rgba(16,33,61,0.66);
+  --text-faint: rgba(16,33,61,0.44);
+  --border:     var(--torq-border-gray);
+  --accent:     var(--torq-blue);
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: #E9EDF5;
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+p { margin: 0; }
+a { color: var(--accent); }
+
+/* ---------- On-screen stage: centers the fixed 8.5x11 sheet ---------- */
+.page-stage { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; }
+.sheet {
+  width: 816px; height: 1056px; flex: 0 0 auto;
+  background: var(--bg); box-shadow: 0 4px 16px rgba(16,33,61,0.10), 0 24px 56px rgba(16,33,61,0.14);
+  padding: 46px 50px 40px;
+  display: flex; flex-direction: column;
+}
+
+/* ---------- Masthead ---------- */
+.masthead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.masthead .eyebrow { display: flex; align-items: center; gap: 7px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.masthead .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.masthead h1 { font-size: 25px; margin-bottom: 3px; }
+.masthead .subtitle { font-size: 12.5px; color: var(--text-muted); font-weight: 500; }
+.meta-block { text-align: right; font-size: 10px; color: var(--text-faint); font-weight: 600; line-height: 1.6; white-space: nowrap; padding-top: 2px; }
+.meta-block b { color: var(--text-muted); font-weight: 700; }
+.masthead-rule { height: 2.5px; background: var(--torq-hero-gradient); margin-bottom: 16px; }
+
+/* ---------- Governing thought ---------- */
+.thesis {
+  background: var(--bg-raised); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  padding: 11px 16px; font-size: 12.5px; line-height: 1.5; color: var(--text); margin-bottom: 18px;
+}
+.thesis b { font-weight: 700; }
+
+/* ---------- Two-column body ---------- */
+.body-grid { display: grid; grid-template-columns: 1.28fr 1fr; gap: 26px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.block-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 7px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+}
+
+/* Stat row */
+.stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.stat-cell { background: var(--bg-raised); border-radius: 6px; padding: 8px 6px; text-align: center; }
+.stat-cell dt { font-size: 19px; font-weight: 900; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.stat-cell dd { margin: 1px 0 0; font-size: 7.6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-faint); line-height: 1.2; }
+
+/* Structure line */
+.structure-line { display: flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 600; color: var(--text-muted); flex-wrap: wrap; }
+.structure-line span.node { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; color: var(--text); white-space: nowrap; }
+.structure-line span.arrow { color: var(--text-faint); }
+
+/* Course table */
+.course-table { width: 100%; border-collapse: collapse; font-size: 9.6px; }
+.course-table th { text-align: left; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); padding: 0 6px 5px; border-bottom: 1.5px solid var(--border); }
+.course-table td { padding: 6px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.course-table tr:last-child td { border-bottom: 0; }
+.course-table td.n { font-weight: 800; color: var(--accent); width: 16px; }
+.course-table td.name { font-weight: 700; width: 27%; }
+.course-table td.count { white-space: nowrap; color: var(--text-muted); font-variant-numeric: tabular-nums; width: 13%; }
+.course-table td.focus { color: var(--text-muted); line-height: 1.35; }
+.course-table tr.capstone td.name { color: var(--accent); }
+
+/* Principle blocks */
+.principle-list { display: flex; flex-direction: column; gap: 8px; }
+.principle { display: flex; gap: 9px; align-items: flex-start; }
+.principle .p-num { flex: 0 0 auto; width: 28px; font-size: 12px; font-weight: 900; color: var(--accent); line-height: 1.3; }
+.principle .p-body b { display: block; font-size: 10.8px; font-weight: 700; line-height: 1.3; }
+.principle .p-body span { display: block; font-size: 9.3px; color: var(--text-muted); line-height: 1.35; margin-top: 1px; }
+
+/* Rigor checklist */
+.rigor-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.rigor-list li { display: flex; gap: 8px; align-items: flex-start; font-size: 9.6px; line-height: 1.4; }
+.rigor-list li::before { content: "✓"; flex: 0 0 auto; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 8px; font-weight: 900; display: grid; place-items: center; margin-top: 1px; }
+.rigor-list b { font-weight: 700; }
+.rigor-list span { display: block; color: var(--text-muted); }
+
+/* Open items */
+.open-list { list-style: none; margin: 0; padding: 0; counter-reset: oi; display: flex; flex-direction: column; gap: 7px; }
+.open-list li { counter-increment: oi; display: flex; gap: 8px; align-items: flex-start; font-size: 9.6px; line-height: 1.4; }
+.open-list li::before {
+  content: counter(oi); flex: 0 0 auto; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--torq-dark-ink); color: #fff; font-size: 8px; font-weight: 700; display: grid; place-items: center; margin-top: 1px;
+}
+.open-list b { font-weight: 700; }
+.open-list span { display: block; color: var(--text-muted); }
+
+/* ---------- Footer ---------- */
+.sheet-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; margin-top: 14px; border-top: 1px solid var(--border); font-size: 8.5px; color: var(--text-faint); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ---------- Print ---------- */
+@page { size: letter; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .page-stage { min-height: 0; padding: 0; display: block; }
+  .sheet { box-shadow: none; width: 8.5in; height: 11in; margin: 0; }
+}
+</style>
+
+<div class="page-stage">
+  <div class="sheet">
+
+    <div class="masthead">
+      <div>
+        <p class="eyebrow">Torq Product Practice</p>
+        <h1>Program Fact Sheet</h1>
+        <p class="subtitle">Internal Product Management Certification — six-course program overview</p>
+      </div>
+      <div class="meta-block">
+        <div><b>Prepared for:</b> Director &amp; Product Leadership Review</div>
+        <div><b>Status:</b> Confidential — Internal Only</div>
+        <div><b>Date:</b> August 2026</div>
+      </div>
+    </div>
+    <div class="masthead-rule"></div>
+
+    <p class="thesis"><b>Most PM certifications train for a job Torq doesn't do.</b> This program trains for the job we actually do — rebuilt clean-room from Product School's PMC certification, weighted 80/20 toward the execution work our consultants are staffed to deliver, and mechanically verified against the source material it's adapted from.</p>
+
+    <div class="body-grid">
+
+      <div class="col">
+        <div>
+          <p class="block-label">By the numbers</p>
+          <dl class="stat-row">
+            <div class="stat-cell"><dt>6</dt><dd>Courses</dd></div>
+            <div class="stat-cell"><dt>37</dt><dd>Tasks</dd></div>
+            <div class="stat-cell"><dt>35</dt><dd>Artifacts</dd></div>
+            <div class="stat-cell"><dt>~1 wk</dt><dd>To complete</dd></div>
+            <div class="stat-cell"><dt>0</dt><dd>Prereqs</dd></div>
+          </dl>
+        </div>
+
+        <div>
+          <p class="block-label">Program structure</p>
+          <div class="structure-line">
+            <span class="node">Program</span><span class="arrow">→</span>
+            <span class="node">Course</span><span class="arrow">→</span>
+            <span class="node">Task</span><span class="arrow">→</span>
+            <span class="node">Block</span>
+          </div>
+          <p style="font-size:8.8px;color:var(--text-faint);margin-top:5px;">One course per source module · one page + artifact per task · quiz/flashcard blocks layered onto a task</p>
+        </div>
+
+        <div>
+          <p class="block-label">The six courses</p>
+          <table class="course-table">
+            <thead><tr><th></th><th>Course</th><th>Tasks / Art.</th><th>Focus</th></tr></thead>
+            <tbody>
+              <tr><td class="n">1</td><td class="name">Strategic Product Thinking</td><td class="count">5 / 5</td><td class="focus">PM role on a cross-functional team, AI output into strategy, lifecycle, problem framing.</td></tr>
+              <tr><td class="n">2</td><td class="name">Discovering Product Opportunities</td><td class="count">5 / 5</td><td class="focus">Reading a client's existing research, raw signal into insight, the status quo as real competitor.</td></tr>
+              <tr><td class="n">3</td><td class="name">Analytics &amp; Metrics for Product Decisions</td><td class="count">5 / 5</td><td class="focus">Choosing a metric that matters, the AARRR funnel, slicing/sizing, a defensible hypothesis.</td></tr>
+              <tr><td class="n">4</td><td class="name">High-Velocity Product Roadmaps</td><td class="count">6 / 6</td><td class="focus">Roadmaps, MVP/MoSCoW scoping, a PRD an engineer can build from, acceptance criteria &amp; QA.</td></tr>
+              <tr><td class="n">5</td><td class="name">Product Experimentation</td><td class="count">7 / 7</td><td class="focus">Testing culture, method choice, a trustworthy A/B test, reading results honestly, the call.</td></tr>
+              <tr class="capstone"><td class="n">6</td><td class="name">Go-to-Market Launch Plans <em>(capstone)</em></td><td class="count">7 / 7</td><td class="focus">Goals/tiers/channels, enablement &amp; budget, the post-launch call, a deck assembling all six courses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col">
+        <div>
+          <p class="block-label">The Torq lens</p>
+          <div class="principle-list">
+            <div class="principle"><span class="p-num">80/20</span><div class="p-body"><b>Execution over strategy</b><span>Weighted like the real job — four-fifths execution, one-fifth upstream strategy.</span></div></div>
+            <div class="principle"><span class="p-num">35</span><div class="p-body"><b>Every task ends in something real</b><span>Not a quiz — an artifact built to the shape you'd hand a client.</span></div></div>
+            <div class="principle"><span class="p-num">↑</span><div class="p-body"><b>"One level up," never gatekept</b><span>Director-altitude content is taught, not cut or walled off by tenure.</span></div></div>
+            <div class="principle"><span class="p-num">AI</span><div class="p-body"><b>Accelerant, not shortcut</b><span>Paired every time with the judgment it doesn't replace.</span></div></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="block-label">Rigor &amp; sources</p>
+          <ul class="rigor-list">
+            <li><span><b>Clean-room rewrite</b> — written from a coverage map with the source closed.</span></li>
+            <li><span><b>Mechanically verified</b> — 8-word overlap check, every task under 10%, most under 3%.</span></li>
+            <li><span><b>Real frameworks, real credit</b> — taught under each framework's real name and originator.</span></li>
+            <li><span><b>No fabricated data, no named clients</b> — composite, anonymized examples only.</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="block-label">Open items for review</p>
+          <ol class="open-list">
+            <li><span><b>Program structure sign-off</b> — tested against two courses expected to need a rewrite; both held.</span></li>
+            <li><span><b>TorqHub setup</b> — Program still needs to be created in the admin panel, Courses 0–6 uploaded.</span></li>
+            <li><span><b>Future courses</b> — same method ready for Product Leadership, Claude Code for PMs, and beyond.</span></li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sheet-footer">
+      <span>Torq Product Practice · Program Fact Sheet</span>
+      <span>Confidential — Internal Only</span>
+      <span>Page 1 of 1</span>
+    </div>
+
+  </div>
+</div>

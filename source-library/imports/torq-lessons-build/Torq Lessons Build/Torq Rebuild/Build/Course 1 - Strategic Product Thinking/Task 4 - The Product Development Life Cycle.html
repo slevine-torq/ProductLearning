@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Product Development Life Cycle — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TORQ BRAND TOKENS — inlined from Torq Work/brandkit/tokens.css
+   ============================================================ */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* Stage strip */
+.stages {
+  display: grid; gap: var(--sp-3);
+  margin: var(--sp-6) 0;
+}
+@media (min-width: 620px) { .stages { grid-template-columns: 2fr 3fr 2fr; } }
+.stage-group {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  background: var(--torq-soft-bg);
+  padding: var(--sp-4);
+}
+.stage-group .gname {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-3);
+}
+.stage-pills { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.pill {
+  background: var(--torq-white);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-sm); font-weight: 600;
+  display: flex; align-items: baseline; gap: var(--sp-2);
+}
+.pill .n {
+  font-size: var(--fs-xs); font-weight: 700; color: var(--torq-sky-blue);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Lifecycle stage cards */
+.lc { margin: var(--sp-6) 0 0; }
+.lc-card {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  padding: var(--sp-6);
+  margin-bottom: var(--sp-4);
+}
+.lc-card .kicker {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.lc-card h3 { font-size: var(--fs-xl); margin: 0 0 var(--sp-1); }
+.lc-card .phases {
+  display: block; font-size: var(--fs-sm); color: var(--torq-blue);
+  font-weight: 600; margin-bottom: var(--sp-4);
+}
+.lc-card ul { margin: 0 0 var(--sp-4); padding-left: var(--sp-6); font-size: var(--fs-sm); }
+.lc-card li { margin-bottom: var(--sp-2); }
+.lc-goal {
+  border-top: 1px solid var(--rule-hair);
+  padding-top: var(--sp-3); margin-bottom: var(--sp-3);
+  font-size: var(--fs-sm);
+}
+.lc-goal b { color: var(--torq-dark-ink); }
+.lc-example {
+  background: var(--torq-soft-bg);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lc-example b { color: var(--torq-dark-ink); font-weight: 600; }
+
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th { font-weight: 700; color: var(--torq-dark-ink); border-bottom: 2px solid var(--torq-blue); }
+tbody th { font-weight: 600; color: var(--ink-muted); width: 18%; }
+
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.canvas {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow-lg);
+  overflow: hidden;
+  margin: var(--sp-4) 0;
+}
+.canvas-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  align-items: center; justify-content: space-between;
+}
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-1);
+  min-height: 44px; cursor: pointer;
+}
+.check-list input[type="checkbox"] {
+  flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0;
+  accent-color: var(--torq-blue); cursor: pointer;
+}
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn {
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--torq-white); background: var(--torq-blue);
+  border: 0; border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); min-height: 44px;
+  cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .btn, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .canvas, .lc-card { box-shadow: none; break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 1 &middot; Task 4 of 5</p>
+    <h1>The product development life cycle</h1>
+    <p class="standfirst">The industry-standard map from a hunch to a finished product — a sequence of checkpoints designed to catch a wrong bet before it's expensive to unwind.</p>
+    <div class="meta">
+      <span><b>Course</b> Strategic Product Thinking</span>
+      <span><b>Read time</b> ~10 min</span>
+      <span><b>Artifact</b> Lifecycle Health Check</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Every org calls the stages something slightly different, and none of that matters much. What holds constant underneath the naming: catch a bad idea while it's still cheap to kill, hold a quality bar while it's being built, and treat launch as a checkpoint, not a finish line.</p>
+
+  <section id="stages">
+    <h2>From a hunch to a shipped product, and back</h2>
+
+    <div class="stages">
+      <div class="stage-group">
+        <span class="gname">Early</span>
+        <div class="stage-pills">
+          <span class="pill"><span class="n">1</span>Discovery</span>
+          <span class="pill"><span class="n">2</span>Research</span>
+        </div>
+      </div>
+      <div class="stage-group">
+        <span class="gname">Execution</span>
+        <div class="stage-pills">
+          <span class="pill"><span class="n">3</span>Design</span>
+          <span class="pill"><span class="n">4</span>Development</span>
+          <span class="pill"><span class="n">5</span>Testing</span>
+        </div>
+      </div>
+      <div class="stage-group">
+        <span class="gname">Final</span>
+        <div class="stage-pills">
+          <span class="pill"><span class="n">6</span>Launch</span>
+          <span class="pill"><span class="n">7</span>Iteration</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="label">Your safety net</span>
+      <p>This is the structure that keeps you from becoming an order-taker shipping whatever landed loudest this week. Every stage exists so that, months later, you can point to exactly why a call got made the way it did.</p>
+    </div>
+  </section>
+
+  <section id="across">
+    <h2>What you actually do at each stage</h2>
+    <p>One real feature traced through the whole cycle below: Netflix's "Play Something" button — a real, publicly discussed example of a product moving from a vague signal to a measured outcome.</p>
+
+    <div class="lc">
+      <div class="lc-card">
+        <span class="kicker">Early stages</span>
+        <h3>Discover</h3>
+        <span class="phases">Discovery &middot; Research</span>
+        <ul>
+          <li>Turn a pile of scattered signals into one specific problem statement</li>
+          <li>Decide which of the candidate problems is actually worth solving first</li>
+          <li>Agree on what "this worked" would look like — before anyone starts building</li>
+        </ul>
+        <p class="lc-goal"><b>Goal:</b> earn the right to spend design and engineering time by proving the opportunity first.</p>
+        <p class="lc-example"><b>Netflix:</b> a PM notices users scrolling for twenty minutes without pressing play on anything — the question that opens: how do we get someone watching faster?</p>
+      </div>
+
+      <div class="lc-card">
+        <span class="kicker">Execution stages</span>
+        <h3>Build</h3>
+        <span class="phases">Design &middot; Development &middot; Testing</span>
+        <ul>
+          <li>Keep design and engineering pointed at the problem, not just the ticket</li>
+          <li>Trade off scope against the calendar without quietly losing the original goal</li>
+          <li>Check the build against both "does it work" and "does it solve the thing"</li>
+        </ul>
+        <p class="lc-goal"><b>Goal:</b> ship something that actually resolves the user's problem, not just something that compiles.</p>
+        <p class="lc-example"><b>Netflix:</b> the team prototypes where a "Play Something" control would live, then ships the simplest version of the logic first to keep the loop fast.</p>
+      </div>
+
+      <div class="lc-card">
+        <span class="kicker">Final stages</span>
+        <h3>Deliver</h3>
+        <span class="phases">Launch &middot; Iteration</span>
+        <ul>
+          <li>Coordinate the release with whoever else touches the customer</li>
+          <li>Watch the metric you actually committed to, not a convenient substitute</li>
+          <li>Make the call: keep investing, change direction, or walk away</li>
+        </ul>
+        <p class="lc-goal"><b>Goal:</b> get it in front of real users and let their behavior — not your instinct — decide what happens next.</p>
+        <p class="lc-example"><b>Netflix:</b> "Play Something" ships to a small slice first; the team checks whether time spent deciding actually dropped before rolling further.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ai">
+    <h2>Moving through it faster</h2>
+    <p>None of the stages above disappear with AI in the loop. What changes is how much of each one is grunt work versus a real decision — the grunt work compresses, the decision doesn't.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Phase</th><th scope="col">You</th><th scope="col">AI assists with</th><th scope="col">Output</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Discover</th>
+            <td>Input qualitative feedback and strategy</td>
+            <td>Analysing hours of research video and text</td>
+            <td>A summary doc with key pain points and quotes</td>
+          </tr>
+          <tr>
+            <th scope="row">Design</th>
+            <td>Define strategic trade-offs and success criteria</td>
+            <td>Converting insights into PRD drafts; generating prototype code</td>
+            <td>A multi-section PRD and an interactive prototype</td>
+          </tr>
+          <tr>
+            <th scope="row">Deliver</th>
+            <td>Make launch decisions and plan GTM strategy</td>
+            <td>Drafting GTM copy, blog posts, test scenarios</td>
+            <td>A launch-ready checklist and campaign materials</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="section-note">The loop closes faster each cycle: every human decision is backed by synthesised evidence, and every plan is supported by rapid, high-quality artifacts. What doesn't change is who decides.</p>
+
+    <div class="callout">
+      <span class="label">Regulated client?</span>
+      <p>On a healthcare, aerospace &amp; defense, or financial-services engagement, Testing and Launch often carry a formal compliance or approval gate that isn't optional. Build that time into your estimate early — don't let it surface the week before launch.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the Lifecycle Health Check</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">Run this on your current engagement any time you're not sure what's actually blocking progress.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Lifecycle Health Check</h3>
+          <p>Torq Product Practice &middot; use on any client product engagement</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">Which stage are we actually in?</span>
+            <span class="why">Discovery, Research, Design, Development, Testing, Launch, or Iteration — name it. Don't assume everyone agrees.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">Can you state this stage's goal in one sentence?</span>
+            <span class="why">If you can't, that's usually why the team feels stuck rather than moving.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">Did we define what a winning outcome looks like before work started?</span>
+            <span class="why">If that happened after the build began, the measurement is already compromised.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">What decision is open that's blocking the next stage?</span>
+            <span class="why">Name the specific unresolved call, not just "alignment."</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q5">
+            <span class="txt"><span class="q">Who owns that decision, and have they actually made it?</span>
+            <span class="why">A decision with no clear owner is why phases quietly stall.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q6">
+            <span class="txt"><span class="q">What does "done with this stage" concretely look like?</span>
+            <span class="why">A specific artifact or outcome, not a vibe.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q7">
+            <span class="txt"><span class="q">Is there a compliance or approval gate ahead nobody's scheduled?</span>
+            <span class="why">Especially on a regulated engagement — find it now, not at launch.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>The lifecycle exists to catch a wrong bet early, not to add process.</b> Each stage is a checkpoint where a bad idea is still cheap to kill.</li>
+      <li><b>Agree on "success" before the build starts.</b> Retrofitting a definition of done after the fact almost always favors whatever shipped.</li>
+      <li><b>Launch is a checkpoint, not a finish line.</b> Watch the metric you committed to, then actually make the call — double down, pivot, or walk away.</li>
+      <li><b>AI compresses the grunt work, not the judgment.</b> It can draft and synthesize at speed; deciding what's actually launch-ready still has to be you.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 5 — Your Problem Hook &amp; Value Proposition.</p>
+    <p>Torq Product Practice &middot; Course 1: Strategic Product Thinking</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "torq.c1t4.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+
+  function readState() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function writeState(state) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* no-op */ }
+  }
+
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+
+  function canvasAsText() {
+    var out = ["LIFECYCLE HEALTH CHECK", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    return out.join("\n");
+  }
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () {
+      btn.textContent = originalLabel;
+      btn.removeAttribute("data-state");
+    }, 2000);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = canvasAsText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () {
+        flash(copyBtn, "Copied", "Copy as text");
+      }, function () {
+        flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+      });
+    } else {
+      flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+    }
+  });
+
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "lifecycle-health-check.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) {
+      flash(downloadBtn, "Use Copy instead", "Download as .md");
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Making the Call — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2; --torq-blue-mid:    #3A79F8; --torq-sky-blue:    #43A8FF;
+  --torq-dark-ink:    #10213D; --torq-soft-bg:     #F6F9FF; --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2; --torq-white:       #FFFFFF;
+  --torq-status-green: #00B050; --torq-status-red:   #E5484D; --torq-status-amber: #F5A623;
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --ink-muted:  rgba(16,33,61,0.66); --ink-faint:  rgba(16,33,61,0.42); --rule-hair:  rgba(16,33,61,0.10);
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem; --fs-lg: 1.25rem; --fs-xl: 1.625rem; --fs-2xl: 2.125rem;
+  --r-sm: 8px; --r-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--torq-white); color: var(--torq-dark-ink); font-family: var(--torq-font-body); font-size: var(--fs-base); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2.5px solid var(--torq-blue); outline-offset: 3px; border-radius: 4px; }
+[data-surface="dark"] a:focus-visible, [data-surface="dark"] button:focus-visible { outline-color: var(--torq-sky-blue); outline-offset: 2px; }
+.skip-link { position: absolute; left: -9999px; top: var(--sp-2); background: var(--torq-white); color: var(--torq-blue); padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10; }
+.skip-link:focus { left: var(--sp-4); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero { background: var(--torq-dark-ink); color: var(--torq-white); padding: var(--sp-8) 0 var(--sp-6); }
+.hero .eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3); }
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst { font-size: var(--fs-lg); color: rgba(255,255,255,0.78); margin: 0; font-weight: 400; max-width: 60ch; }
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,0.14); font-size: var(--fs-sm); color: rgba(255,255,255,0.66); }
+.meta b { color: var(--torq-white); font-weight: 600; }
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 { font-size: var(--fs-xl); color: var(--torq-blue); margin-bottom: var(--sp-3); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--rule-hair); }
+.outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); margin: var(--sp-4) 0; }
+@media (max-width: 560px) { .outcomes { grid-template-columns: 1fr; } }
+.outcome-card { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-5); box-shadow: var(--torq-shadow); }
+.outcome-card .oc-top { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.oc-dot { width: 12px; height: 12px; border-radius: 50%; flex: 0 0 auto; }
+.oc-dot.ship { background: var(--torq-status-green); }
+.oc-dot.iterate { background: var(--torq-sky-blue); }
+.oc-dot.investigate { background: var(--torq-status-amber); }
+.oc-dot.kill { background: var(--torq-status-red); }
+.outcome-card h3 { font-size: var(--fs-lg); margin: 0; }
+.outcome-card p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.case { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); margin: var(--sp-5) 0; }
+.case h3 { font-size: var(--fs-lg); margin-bottom: var(--sp-2); }
+.case .verdict { display: inline-block; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 10px; border-radius: 999px; margin-bottom: var(--sp-3); }
+.case .verdict.ship { background: rgba(0,176,80,0.12); color: #0A7A38; }
+.case .verdict.investigate { background: rgba(245,166,35,0.15); color: #92610A; }
+.case p:last-child { margin-bottom: 0; }
+.canvas { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); box-shadow: var(--torq-shadow-lg); overflow: hidden; margin: var(--sp-4) 0; }
+.canvas-head { background: var(--torq-soft-bg); border-bottom: 1px solid var(--torq-border-gray); padding: var(--sp-4) var(--sp-6); display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; justify-content: space-between; }
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-4) var(--sp-6); }
+.canvas-body label { display: block; font-weight: 600; font-size: var(--fs-sm); margin-bottom: var(--sp-2); }
+.canvas-body select, .canvas-body textarea { font: inherit; width: 100%; border: 1px solid var(--torq-border-gray); border-radius: var(--r-sm); padding: var(--sp-3); margin-bottom: var(--sp-4); }
+.canvas-body select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2310213D' stroke-width='1.6'%3E%3Cpath d='M5 7l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.canvas-body textarea { resize: vertical; min-height: 60px; }
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn { font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--torq-white); background: var(--torq-blue); border: 0; border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); min-height: 44px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li { counter-increment: t; position: relative; padding: var(--sp-3) 0 var(--sp-3) var(--sp-12); border-top: 1px solid var(--rule-hair); }
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before { content: counter(t); position: absolute; left: 0; top: var(--sp-3); width: 28px; height: 28px; border-radius: 50%; background: var(--torq-soft-bg); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); display: grid; place-items: center; font-size: var(--fs-sm); font-weight: 700; }
+.lesson-foot { border-top: 1px solid var(--torq-border-gray); padding-top: var(--sp-4); margin-top: var(--sp-8); font-size: var(--fs-sm); color: var(--ink-muted); }
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+@media (max-width: 480px) { :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media print { .btn, .skip-link { display: none !important; } body { font-size: 11pt; } .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); } .hero .standfirst, .meta { color: var(--ink-muted); } .hero .eyebrow { color: var(--torq-blue); } .canvas { box-shadow: none; break-inside: avoid; } section, .case { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 5 &middot; Task 6 of 7</p>
+    <h1>Making the call</h1>
+    <p class="standfirst">A trustworthy result still isn't a decision. Once you've passed the reality-check in Task 5, you land in exactly one of four places — and each one calls for a different next move.</p>
+    <div class="meta">
+      <span><b>Course</b> Product Experimentation</span>
+      <span><b>Read time</b> ~9 min</span>
+      <span><b>Artifact</b> Call Recommendation</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Reading a result and deciding what to do about it are two different skills. This is the second one.</p>
+
+  <section id="outcomes">
+    <h2>Four outcomes, not two</h2>
+    <p>It's tempting to collapse every result into "it worked" or "it didn't." That loses the two most useful outcomes in between.</p>
+    <div class="outcomes">
+      <div class="outcome-card">
+        <div class="oc-top"><span class="oc-dot ship"></span><h3>Ship</h3></div>
+        <p>Primary metric moved as predicted, guardrails held, effect held up across segments. Roll it out.</p>
+      </div>
+      <div class="outcome-card">
+        <div class="oc-top"><span class="oc-dot iterate"></span><h3>Iterate</h3></div>
+        <p>Directionally right but not enough to ship as-is — a guardrail dipped slightly, or the effect was real but small. Refine the variant and test again.</p>
+      </div>
+      <div class="outcome-card">
+        <div class="oc-top"><span class="oc-dot investigate"></span><h3>Investigate</h3></div>
+        <p>The result doesn't match what you expected — flat where you predicted movement, or a segment split that makes no sense. Don't ship or kill yet; find out why first.</p>
+      </div>
+      <div class="outcome-card">
+        <div class="oc-top"><span class="oc-dot kill"></span><h3>Kill</h3></div>
+        <p>No effect, or a guardrail broke. The idea was worth testing and is now worth dropping — that's the system working, not a failure.</p>
+      </div>
+    </div>
+    <p style="margin-top:var(--sp-3)">"Investigate" is the one teams skip most often, because a clean ship/kill call feels more decisive. But forcing an ambiguous result into one of the other three is exactly the kind of shortcut Task 5's reality-check exists to catch.</p>
+  </section>
+
+  <section id="cases">
+    <h2>Two calls, worked through</h2>
+    <p style="font-size:var(--fs-sm);color:var(--ink-muted);margin:0 0 var(--sp-3)">Composite scenarios built from common, publicly-discussed testing patterns — not any single company's real reported numbers.</p>
+
+    <div class="case">
+      <span class="verdict ship">Ship</span>
+      <h3>A mid-size media-streaming app tests autoplay-next</h3>
+      <p>A consumer streaming product tested automatically queuing a related item after the current one ended, against a control that required a manual tap to continue. The hypothesis: reducing that one tap would lift session length without hurting how people rated their experience.</p>
+      <p>The primary metric — average session length — moved up meaningfully in the variant, held across device types and the two largest markets, and reached the planned sample size on schedule. The guardrail — an in-app satisfaction rating collected after each session — stayed flat, not down. Call: ship, with a follow-up watch on unsubscribe rate over the following quarter, since a session-length win driven by passive autoplay is worth confirming it isn't quietly annoying people in a way the immediate rating doesn't catch.</p>
+    </div>
+
+    <div class="case">
+      <span class="verdict investigate">Investigate</span>
+      <h3>A large online marketplace tests a one-tap reorder button</h3>
+      <p>An e-commerce team tested adding a one-tap "buy again" button to a past-orders page, against the existing multi-step reorder flow. The hypothesis: removing friction would lift reorder completion rate.</p>
+      <p>Reorder completions rose overall — but the lift was concentrated almost entirely in one product category and nearly flat everywhere else, which didn't match the team's prediction of a broad effect. The overall guardrail (return rate) held. Call: investigate before shipping broadly. A result that strong in one slice and flat elsewhere is more likely explained by something specific to that category — pricing, inventory, or how that category's page was laid out — than by the button itself. Shipping on the headline number alone would have missed that the win wasn't actually coming from the change being tested.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the Call Recommendation</h2>
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Call Recommendation</h3>
+          <p>Torq Product Practice &middot; write the call before you present it</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <label for="test">Which test are you calling? <span style="font-weight:400;color:var(--ink-faint)">— your Task 4 brief, or a real one</span></label>
+        <textarea id="test" rows="2"></textarea>
+        <label for="verdict">Your call</label>
+        <select id="verdict">
+          <option value="">Choose one</option>
+          <option>Ship</option>
+          <option>Iterate</option>
+          <option>Investigate</option>
+          <option>Kill</option>
+        </select>
+        <label for="reason">Why — cite the specific reality-check answers that drove it</label>
+        <textarea id="reason" rows="3"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Four outcomes, not two.</b> Iterate and Investigate are real calls, not a failure to decide.</li>
+      <li><b>Investigate is the outcome teams skip.</b> A forced ship/kill call on an ambiguous result undoes the discipline from Task 5.</li>
+      <li><b>An uneven result across segments is a clue, not just a footnote.</b> Where the effect is concentrated often tells you what actually caused it.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 7 — Common Mistakes in A/B Testing.</p>
+    <p>Torq Product Practice &middot; Course 5: Product Experimentation</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "torq.c5t6.canvas";
+  var fieldIds = ["test", "verdict", "reason"];
+  function readState() { try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+  function writeState(state) { try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
+  var saved = readState();
+  fieldIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (saved[id] !== undefined) { el.value = saved[id]; }
+    el.addEventListener("input", function () { var s = readState(); s[id] = el.value; writeState(s); });
+    el.addEventListener("change", function () { var s = readState(); s[id] = el.value; writeState(s); });
+  });
+  function buildText() {
+    var test = document.getElementById("test").value.trim();
+    var verdict = document.getElementById("verdict").value.trim();
+    var reason = document.getElementById("reason").value.trim();
+    return ["CALL RECOMMENDATION", "Torq Product Practice", "", "Test: " + (test || "—"), "Call: " + (verdict || "—"), "", "Reasoning:", (reason || "—")].join("\n");
+  }
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () { btn.textContent = originalLabel; btn.removeAttribute("data-state"); }, 2000);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = buildText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () { flash(copyBtn, "Copied", "Copy as text"); }, function () { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); });
+    } else { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); }
+  });
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([buildText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "call-recommendation.md";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) { flash(downloadBtn, "Use Copy instead", "Download as .md"); }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!-- Built from _TASK-TEMPLATE-TIERED.html. Tokens inlined, not @import'ed.
+     #43A8FF is 2.5:1 on white — rules, dividers and gradient stops only, never text. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What moving up takes — Technical Fluency for Transform Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CANONICAL TOKENS — do not edit values ===== */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient: linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* DERIVED — canonical dark-ink at alpha, not new brand hexes.
+     The kit has no muted-text token; muted passes 5.3:1 on white. */
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+/* ===== A11Y (required — do not remove) ===== */
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+/* ===== LAYOUT + HERO ===== */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* ===== TABLES ===== */
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th { font-weight: 700; color: var(--torq-dark-ink); border-bottom: 2px solid var(--torq-blue); }
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 22%; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* ===== CALLOUT (regulated-client note, key framing) ===== */
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+
+/* ===== TAKEAWAYS (every Task ends with these) ===== */
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ===== TIER READS (required — every Task carries one) =====
+   Three labeled reads, all visible, never gated. The sky-blue rule
+   between tiers is a DIVIDER, never text — #43A8FF is 2.5:1 on white
+   and fails for type. Labels use #2D53F2 (5.8:1). */
+.tiers {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  overflow: hidden;
+  margin: var(--sp-6) 0;
+}
+.tiers-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+}
+.tiers-head .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-1);
+}
+.tiers-head p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.tier { padding: var(--sp-4) var(--sp-6); border-top: 2px solid var(--torq-sky-blue); }
+.tier:first-of-type { border-top: 0; }
+.tier .tier-label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.tier p { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+.tier p:last-child { margin-bottom: 0; }
+.tier .move { display: block; margin-top: var(--sp-2); color: var(--ink-muted); }
+.tier .move b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ============================================================
+   OPTIONAL COMPONENTS — delete any you don't use.
+   ============================================================ */
+
+/* OPTIONAL · numbered list with big numerals (skill stacks, step lists) */
+.numbered { list-style: none; margin: var(--sp-4) 0 0; padding: 0; counter-reset: sk; }
+.numbered li {
+  counter-increment: sk; position: relative;
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.numbered li:first-child { border-top: 0; }
+.numbered li::before {
+  content: counter(sk);
+  position: absolute; left: 0; top: var(--sp-4);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+.numbered .name { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+
+/* OPTIONAL · plain divided list (definitions, lenses, checks) */
+.plain-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.plain-list li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); }
+.plain-list li:first-child { border-top: 0; padding-top: 0; }
+.plain-list b { color: var(--torq-dark-ink); }
+
+/* OPTIONAL · formula box (fill-in-the-blank sentence patterns) */
+.formula {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0;
+  box-shadow: var(--torq-shadow);
+  font-size: var(--fs-lg); font-weight: 600; line-height: 1.6;
+}
+.formula .tag {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  color: var(--torq-blue); background: var(--torq-soft-bg);
+  padding: 2px 8px; border-radius: 6px; margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · not-this / this comparison */
+.compare { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.compare li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); font-size: var(--fs-sm); }
+.compare li:first-child { border-top: 0; }
+.compare .bad, .compare .good { display: block; }
+.compare .bad { color: var(--ink-muted); }
+.compare .bad::before {
+  content: "Not this"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-red); margin-right: var(--sp-2);
+}
+.compare .good { margin-top: var(--sp-2); font-weight: 600; }
+.compare .good::before {
+  content: "This"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-green); margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · copyable prompt block (AI exercises) */
+.prompt { background: var(--torq-dark-ink); padding: var(--sp-4) var(--sp-6); position: relative; }
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono); font-size: var(--fs-sm);
+  color: #E8EFFF; line-height: 1.7; white-space: pre-wrap;
+  word-break: break-word; display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22); border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3); min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+
+/* OPTIONAL · bordered example / stage card */
+.card {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow); padding: var(--sp-6); margin-bottom: var(--sp-4);
+}
+.card .kicker {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.card .example {
+  background: var(--torq-soft-bg); border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.card .example b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* OPTIONAL · dashed optional-extra box */
+.optional {
+  border: 1px dashed var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-6) 0 0;
+}
+.optional .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-2);
+}
+
+/* ===== RESPONSIVE / MOTION / PRINT ===== */
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .card, .formula, .tiers { box-shadow: none; break-inside: avoid; }
+  .tier { break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Technical Fluency &middot; Course 0 &middot; Task&nbsp;3&nbsp;of&nbsp;4</p>
+    <h1>What moving up takes</h1>
+    <p class="standfirst">The behaviors a Torq lead can actually watch happen, the five capabilities that get earned separately &mdash; and why Tier 2 is a place to stay if you want to.</p>
+    <div class="meta">
+      <span><b>Course</b> Before You Start</span>
+      <span><b>Read time</b> ~8 min</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Task 2 placed you. This one is about what changes between tiers &mdash; stated as things someone can watch you do on an engagement, rather than as adjectives on a rubric. Start with the part most tier models get wrong.</p>
+
+  <section id="destination">
+    <h2>Tier 2 is a destination, not a waiting room</h2>
+    <p><b>Tier 2 is where most Torq client work actually gets done.</b> A tier model that reads as "everyone is en route to Tier 3" misdescribes the majority of the population and quietly devalues the tier carrying the engagements.</p>
+    <p>A high-performing, independent Tier 2 consultant creates real value and is someone a firm is happy to keep indefinitely. Nobody is stalling by staying. If you read the rest of this task as a ladder you're obliged to climb, you've read it wrong &mdash; read it as a description of what changes, so you can decide whether you want that change.</p>
+    <p class="section-note">Stated plainly: <b>the step from Tier 1 to Tier 2 is a job change, not a skill upgrade.</b> Getting better at producing artifacts does not get you to Tier 2. Getting better at owning ambiguity and defending a position does. That's why what follows is mostly defense rather than more execution craft.</p>
+  </section>
+
+  <section id="behaviors">
+    <h2>Observable behaviors</h2>
+    <p>More useful than a rubric, because every row is something a Torq lead can watch happen on an engagement rather than infer from a self-description.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Earlier tier</th><th scope="col">Later tier</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Structure</th><td>Needs templates and a preset process</td><td>Works without them; supplies them for others</td></tr>
+          <tr><th scope="row">Ambiguity</th><td>Wants the question answered before starting</td><td>Comfortable starting with it unsettled</td></tr>
+          <tr><th scope="row">Trade-offs</th><td>Escalates them</td><td>Makes them, and defends the reasoning</td></tr>
+          <tr><th scope="row">Direction</th><td>Receives what to work on</td><td>Argues for what should be worked on</td></tr>
+          <tr><th scope="row">Optimization frame</th><td>Optimizes their own deliverable</td><td>Optimizes across the engagement, and for the long term</td></tr>
+          <tr><th scope="row">Time horizon</th><td>This deliverable</td><td>The next several</td></tr>
+          <tr><th scope="row">Team</th><td>Is coached</td><td>Has earned decision-making trust and empowers others</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note">Read the right-hand column as behaviors you can start this week at your current scope, rather than permissions you're waiting to be granted. It's the same mechanism from Task 2: autonomy and impact get demonstrated where you already are.</p>
+  </section>
+
+  <section id="currencies">
+    <h2>Five currencies, earned separately</h2>
+    <p>Product capability isn't one seniority score. <i>Cracking the PM Career</i> splits it into five things that are earned independently &mdash; which is a far more honest input to a staffing decision than a single number:</p>
+    <ol class="numbered">
+      <li><span class="name">Product skills</span>Judgment about what to build and why &mdash; the customer, the problem, the shape of the solution.</li>
+      <li><span class="name">Execution skills</span>Getting it shipped: specs, sequencing, unblocking, acceptance, delivery.</li>
+      <li><span class="name">Strategic skills</span>Reading the market and the business, and connecting today's work to where it has to end up.</li>
+      <li><span class="name">Leadership skills</span>Influence without authority &mdash; the defining Tier 2 skill, and the one most consulting engagements test hardest.</li>
+      <li><span class="name">People-management skills</span>Hiring, coaching, running a team. Earned separately from every other row here.</li>
+    </ol>
+    <p class="section-note">A consultant can be strong on execution, still developing on strategy, and be genuinely good at their tier. That's a normal, staffable profile, and nothing to apologize for.</p>
+  </section>
+
+  <section id="guardrails">
+    <h2>Two guardrails</h2>
+    <h3>Don't turn it into a rubric</h3>
+    <p>Conventional ladders fail in one of two directions: too vague to act on ("demonstrates strong judgement"), or so specific they get applied inconsistently. Worse, they often just restate the scope someone was already assigned, which makes them circular &mdash; you're rated senior because you were given senior work. The tables above are deliberately behavioral and deliberately short, and expanding them into a scoring sheet would break them.</p>
+    <h3>The consulting third rung is not people management</h3>
+    <p>A standard PM ladder's third phase is organizational excellence &mdash; hiring, coaching, running the org. Only the <b>advisor-to-executives</b> half of that transfers to a Torq Principal advising a client team they don't manage. The manage-the-org half applies to an AD managing Torq consultants and to nobody else. Any tier model that borrows a standard PM ladder wholesale imports an assumption that doesn't hold here.</p>
+  </section>
+
+  <div class="callout">
+    <span class="label">One level up:</span>
+    <p>Reading these behaviors across a whole team &mdash; who can be left alone with an ambiguous workstream, who needs the scope cut cleaner &mdash; is usually an AD/Director staffing call rather than yours. Knowing how the decision gets made is what lets you feed it good input now, and make it yourself later.</p>
+  </div>
+
+  <!-- ===== TIER READS — required on every Task. Never gate or collapse. ===== -->
+  <section id="tiers">
+    <h2>The same content, read three ways</h2>
+    <div class="tiers">
+      <div class="tiers-head">
+        <span class="label">All three reads, always visible</span>
+        <p>Find yours, then read the other two anyway &mdash; that's how you know what the conversation above you sounds like.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 1 &mdash; a level deeper</span>
+        <p>Pick one row from the behaviors table &mdash; ambiguity is usually the highest-yield &mdash; and practice it on something small this week. Starting a piece of work before the question is fully answered, then bringing back options instead of the question, is the single most visible move on the list.</p>
+        <p class="move"><b>The move:</b> one row, one deliverable, deliberately.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 2 &mdash; the trade-off you can discuss</span>
+        <p>This is your tier and it may well stay your tier. The useful read isn't "what's missing" but "which currency is my engagement paying for" &mdash; a delivery-heavy engagement rewards execution and leadership, and will barely test strategy no matter how long you stay on it.</p>
+        <p class="move"><b>The move:</b> if a currency isn't being tested by your staffing, it won't develop by itself &mdash; ask for the work that tests it.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 3 &mdash; strategic &amp; risk read</span>
+        <p>The currencies are a staffing and risk instrument. A team strong on execution and thin on strategic capability will deliver an engagement competently and miss the phase-two opening &mdash; which is a commercial outcome before it's a coaching note.</p>
+        <p class="move"><b>The move:</b> staff the currency the engagement will test, and name the gap in the plan rather than hoping.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Tier 2 is a destination, not a waiting room.</b> Most Torq client work happens there, and staying is a legitimate choice.</li>
+      <li><b>Tier 1 to Tier 2 is a job change, not a skill upgrade.</b> More execution craft doesn't get you there; owning ambiguity and defending a position does.</li>
+      <li><b>Behaviors beat rubrics.</b> Every row above is something someone can watch happen, and you can start doing it at your current scope.</li>
+      <li><b>The five currencies are earned separately.</b> Strong on execution and still developing on strategy is a normal, staffable profile.</li>
+      <li><b>Don't expand this into a scoring sheet.</b> Ladders that get specific enough to score end up circular &mdash; rating you senior for having been given senior work.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 4 &mdash; Sources &amp; further reading.</p>
+    <p>Technical Fluency for Transform Practice &middot; Course 0: Before You Start</p>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

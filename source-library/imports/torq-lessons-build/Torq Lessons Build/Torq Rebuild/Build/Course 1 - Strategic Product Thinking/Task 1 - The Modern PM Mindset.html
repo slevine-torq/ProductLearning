@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Modern PM Mindset — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TORQ BRAND TOKENS — inlined from Torq Work/brandkit/tokens.css
+   Inlined (not @import) because each TorqHub Block ships standalone.
+   If the kit changes, re-inline this block.
+   ============================================================ */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+
+  /* DERIVED — not new brand hexes. Canonical dark-ink at alpha. */
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th {
+  font-weight: 700; color: var(--torq-dark-ink);
+  border-bottom: 2px solid var(--torq-blue);
+}
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; letter-spacing: 0;
+  text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 22%; }
+
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.pillars { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.pillars li {
+  padding: var(--sp-4) 0; border-top: 1px solid var(--rule-hair);
+}
+.pillars li:first-child { border-top: 0; padding-top: 0; }
+.pillars .name {
+  display: block; font-weight: 700; color: var(--torq-dark-ink);
+  margin-bottom: var(--sp-1);
+}
+.pillars .ask {
+  display: block; font-size: var(--fs-sm); color: var(--torq-blue);
+  font-weight: 600; margin-top: var(--sp-2);
+}
+
+.venn { margin: var(--sp-6) 0; text-align: center; }
+.venn svg { max-width: 100%; height: auto; }
+
+.tradeoffs { list-style: none; margin: var(--sp-3) 0 0; padding: 0; }
+.tradeoffs li {
+  padding: var(--sp-2) 0 var(--sp-2) var(--sp-6);
+  position: relative; font-size: var(--fs-sm);
+}
+.tradeoffs li::before {
+  content: ""; position: absolute; left: 0; top: 14px;
+  width: 10px; height: 2px; background: var(--torq-sky-blue);
+}
+
+.canvas {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow-lg);
+  overflow: hidden;
+  margin: var(--sp-4) 0;
+}
+.canvas-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  align-items: center; justify-content: space-between;
+}
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-1);
+  min-height: 44px; cursor: pointer;
+}
+.check-list input[type="checkbox"] {
+  flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0;
+  accent-color: var(--torq-blue); cursor: pointer;
+}
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn {
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--torq-white); background: var(--torq-blue);
+  border: 0; border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); min-height: 44px;
+  cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .btn, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .canvas { box-shadow: none; break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 1 &middot; Task 1 of 5</p>
+    <h1>The modern PM mindset</h1>
+    <p class="standfirst">Every request arrives labeled urgent. Your value isn't how fast you process them — it's turning that noise into a clear, defensible direction.</p>
+    <div class="meta">
+      <span><b>Course</b> Strategic Product Thinking</span>
+      <span><b>Read time</b> ~8 min</span>
+      <span><b>Artifact</b> Three Pillars Backlog Audit</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">A product owner's day is a flood of requests — from sales, from support, from an executive who cornered someone in a hallway. All of them urgent. The question this task answers: what actually keeps a product team from moving forward, and what's your job in fixing it?</p>
+
+  <section id="clarity">
+    <h2>The clarity problem</h2>
+    <p>Almost all of that friction has one root cause: nobody has agreed on <b>a single direction the team is optimizing for.</b> Without it, every request looks equally urgent, which means none of them is actually prioritized — and a backlog that keeps growing faster than it shrinks is usually a symptom of that, not a capacity problem.</p>
+    <p>Throughput isn't what makes you valuable here. What does is <b>clarity</b> — pulling a conversation away from <em>how fast can we ship this</em> and back toward <em>why does this matter to the business</em>.</p>
+    <div class="callout">
+      <span class="label">Try this on your own work</span>
+      <p>Think of a product team you've been on — client or internal — where work felt scattered and directionless. Was that really a resourcing problem, or was it that nobody could say which single outcome the quarter was actually for? That distinction is the whole subject of this course.</p>
+    </div>
+  </section>
+
+  <section id="mandate">
+    <h2>From output to outcome</h2>
+    <p>The most important shift you'll make as a PM: stop counting what shipped and start proving what changed. A feature that lands on time, exactly as specced, is an <b>output</b>. Whether it actually made a user's life better is the <b>outcome</b> — and it's the only one that was ever the point.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Signal</th>
+            <th scope="col">Output view<span class="sub">what got built</span></th>
+            <th scope="col">Outcome view<span class="sub">what got proven</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Ship date</th><td>Hit, on schedule</td><td>Irrelevant on its own — a date isn't evidence</td></tr>
+          <tr><th scope="row">Usage</th><td>Feature is live and available</td><td>Adoption is measured against a baseline, not assumed</td></tr>
+          <tr><th scope="row">Definition of done</th><td>Code merged, ticket closed</td><td>A specific user behavior changed, and it's measurable</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <span class="label">This isn't "shipping doesn't matter"</span>
+      <p>Execution is still the job — nothing changes for a user until code ships. The point is that a shipped feature and a solved problem aren't the same claim, and only one of them is worth reporting as a win.</p>
+    </div>
+  </section>
+
+  <section id="pillars">
+    <h2>Desirability, viability, feasibility</h2>
+    <p>Remember that flood of requests? This is the filter you run them through. Every real initiative has to clear three separate tests — not just one — and the highest-impact work is what clears all three at once.</p>
+
+    <div class="venn">
+      <svg viewBox="0 0 420 300" role="img" aria-labelledby="venn-t venn-d" xmlns="http://www.w3.org/2000/svg">
+        <title id="venn-t">Desirability, viability, feasibility</title>
+        <desc id="venn-d">Three overlapping circles — Desirability, Viability, and Feasibility. The highest-impact work sits in the region where all three overlap.</desc>
+        <circle cx="165" cy="120" r="78" fill="#2D53F2" fill-opacity="0.16" stroke="#2D53F2" stroke-opacity="0.35"/>
+        <circle cx="255" cy="120" r="78" fill="#3A79F8" fill-opacity="0.16" stroke="#3A79F8" stroke-opacity="0.35"/>
+        <circle cx="210" cy="196" r="78" fill="#43A8FF" fill-opacity="0.16" stroke="#43A8FF" stroke-opacity="0.4"/>
+        <text x="210" y="152" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#10213D">Highest</text>
+        <text x="210" y="167" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#10213D">impact</text>
+        <text x="120" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#10213D">Desirability</text>
+        <text x="305" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#10213D">Viability</text>
+        <text x="210" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#10213D">Feasibility</text>
+      </svg>
+    </div>
+
+    <ul class="pillars">
+      <li>
+        <span class="name">Desirability</span>
+        Does a real user actually have this problem, and does it hurt enough that they'd change behavior to fix it?
+        <span class="ask">If we build it, does anyone care?</span>
+      </li>
+      <li>
+        <span class="name">Viability</span>
+        Does solving it justify the resources — revenue protected, cost avoided, or a strategic position defended?
+        <span class="ask">Does this move something the business is actually accountable for?</span>
+      </li>
+      <li>
+        <span class="name">Feasibility</span>
+        Can it be built, shipped, and kept running with the time, skills, and constraints actually available?
+        <span class="ask">Can we build and sustain this, not just demo it once?</span>
+      </li>
+    </ul>
+
+    <h3>The overlap is never clean</h3>
+    <ul class="tradeoffs">
+      <li>The desirable, feasible fix that has no business case behind it.</li>
+      <li>The viable, feasible initiative nobody asked for and nobody will use.</li>
+      <li>The desirable, viable idea that would take a rebuild to actually ship.</li>
+    </ul>
+    <p class="section-note">Two out of three is the common case, not the exception. Naming which lens is missing turns a vague "not now" into a specific, arguable reason — that's what makes the call defensible instead of just felt.</p>
+
+    <div class="callout">
+      <span class="label">Regulated client?</span>
+      <p>On a healthcare, aerospace &amp; defense, or financial-services engagement, feasibility carries a fourth question the other two don't: what has to be reviewed or certified before this can ship? Fold that into the feasibility lens rather than discovering it late.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the Three Pillars Backlog Audit</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">Take a real initiative from your current engagement and run it through the pillars. The goal isn't to fill in a form — it's to end up with something you'd cut or defer.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Three Pillars Backlog Audit</h3>
+          <p>Torq Product Practice &middot; run on a real backlog, not a hypothetical</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">Pick 8–10 real items off your current backlog.</span>
+            <span class="why">Real ones, including the ones you inherited and never questioned.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">Desirability: which user frustration does each one actually solve?</span>
+            <span class="why">If you can't name the frustration, that's a finding, not a gap in the exercise.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">Viability: which metric does each one move?</span>
+            <span class="why">Name the metric, not the theme. "Improves experience" isn't a metric.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">Feasibility: can this be built and maintained given real constraints?</span>
+            <span class="why">Including the approval or certification path if your client is regulated.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q5">
+            <span class="txt"><span class="q">Mark which items clear all three.</span>
+            <span class="why">That's your highest-impact work. Usually fewer items than expected.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q6">
+            <span class="txt"><span class="q">Cut or defer what doesn't qualify — and write down why.</span>
+            <span class="why">The written reason is what lets you defend the call when someone asks later.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q7">
+            <span class="txt"><span class="q">Name the one trade-off you're least comfortable with.</span>
+            <span class="why">Every real backlog has one. Surfacing it beats discovering it in a steering meeting.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>A shared North Star is the antidote to "everything is urgent."</b> When nothing is prioritized, the problem is usually clarity, not capacity.</li>
+      <li><b>Your value is clarity, not throughput.</b> Move the conversation from the <em>how</em> of shipping to the <em>why</em> of the business.</li>
+      <li><b>Outcomes over outputs — but shipping still matters.</b> Success is a measurable change in user behavior, not a date on a calendar.</li>
+      <li><b>Desirability, viability, feasibility make judgment defensible.</b> They don't remove the trade-offs; they give you a reason you can say out loud for how you resolved them.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 2 — The Skill Stack &amp; Your Place in the Team.</p>
+    <p>Torq Product Practice &middot; Course 1: Strategic Product Thinking</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "torq.c1t1.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+
+  function readState() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function writeState(state) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* no-op */ }
+  }
+
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+
+  function canvasAsText() {
+    var out = ["THREE PILLARS BACKLOG AUDIT", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    return out.join("\n");
+  }
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () {
+      btn.textContent = originalLabel;
+      btn.removeAttribute("data-state");
+    }, 2000);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = canvasAsText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () {
+        flash(copyBtn, "Copied", "Copy as text");
+      }, function () {
+        flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+      });
+    } else {
+      flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+    }
+  });
+
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "three-pillars-backlog-audit.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) {
+      flash(downloadBtn, "Use Copy instead", "Download as .md");
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

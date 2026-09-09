@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setting Up a Trustworthy A/B Test — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2; --torq-blue-mid:    #3A79F8; --torq-sky-blue:    #43A8FF;
+  --torq-dark-ink:    #10213D; --torq-soft-bg:     #F6F9FF; --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2; --torq-white:       #FFFFFF;
+  --torq-status-green: #00B050; --torq-status-red:   #E5484D;
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --ink-muted:  rgba(16,33,61,0.66); --ink-faint:  rgba(16,33,61,0.42); --rule-hair:  rgba(16,33,61,0.10);
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem; --fs-lg: 1.25rem; --fs-xl: 1.625rem; --fs-2xl: 2.125rem;
+  --r-sm: 8px; --r-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--torq-white); color: var(--torq-dark-ink); font-family: var(--torq-font-body); font-size: var(--fs-base); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2.5px solid var(--torq-blue); outline-offset: 3px; border-radius: 4px; }
+[data-surface="dark"] a:focus-visible, [data-surface="dark"] button:focus-visible { outline-color: var(--torq-sky-blue); outline-offset: 2px; }
+.skip-link { position: absolute; left: -9999px; top: var(--sp-2); background: var(--torq-white); color: var(--torq-blue); padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10; }
+.skip-link:focus { left: var(--sp-4); }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero { background: var(--torq-dark-ink); color: var(--torq-white); padding: var(--sp-8) 0 var(--sp-6); }
+.hero .eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3); }
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst { font-size: var(--fs-lg); color: rgba(255,255,255,0.78); margin: 0; font-weight: 400; max-width: 58ch; }
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,0.14); font-size: var(--fs-sm); color: rgba(255,255,255,0.66); }
+.meta b { color: var(--torq-white); font-weight: 600; }
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 { font-size: var(--fs-xl); color: var(--torq-blue); margin-bottom: var(--sp-3); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--rule-hair); }
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+.numbered { list-style: none; margin: var(--sp-4) 0 0; padding: 0; counter-reset: sk; }
+.numbered li { counter-increment: sk; position: relative; padding: var(--sp-4) 0 var(--sp-4) var(--sp-12); border-top: 1px solid var(--rule-hair); }
+.numbered li:first-child { border-top: 0; }
+.numbered li::before { content: counter(sk); position: absolute; left: 0; top: var(--sp-4); width: 28px; height: 28px; border-radius: 50%; background: var(--torq-soft-bg); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); display: grid; place-items: center; font-size: var(--fs-sm); font-weight: 700; }
+.numbered .name { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+.formula { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0; box-shadow: var(--torq-shadow); font-size: var(--fs-lg); font-weight: 600; line-height: 1.6; }
+.formula .tag { display: inline-block; font-size: var(--fs-xs); font-weight: 700; color: var(--torq-blue); background: var(--torq-soft-bg); padding: 2px 8px; border-radius: 6px; margin-right: var(--sp-2); }
+.callout { background: var(--torq-soft-bg); border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-6); margin: var(--sp-6) 0; }
+.callout .label { display: block; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--torq-blue); margin-bottom: var(--sp-2); }
+.callout p:last-child { margin-bottom: 0; }
+.canvas { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); box-shadow: var(--torq-shadow-lg); overflow: hidden; margin: var(--sp-4) 0; }
+.canvas-head { background: var(--torq-soft-bg); border-bottom: 1px solid var(--torq-border-gray); padding: var(--sp-4) var(--sp-6); display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; justify-content: space-between; }
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label { display: flex; gap: var(--sp-3); align-items: flex-start; padding: var(--sp-3) var(--sp-1); min-height: 44px; cursor: pointer; }
+.check-list input[type="checkbox"] { flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--torq-blue); cursor: pointer; }
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn { font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--torq-white); background: var(--torq-blue); border: 0; border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); min-height: 44px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li { counter-increment: t; position: relative; padding: var(--sp-3) 0 var(--sp-3) var(--sp-12); border-top: 1px solid var(--rule-hair); }
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before { content: counter(t); position: absolute; left: 0; top: var(--sp-3); width: 28px; height: 28px; border-radius: 50%; background: var(--torq-soft-bg); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); display: grid; place-items: center; font-size: var(--fs-sm); font-weight: 700; }
+.lesson-foot { border-top: 1px solid var(--torq-border-gray); padding-top: var(--sp-4); margin-top: var(--sp-8); font-size: var(--fs-sm); color: var(--ink-muted); }
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+@media (max-width: 480px) { :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media print { .btn, .skip-link { display: none !important; } body { font-size: 11pt; } .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); } .hero .standfirst, .meta { color: var(--ink-muted); } .hero .eyebrow { color: var(--torq-blue); } .canvas, .formula { box-shadow: none; break-inside: avoid; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 5 &middot; Task 3 of 7</p>
+    <h1>Setting up a trustworthy A/B test</h1>
+    <p class="standfirst">Split the traffic, change exactly one thing, measure both arms against the same rules. That isolation is the entire reason the result means anything.</p>
+    <div class="meta">
+      <span><b>Course</b> Product Experimentation</span>
+      <span><b>Read time</b> ~9 min</span>
+      <span><b>Artifact</b> A/B Setup Checklist</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Every A/B testing platform — Optimizely, Statsig, LaunchDarkly, or a homegrown tool — asks for roughly the same things, in roughly the same order. Learn the sequence once and the specific tool becomes a detail.</p>
+
+  <section id="anatomy">
+    <h2>What makes a result trustworthy</h2>
+    <p>Split your traffic in two. Hold everything constant except the one change under test. Measure both arms against the exact same primary metric and guardrails. That isolation — one variable, identical measurement — is the entire reason anyone should believe the result.</p>
+  </section>
+
+  <section id="setup">
+    <h2>Before you touch a platform</h2>
+    <ol class="numbered">
+      <li>
+        <span class="name">Write the hypothesis first</span>
+        Before you build anything, commit to a specific claim:
+        <div class="formula">
+          <span class="tag">Formula</span>
+          If we make [this change] for [this persona], then [this outcome] will follow — we'll see it as a [X%] shift in [primary metric] over [duration]. [Guardrail] stays untouched the whole time.
+        </div>
+        Set the bar for "shippable" now. Setting it after you've seen the result isn't analysis, it's rationalization.
+      </li>
+      <li>
+        <span class="name">Confirm the page or flow is instrumented</span>
+        The platform needs to know where to inject the test. Usually a one-time engineering task — know it's done, and who to ask, before you commit to a launch date.
+      </li>
+      <li>
+        <span class="name">Build from a template if you can</span>
+        If you're running tests on the same pages or events repeatedly, a template turns setup from an hour into minutes — the difference between running a handful of tests a quarter and several a week.
+      </li>
+      <li>
+        <span class="name">Define control and variant precisely</span>
+        Control is the product exactly as it exists today. The variant is your single change — nothing else. Set the traffic split on real numbers: 50/50 when you have the sample size, a smaller slice like 10/10 when risk or traffic is tight.
+      </li>
+      <li>
+        <span class="name">Lock your metrics before launch</span>
+        Define the primary metric that decides success, and the guardrails you can't afford to move the wrong way — both before any data exists. This is your last honest chance to set the rules.
+      </li>
+      <li>
+        <span class="name">Launch, then don't touch it</span>
+        Review every setting, publish, and leave it alone. Changing targeting, the variant, or the metrics mid-flight breaks the comparison — your two arms are no longer measuring the same thing.
+      </li>
+    </ol>
+    <div class="callout">
+      <span class="label">Every field is a record</span>
+      <p>Name, description, target pages — none of this is bureaucracy. It's the documentation that lets you (or a teammate) understand what was tested and why, six months from now.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the A/B Setup Checklist</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">Run through this before you launch anything — on a real test if you have one queued, or against the method you chose in Task 2.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>A/B Setup Checklist</h3>
+          <p>Torq Product Practice &middot; complete before launch, not after</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">Write the full hypothesis using the formula.</span>
+            <span class="why">All five blanks filled, or it isn't specific enough to test.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">Describe control and variant in one sentence each.</span>
+            <span class="why">If the variant changes more than one thing, it isn't a clean test.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">Name your primary metric and at least one guardrail.</span>
+            <span class="why">Both, before launch — not after you see how it's trending.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">Confirm instrumentation is actually in place.</span>
+            <span class="why">A launch date committed before this is confirmed is a real risk.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>Isolation is what makes a result trustworthy.</b> One variable, identical measurement on both arms.</li>
+      <li><b>Write the hypothesis before you build anything.</b> Setting the shippable bar after you see results is rationalization, not analysis.</li>
+      <li><b>Lock your metrics before launch.</b> This is the last point where the rules are actually neutral.</li>
+      <li><b>Once it's live, leave it alone.</b> A mid-flight change to targeting or metrics breaks the comparison entirely.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 4 — Design Your Experiment Brief.</p>
+    <p>Torq Product Practice &middot; Course 5: Product Experimentation</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "torq.c5t3.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+  function readState() { try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+  function writeState(state) { try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+  function canvasAsText() {
+    var out = ["A/B SETUP CHECKLIST", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    return out.join("\n");
+  }
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () { btn.textContent = originalLabel; btn.removeAttribute("data-state"); }, 2000);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = canvasAsText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () { flash(copyBtn, "Copied", "Copy as text"); }, function () { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); });
+    } else { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); }
+  });
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "ab-setup-checklist.md";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) { flash(downloadBtn, "Use Copy instead", "Download as .md"); }
+  });
+})();
+</script>
+
+</body>
+</html>

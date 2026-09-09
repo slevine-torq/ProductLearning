@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<!-- Built from _TASK-TEMPLATE-TIERED.html. Tokens inlined, not @import'ed.
+     #43A8FF is 2.5:1 on white — rules, dividers and gradient stops only, never text. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL, NoSQL, and the data warehouse — Technical Fluency for Transform Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CANONICAL TOKENS — do not edit values ===== */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient: linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* DERIVED — canonical dark-ink at alpha, not new brand hexes.
+     The kit has no muted-text token; muted passes 5.3:1 on white. */
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+/* ===== A11Y (required — do not remove) ===== */
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+/* ===== LAYOUT + HERO ===== */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* ===== TABLES ===== */
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th { font-weight: 700; color: var(--torq-dark-ink); border-bottom: 2px solid var(--torq-blue); }
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 22%; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* ===== CALLOUT (regulated-client note, key framing) ===== */
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+
+/* ===== TAKEAWAYS (every Task ends with these) ===== */
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ===== TIER READS (required — every Task carries one) =====
+   Three labeled reads, all visible, never gated. The sky-blue rule
+   between tiers is a DIVIDER, never text — #43A8FF is 2.5:1 on white
+   and fails for type. Labels use #2D53F2 (5.8:1). */
+.tiers {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  overflow: hidden;
+  margin: var(--sp-6) 0;
+}
+.tiers-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+}
+.tiers-head .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-1);
+}
+.tiers-head p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.tier { padding: var(--sp-4) var(--sp-6); border-top: 2px solid var(--torq-sky-blue); }
+.tier:first-of-type { border-top: 0; }
+.tier .tier-label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.tier p { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+.tier p:last-child { margin-bottom: 0; }
+.tier .move { display: block; margin-top: var(--sp-2); color: var(--ink-muted); }
+.tier .move b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ============================================================
+   OPTIONAL COMPONENTS — delete any you don't use.
+   ============================================================ */
+
+/* OPTIONAL · numbered list with big numerals (skill stacks, step lists) */
+.numbered { list-style: none; margin: var(--sp-4) 0 0; padding: 0; counter-reset: sk; }
+.numbered li {
+  counter-increment: sk; position: relative;
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.numbered li:first-child { border-top: 0; }
+.numbered li::before {
+  content: counter(sk);
+  position: absolute; left: 0; top: var(--sp-4);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+.numbered .name { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+
+/* OPTIONAL · plain divided list (definitions, lenses, checks) */
+.plain-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.plain-list li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); }
+.plain-list li:first-child { border-top: 0; padding-top: 0; }
+.plain-list b { color: var(--torq-dark-ink); }
+
+/* OPTIONAL · formula box (fill-in-the-blank sentence patterns) */
+.formula {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0;
+  box-shadow: var(--torq-shadow);
+  font-size: var(--fs-lg); font-weight: 600; line-height: 1.6;
+}
+.formula .tag {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  color: var(--torq-blue); background: var(--torq-soft-bg);
+  padding: 2px 8px; border-radius: 6px; margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · not-this / this comparison */
+.compare { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.compare li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); font-size: var(--fs-sm); }
+.compare li:first-child { border-top: 0; }
+.compare .bad, .compare .good { display: block; }
+.compare .bad { color: var(--ink-muted); }
+.compare .bad::before {
+  content: "Not this"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-red); margin-right: var(--sp-2);
+}
+.compare .good { margin-top: var(--sp-2); font-weight: 600; }
+.compare .good::before {
+  content: "This"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-green); margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · copyable prompt block (AI exercises) */
+.prompt { background: var(--torq-dark-ink); padding: var(--sp-4) var(--sp-6); position: relative; }
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono); font-size: var(--fs-sm);
+  color: #E8EFFF; line-height: 1.7; white-space: pre-wrap;
+  word-break: break-word; display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22); border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3); min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+
+/* OPTIONAL · bordered example / stage card */
+.card {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow); padding: var(--sp-6); margin-bottom: var(--sp-4);
+}
+.card .kicker {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.card .example {
+  background: var(--torq-soft-bg); border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.card .example b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* OPTIONAL · dashed optional-extra box */
+.optional {
+  border: 1px dashed var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-6) 0 0;
+}
+.optional .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-2);
+}
+
+/* ===== RESPONSIVE / MOTION / PRINT ===== */
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .card, .formula, .tiers { box-shadow: none; break-inside: avoid; }
+  .tier { break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Technical Fluency &middot; Course 2 &middot; Task&nbsp;4&nbsp;of&nbsp;6</p>
+    <h1>SQL, NoSQL, and the data warehouse</h1>
+    <p class="standfirst">Where a client's data lives, the guarantee they traded away to get scale, and the most expensive sentence in analytics scoping.</p>
+    <div class="meta">
+      <span><b>Course</b> How Systems Talk</span>
+      <span><b>Read time</b> ~8 min</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Two questions come up on almost every engagement: where does the data live, and why is the dashboard out of date? The answers are the same three concepts, and one of them is a business decision that's routinely made by engineers and never surfaced to the people accountable for it.</p>
+
+  <section id="split">
+    <h2>The actual difference</h2>
+    <p><b>SQL</b> databases enforce a schema and give you transactional guarantees, usually summarised as ACID: a transfer either fully happens or fully doesn't. <b>NoSQL</b> relaxes those guarantees in exchange for scale and flexibility, typically offering <em>eventual</em> consistency &mdash; the data will agree with itself shortly.</p>
+    <p>The decision usually turns on one question: <b>does this data have real relationships and correctness requirements?</b></p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">Says SQL</th><th scope="col">Can say NoSQL</th></tr></thead>
+        <tbody>
+          <tr><td>Money, orders, patients, bookings</td><td>Event streams, product catalogues, session data</td></tr>
+          <tr><td>Anything where two records disagreeing is a problem someone has to clean up</td><td>Anything where a few seconds of disagreement is invisible</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note">Most real systems legitimately use both, and "which database are you on?" often has more than one right answer. That isn't a mess; it's normal.</p>
+  </section>
+
+  <section id="eventual">
+    <h2>"Eventually consistent" is a business decision</h2>
+    <p>This is the sentence to notice. <b>Eventual consistency is a business decision disguised as a technical one.</b> It means that for some window of time, two parts of the system can give different answers to the same question.</p>
+    <p>For a product catalogue that's fine. For an account balance, a medication record, or a seat on a flight, it's a different conversation entirely &mdash; and in finance or healthcare it can be a compliance problem rather than a user-experience one.</p>
+    <p class="section-note">Your job isn't to make the call. It's to make sure the client's PM knows which one was picked and what it means for their data. That is frequently news to them, because it was decided by an engineer solving a scaling problem two years ago.</p>
+  </section>
+
+  <section id="warehouse">
+    <h2>The data warehouse, and why the dashboard says "as of last night"</h2>
+    <p>A <b>data warehouse</b> is column-oriented storage optimised for analytical queries over huge datasets, loaded from the production systems on a schedule. Production databases are built for handling one order at a time; warehouses are built for asking questions about ten million of them.</p>
+    <p>That scheduled load is why the dashboard is out of date. It's typically a nightly job &mdash; Course 3 covers the scheduling mechanism &mdash; and it's a design choice you can change, at a cost, if the business genuinely needs fresher data.</p>
+    <div class="formula">
+      <span class="tag">Expensive sentence</span>"We want real-time analytics."
+    </div>
+    <p class="section-note">Establish what refresh interval the business decision actually requires before anyone prices streaming infrastructure. The honest answer is often "hourly would be fine," and the gap between hourly and real-time is most of the cost.</p>
+  </section>
+
+  <div class="callout">
+    <span class="label">Regulated client?</span>
+    <p>If you're engaged with a healthcare, aerospace &amp; defense, or financial-services client, an eventual-consistency model on records that carry regulatory weight &mdash; balances, medication histories, transaction logs &mdash; likely needs legal/compliance review and data-handling constraints before it can move forward the way a vendor's documentation describes. Assume &quot;the data will agree with itself shortly&quot; is a compliance question before it's a technical one.</p>
+  </div>
+
+  <!-- ===== TIER READS — required on every Task. Never gate or collapse. ===== -->
+  <section id="tiers">
+    <h2>The same content, read three ways</h2>
+    <div class="tiers">
+      <div class="tiers-head">
+        <span class="label">All three reads, always visible</span>
+        <p>Find yours, then read the other two anyway &mdash; that's how you know what the conversation above you sounds like.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 1 &mdash; a level deeper</span>
+        <p>SQL for things that must be exactly right; NoSQL for things that must be fast and huge. A warehouse is the separate copy the reporting runs against, which is why the numbers are from last night rather than from now.</p>
+        <p class="move"><b>The move:</b> when a dashboard looks wrong, check when it last loaded before assuming the data is wrong.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 2 &mdash; the trade-off you can discuss</span>
+        <p>Two conversations are yours. Making sure the consistency model is understood by the person accountable for the data, and pinning down what refresh interval the business actually needs before &quot;real-time&quot; gets into a requirement.</p>
+        <p class="move"><b>The move:</b> ask what decision depends on the freshness, then work back to the interval.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 3 &mdash; strategic &amp; risk read</span>
+        <p>Eventual consistency in finance or healthcare can be a compliance exposure rather than a UX quirk, and it was usually chosen by an engineer solving a different problem. &quot;Real-time analytics&quot; is one of the most expensive sentences in a scoping conversation, and the cost sits between hourly and instant.</p>
+        <p class="move"><b>The move:</b> price the refresh interval the business can defend, not the one it asked for.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>SQL guarantees correctness; NoSQL trades it for scale.</b> Money, orders, patients, and bookings say SQL. Catalogues and event streams can say NoSQL.</li>
+      <li><b>Most systems legitimately use both.</b> &quot;Which database?&quot; often has more than one right answer, and that's normal.</li>
+      <li><b>&quot;Eventually consistent&quot; is a business decision in technical clothing.</b> In finance or healthcare it can be a compliance problem, not a UX quirk.</li>
+      <li><b>The warehouse is a separate, scheduled copy.</b> That nightly load is why the dashboard says &quot;as of last night.&quot;</li>
+      <li><b>&quot;We want real-time analytics&quot; is expensive.</b> Find the refresh interval the decision actually needs before anyone prices streaming.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 5 &mdash; The network path.</p>
+    <p>Technical Fluency for Transform Practice &middot; Course 2: How Systems Talk</p>
+  </div>
+
+</div>
+</main>
+</body>
+</html>

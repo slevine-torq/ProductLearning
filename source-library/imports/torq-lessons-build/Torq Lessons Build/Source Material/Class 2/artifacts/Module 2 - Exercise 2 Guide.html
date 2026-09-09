@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 · Exercise 2 Guide, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', -apple-system, sans-serif; background: #07162C; color: #ffffff; -webkit-font-smoothing: antialiased; line-height: 1.6; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 25% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  h1 { font-size: clamp(30px, 4vw, 44px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  p { color: #ffffff; }
+  strong { color: #fff; font-weight: 700; }
+  em { color: #22d3ee; font-style: normal; font-weight: 600; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 40px 28px 100px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 34px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .meta-chip { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 18px; }
+  .lead { font-size: 17px; color: #ffffff; max-width: 800px; margin: 18px 0 8px; }
+
+  .scenario { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); border-radius: 16px; padding: 24px 26px; margin: 26px 0; }
+  .scenario h2 { font-size: 19px; color: #fff; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .scenario ul { list-style: none; margin: 12px 0 0; }
+  .scenario ul li { font-size: 14.5px; color: #ffffff; padding: 5px 0 5px 22px; position: relative; }
+  .scenario ul li::before { content: '▸'; position: absolute; left: 0; color: #22d3ee; }
+  .scenario .stat { color: #fff; font-weight: 700; }
+  .scn-pick { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px; }
+  .scn-pick > div { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:16px 18px; }
+  .scn-pick h3 { font-size:15px; color:#fff; margin-bottom:6px; }
+  .scn-pick .tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#22d3ee; }
+  @media (max-width:680px){ .scn-pick{ grid-template-columns:1fr; } }
+
+  .phase { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 26px; margin: 22px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .phase-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .phase-badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 13px; color: #07162C; background: var(--acc, #22d3ee); padding: 5px 12px; border-radius: 999px; }
+  .phase-head h2 { font-size: 21px; color: #fff; }
+  .phase > p { margin: 4px 0 10px; }
+
+  .qtable { width: 100%; border-collapse: collapse; margin: 14px 0 4px; }
+  .qtable td { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.07); font-size: 13.5px; color: #ffffff; vertical-align: top; }
+  .qtable td.q { background: rgba(255,255,255,0.02); color: #fff; font-weight: 600; width: 58%; }
+  .qtable td.a { color: #ffffff; font-style: italic; }
+
+  .promptbox { background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px; padding: 18px 20px; margin: 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.65; color: #9fd0ff; white-space: pre-wrap; }
+  .prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #22d3ee; display: block; margin-bottom: 10px; }
+
+  /* Scenario picker, selectable (Step 3) */
+  .scn-pick > div { cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s; position: relative; }
+  .scn-pick > div:hover { border-color: rgba(34,211,238,0.45); background: rgba(34,211,238,0.05); }
+  .scn-pick > div.sel { border-color: #22d3ee; background: rgba(34,211,238,0.09); box-shadow: 0 0 0 1px #22d3ee inset; }
+  .scn-pick > div.sel::after { content: '✓ Selected'; position: absolute; top: 12px; right: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #22d3ee; }
+  .scn-pick > div:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
+
+  /* Prompt copy button + injected data */
+  .prompt-actions { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; flex-wrap: wrap; }
+  .prompt-copy { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 11.5px; padding: 7px 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(34,211,238,0.35); background: rgba(34,211,238,0.1); color: #22d3ee; transition: all .15s; }
+  .prompt-copy:hover { background: rgba(34,211,238,0.2); }
+  .prompt-hint { font-size: 12.5px; color: #ffffff; }
+  .prompt-data { color: #ffffff; }
+  .prompt-data.empty { color: #ffffff; font-style: italic; }
+
+  /* Module 1 carry-in box */
+  .m1-box { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); border-radius: 14px; padding: 18px 20px; margin: 18px 0; }
+  .m1-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 14.5px; color: #fff; margin-bottom: 4px; }
+  .m1-sub { font-size: 13px; color: #ffffff; margin-bottom: 12px; }
+  .m1-lab { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #60a5fa; margin: 10px 0 5px; }
+  .m1in { width: 100%; background: rgba(8,18,36,0.6); border: 1px solid rgba(96,165,250,0.22); border-radius: 8px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 13.5px; line-height: 1.5; padding: 9px 11px; resize: vertical; min-height: 44px; }
+  .m1in:focus { outline: none; border-color: #22d3ee; }
+  .m1in::placeholder { color: #ffffff; }
+
+  /* Run-in-Claude step marker */
+  .run-step { font-size: 13.5px; color: #ffffff; background: rgba(34,211,238,0.06); border-left: 3px solid #22d3ee; border-radius: 0 8px 8px 0; padding: 9px 14px; margin: 10px 0; }
+  .run-step strong { color: #fff; }
+
+  .callout { border-radius: 12px; padding: 16px 18px; margin: 16px 0; font-size: 14px; line-height: 1.6; }
+  .callout.warn { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.22); color: #fca5a5; }
+  .callout.warn strong { color: #fff; }
+  .callout.tip { background: rgba(110,231,183,0.06); border: 1px solid rgba(110,231,183,0.2); color: #ffffff; }
+  .callout.tip strong { color: #6ee7b7; }
+
+  /* Fillable answer fields + export toolbar */
+  .fill { width: 100%; background: rgba(8,18,36,0.6); border: 1px solid rgba(96,165,250,0.22); border-radius: 8px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 13.5px; line-height: 1.5; padding: 9px 11px; resize: vertical; min-height: 46px; transition: border-color .2s; }
+  input.fill { min-height: 0; }
+  .fill:focus { outline: none; border-color: #22d3ee; }
+  .fill::placeholder { color: #ffffff; }
+  .lab-toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; padding: 14px; margin: 34px -28px 0; background: linear-gradient(0deg, #07162C 72%, transparent); z-index: 30; }
+  .lab-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s, border-color .2s, color .2s; }
+  .lab-btn.primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .lab-btn.primary:hover { transform: translateY(-2px); }
+  .lab-btn.alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .lab-btn.alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .lab-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; opacity: 0; transition: opacity .3s; }
+  .lab-saved.show { opacity: 1; }
+  .lab-toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .lab-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a:hover { color: #22d3ee; }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="#" class="back-link" role="button" aria-label="Go back to the previous page" data-ps-qa-back onclick="if(history.length>1){history.back();}return false;">← Back</a>
+      <a href="Module 2 - Slides (Shareable).html" class="back-link">← Module 2 deck</a>
+    </div>
+    <div class="meta-chip">Individual · ~25 min</div>
+  </div>
+
+  <span class="section-label">Module 2 · Exercise 2 Guide</span>
+  <h1>Map your product’s competitive edge</h1>
+  <p class="lead">Use your Executive Summary from Exercise 1 to define a future-state <strong>journey map</strong>. You’ll identify a persona and show how your initiative (StreamLine or RouteLogic) replaces the status quo of manual workarounds with a superior, streamlined journey.</p>
+
+  <div class="callout tip"><strong>🔁 Stay in the same chat:</strong> return to the <strong>same Claude conversation</strong> from Exercise 1 so the AI keeps the context of your Executive Summary, interviews, and bug reports.</div>
+
+  <div class="m1-box">
+    <div class="m1-title">📎 Bring in your Module 1 work</div>
+    <p class="m1-sub">Open your <code>01-product-thinking/problem-hook.md</code> (you downloaded it in Module 1) and paste these two pieces below, they auto-fill into the prompts.</p>
+    <label class="m1-lab" for="m1Hook">Problem Hook</label>
+    <textarea id="m1Hook" class="m1in" rows="2" placeholder="Paste your Module 1 Problem Hook…"></textarea>
+    <label class="m1-lab" for="m1Vp">Value Proposition</label>
+    <textarea id="m1Vp" class="m1in" rows="2" placeholder="Paste your Module 1 Value Proposition…"></textarea>
+  </div>
+
+  <!-- EXERCISE 2 -->
+  <div class="phase" style="--acc:#22d3ee;">
+    <div class="phase-head"><span class="phase-badge">Exercise 2 · 25 min</span></div>
+
+    <h3 style="font-size:15px;color:#22d3ee;margin:18px 0 4px;">Step 1 · Identify your persona</h3>
+    <p style="font-size:14px">Define the specific user you’re designing for. Use your <strong>Problem Hook from Module 1</strong> to filter the evidence in your Executive Summary so you’re solving the right business crisis. Paste this prompt into your Claude conversation:</p>
+    <div class="promptbox" id="pPersona"><span class="prompt-label">Prompt · generate personas</span>Review my Problem Hook: <span id="hookInject" class="prompt-data empty">[Paste your Module 1 Problem Hook above]</span>
+
+Based on that hook, consult our Executive Summary (specifically the user
+interviews and bug reports). Identify one or two distinct Personas who best
+embody the human struggle described in my hook. For each, provide:
+- Role: who they are, in one sentence.
+- Goal: what they want to achieve, in one sentence.
+- Friction: the specific 'Moment of Misery' from our research that is stopping them.</div>
+    <div class="prompt-actions">
+      <button type="button" class="prompt-copy" onclick="copyPrompt('pPersona')">📋 Copy prompt</button>
+      <span class="prompt-hint">Paste your hook in the box at the top and it fills in here.</span>
+    </div>
+    <p class="run-step">▶ <strong>Run it in Claude</strong>, then choose the persona you’ll use for the rest of the course and fill the table below.</p>
+    <table class="qtable">
+      <tr><td class="q">Role, who are you solving for? (the specific user segment or profile)</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Goal, what is this user ultimately trying to achieve?</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Friction, the main barrier (moment of misery) stopping them from succeeding</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+
+    <h3 style="font-size:15px;color:#22d3ee;margin:18px 0 4px;">Step 2 · Document the current workaround</h3>
+    <p style="font-size:14px">Identify exactly how your persona is “hacking” a solution today, this defines the competitive baseline your initiative must beat. Remember: your real competition is the <em>status quo</em>: the messy spreadsheets and manual habits users stick with to avoid the friction of learning something new.</p>
+    <div class="promptbox" id="pWorkaround"><span class="prompt-label">Prompt · find the workaround</span>For my persona, <span id="w-role" class="prompt-data empty">[your Step 1 Role]</span> (goal: <span id="w-goal" class="prompt-data empty">[your Step 1 Goal]</span>), identify the specific external tools or manual processes they use to bypass their friction: <span id="w-fric" class="prompt-data empty">[your Step 1 Friction]</span>.
+
+Referencing our Problem Hook and the Executive Summary, list the specific steps
+they take and explain why this workaround is inefficient. Highlight how this
+'hack' directly contributes to the business crisis we identified.</div>
+    <div class="prompt-actions">
+      <button type="button" class="prompt-copy" onclick="copyPrompt('pWorkaround')">📋 Copy prompt with your persona</button>
+      <span class="prompt-hint">Auto-fills the <strong>Role, Goal &amp; Friction</strong> you wrote in Step 1.</span>
+    </div>
+    <p class="run-step">▶ <strong>Run it in Claude</strong>, then extract the answer into the table below.</p>
+    <table class="qtable">
+      <tr><td class="q">External tools, the outside platforms or tools the user is forced to use</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">The process, the 3 to 5 manual steps the user takes to get the job done</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Core frustration, the exact moment the process feels most “broken”</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">The evidence, a specific quote or behavior from the research that proves this</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+
+    <h3 style="font-size:15px;color:#22d3ee;margin:18px 0 4px;">Step 3 · Design your future-state journey map</h3>
+    <p style="font-size:14px">Flip the “before” state into a future-state workflow. Map how your initiative replaces those manual, external hacks to deliver the value proposition you defined in Module 1. Choose the strategy block that matches your project:</p>
+    <div class="scn-pick">
+      <div role="button" tabindex="0" data-scn="ds-streamline" onclick="pickStrategy('ds-streamline')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickStrategy('ds-streamline')}"><span class="tag">Scenario A · StreamLine Spotlight</span><h3>Restore &amp; curate</h3><p style="font-size:13.5px;color:#ffffff">Restore brand authority and win back users by prioritizing human-led curation and restoration over mass-market scale.</p></div>
+      <div role="button" tabindex="0" data-scn="ds-routelogic" onclick="pickStrategy('ds-routelogic')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickStrategy('ds-routelogic')}"><span class="tag">Scenario B · RouteLogic Velocity</span><h3>Strip &amp; accelerate</h3><p style="font-size:13.5px;color:#ffffff">Reclaim operational simplicity by stripping away legacy noise and ensuring the tool is the fastest for everyday work.</p></div>
+    </div>
+    <p style="font-size:14px;margin-top:14px">Pick the strategy block that matches your project. Your persona, strategy, and value prop all drop into the prompt below:</p>
+    <div class="promptbox" id="pJourney"><span class="prompt-label">Prompt · future-state journey map</span>Using the Persona and Workaround we identified, map a 4-stage 'Future State'
+journey for my initiative.
+
+Persona: <span id="j-role" class="prompt-data empty">[your Step 1 Role]</span>, goal: <span id="j-goal" class="prompt-data empty">[your Step 1 Goal]</span>; friction: <span id="j-fric" class="prompt-data empty">[your Step 1 Friction]</span>.
+The Strategy: <span id="strategyData" class="prompt-data empty">[Pick a strategy block above]</span>
+My Value Prop: <span id="vpInject" class="prompt-data empty">[Paste your Module 1 Value Prop above]</span>
+
+Output Requirements:
+- A one-page visual timeline.
+- A numbered list for the 4 stages.
+- Use an 'Action -> Benefit' format (max 15 words per bullet).
+- Each stage must include: Stage Name, User Action, Internal State, and Pain
+  Point Addressed.
+- End with 3 Competitive Advantages over the manual workaround.</div>
+    <div class="prompt-actions">
+      <button type="button" class="prompt-copy" id="copyJourneyBtn" onclick="copyPrompt('pJourney')">📋 Copy prompt + my strategy</button>
+      <span class="prompt-hint" id="journeyHint">Pick a strategy block above and it drops into the prompt.</span>
+    </div>
+    <p class="run-step">▶ <strong>Run it in Claude</strong> to generate your future-state journey map.</p>
+    <p style="font-size:14px;margin-top:12px">The map <strong>is</strong> your deliverable, no need to retype the stages here. Claude hands it back as a file (usually <code>.md</code> or <code>.html</code>) or a visual you can screenshot. <strong>Commit that file to your repo</strong>, then drop a shareable link or the filename below so this guide points to it:</p>
+    <table class="qtable">
+      <tr><td class="q">📎 Your journey map, a shareable link, or the map file you committed (e.g. <code>journey-map.html</code>)</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <div class="callout warn"><strong>📍 Deliverable:</strong> commit your journey map file to the repo and make sure it’s linked above, it’s the core artifact of this lab. Download this guide as <code>.md</code>, commit it too, then post the single biggest opportunity gap you found in <code>#cohort-channel</code>.</div>
+  </div>
+
+  <div class="lab-toolbar">
+    <button class="lab-btn primary" onclick="labCopyMd()">📋 Copy as Markdown</button>
+    <button class="lab-btn alt" onclick="labDownloadMd()">⬇ Download .md</button>
+    <button class="lab-btn alt" onclick="labReset()">↺ Reset</button>
+    <span class="lab-saved" id="labSaved">✓ Saved</span>
+  </div>
+
+  <footer>
+    <span>Product School · Product Management · Module 2</span>
+    <a href="Module 2 - Slides (Shareable).html">← Back to the Module 2 deck</a>
+  </footer>
+</div>
+<div class="lab-toast" id="labToast"></div>
+
+<script>
+(function () {
+  const KEY = 'pm-m2-labguide-ex2';
+  const TITLE = 'Competitive Analysis & Journey Map (Module 2)';
+  const DLNAME = 'competitive-and-journey.md';
+
+  const wrap = document.querySelector('.wrap');
+
+  const clean = s => (s || '').replace(/✍️/g, '').replace(/…+/g, '').replace(/\s+/g, ' ').trim().replace(/[:：]+$/, '').trim();
+  const isLabelCell = c => /\b(q|conn|prompt)\b/.test(c.className || '');
+  const isFieldCell = c => {
+    if (c.querySelector('.fill')) return false;
+    if (isLabelCell(c)) return false;
+    if (c.tagName === 'TH') return c.textContent.includes('✍️');
+    const cls = (c.className || '').trim();
+    if (/\b(ans|a)\b/.test(cls)) return c.textContent.includes('✍️');
+    if (!cls) return c.textContent.trim().startsWith('✍️');
+    return false;
+  };
+  const cells = Array.from(wrap.querySelectorAll('td, th')).filter(isFieldCell);
+  cells.forEach((cell, i) => {
+    const isHead = cell.tagName === 'TH';
+    const ph = cell.textContent.trim();
+    const row = cell.closest('tr');
+    const q = row && row.querySelector('.q');
+    let label = '';
+    if (isHead) {
+      label = clean(cell.textContent);
+    } else if (q && q !== cell) {
+      label = clean(q.textContent);
+    } else if (row) {
+      const sib = Array.from(row.children).find(td => td !== cell && td.textContent.trim());
+      label = sib ? clean(sib.textContent) : '';
+    }
+    if (!label) label = 'Response ' + (i + 1);
+    const el = document.createElement(isHead ? 'input' : 'textarea');
+    el.className = 'fill';
+    if (isHead) el.type = 'text';
+    el.dataset.k = 'f' + i;
+    el.dataset.label = label;
+    el.placeholder = ph;
+    cell.textContent = '';
+    cell.appendChild(el);
+  });
+
+  const fields = Array.from(wrap.querySelectorAll('.fill'));
+
+  function sectionFor(field) {
+    const phase = field.closest('.phase');
+    if (phase) { const h = phase.querySelector('.phase-head h2'); if (h) return h.textContent.trim(); }
+    return 'Responses';
+  }
+
+  function load() {
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    fields.forEach(f => { if (d[f.dataset.k] != null) f.value = d[f.dataset.k]; });
+  }
+  let t;
+  function save() {
+    const d = {};
+    fields.forEach(f => d[f.dataset.k] = f.value);
+    localStorage.setItem(KEY, JSON.stringify(d));
+    const s = document.getElementById('labSaved');
+    s.classList.add('show');
+    clearTimeout(t);
+    t = setTimeout(() => s.classList.remove('show'), 1200);
+  }
+  fields.forEach(f => f.addEventListener('input', save));
+  load();
+
+  function md() {
+    const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+    const order = [];
+    const map = {};
+    fields.forEach(f => {
+      const s = sectionFor(f);
+      if (!map[s]) { map[s] = []; order.push(s); }
+      map[s].push(f);
+    });
+    let out = '# ' + TITLE + '\n';
+    order.forEach(g => {
+      out += '\n## ' + g + '\n';
+      map[g].forEach(f => { out += '- **' + f.dataset.label + ':** ' + v(f.value) + '\n'; });
+    });
+    return out;
+  }
+  function toast(m) {
+    const el = document.getElementById('labToast');
+    el.textContent = m; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1800);
+  }
+  window.labCopyMd = async function () {
+    try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+    catch (e) { toast('Copy failed, try Download'); }
+  };
+  window.labDownloadMd = function () {
+    const b = new Blob([md()], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = DLNAME;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Downloaded ' + DLNAME + ' ✓');
+  };
+  window.labReset = function () {
+    if (!confirm('Clear everything you’ve typed in this guide?')) return;
+    localStorage.removeItem(KEY);
+    fields.forEach(f => f.value = '');
+    toast('Cleared');
+  };
+})();
+</script>
+<script>
+(function () {
+  function toast(m) {
+    var el = document.getElementById('labToast'); if (!el) return;
+    el.textContent = m; el.classList.add('show');
+    setTimeout(function () { el.classList.remove('show'); }, 1800);
+  }
+  function promptText(id) {
+    var box = document.getElementById(id); if (!box) return '';
+    var c = box.cloneNode(true);
+    var lbl = c.querySelector('.prompt-label'); if (lbl) lbl.remove();
+    return c.textContent.replace(/\n{3,}/g, '\n\n').trim();
+  }
+  function setSpan(id, val, ph) {
+    var s = document.getElementById(id); if (!s) return;
+    if (val && val.trim()) { s.textContent = val.trim(); s.classList.remove('empty'); }
+    else { s.textContent = ph; s.classList.add('empty'); }
+  }
+  function fieldByLabel(sub) {
+    return Array.from(document.querySelectorAll('.fill')).find(function (x) {
+      return (x.dataset.label || '').toLowerCase().indexOf(sub.toLowerCase()) >= 0;
+    });
+  }
+
+  // ── Live persona carry: Step 1 fields → Step 2 & Step 3 prompt spans ──
+  var persona = [
+    { sub: 'role, who are you solving for', spans: [['w-role', '[your Step 1 Role]'], ['j-role', '[your Step 1 Role]']] },
+    { sub: 'goal, what is this user',        spans: [['w-goal', '[your Step 1 Goal]'], ['j-goal', '[your Step 1 Goal]']] },
+    { sub: 'friction, the main barrier',     spans: [['w-fric', '[your Step 1 Friction]'], ['j-fric', '[your Step 1 Friction]']] }
+  ];
+  persona.forEach(function (p) {
+    var f = fieldByLabel(p.sub); if (!f) return;
+    function sync() { p.spans.forEach(function (sp) { setSpan(sp[0], f.value, sp[1]); }); }
+    f.addEventListener('input', sync); sync();
+  });
+
+  // ── Module 1 carry-in: Hook → Step 1 prompt, Value Prop → Step 3 prompt ──
+  var M1KEY = 'pm-m2-ex2-m1';
+  var m1Hook = document.getElementById('m1Hook'), m1Vp = document.getElementById('m1Vp');
+  function m1Sync() {
+    setSpan('hookInject', m1Hook ? m1Hook.value : '', '[Paste your Module 1 Problem Hook above]');
+    setSpan('vpInject', m1Vp ? m1Vp.value : '', '[Paste your Module 1 Value Prop above]');
+  }
+  function m1Save() {
+    try { localStorage.setItem(M1KEY, JSON.stringify({ h: m1Hook ? m1Hook.value : '', v: m1Vp ? m1Vp.value : '' })); } catch (e) {}
+  }
+  (function () {
+    var d = {}; try { d = JSON.parse(localStorage.getItem(M1KEY) || '{}'); } catch (e) {}
+    if (m1Hook && d.h) m1Hook.value = d.h;
+    if (m1Vp && d.v) m1Vp.value = d.v;
+  })();
+  if (m1Hook) m1Hook.addEventListener('input', function () { m1Sync(); m1Save(); });
+  if (m1Vp) m1Vp.addEventListener('input', function () { m1Sync(); m1Save(); });
+  m1Sync();
+
+  // ── Copy a prompt (spans already reflect the student's inputs) ──
+  window.copyPrompt = function (id) {
+    if (id === 'pJourney') {
+      var sd = document.getElementById('strategyData');
+      if (!sd || sd.classList.contains('empty')) {
+        toast('Pick your strategy block above first ☝️');
+        var p = document.querySelector('.scn-pick');
+        if (p) p.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+    var text = promptText(id);
+    navigator.clipboard.writeText(text).then(function () {
+      toast(text.indexOf('[') >= 0 ? 'Copied, a couple of [blanks] still need your input in Claude ✓' : 'Prompt copied, paste it into Claude ✓');
+    }).catch(function () { toast('Copy failed, select the text manually'); });
+  };
+
+  // ── Step 3 · strategy picker → drop chosen strategy into the journey-map prompt ──
+  var STRAT = {
+    'ds-streamline': 'Restore brand authority and win back users by prioritizing human-led curation and restoration over mass-market scale.',
+    'ds-routelogic': 'Reclaim operational simplicity by stripping away legacy noise and ensuring the tool is the fastest for everyday work.'
+  };
+  var SKEY = 'pm-m2-ex2-strategy';
+  window.pickStrategy = function (id) {
+    document.querySelectorAll('.scn-pick > div').forEach(function (c) {
+      c.classList.toggle('sel', c.getAttribute('data-scn') === id);
+    });
+    setSpan('strategyData', STRAT[id], '[Pick a strategy block above]');
+    var isA = id === 'ds-streamline';
+    var btn = document.getElementById('copyJourneyBtn');
+    if (btn) btn.textContent = '📋 Copy prompt + ' + (isA ? 'StreamLine' : 'RouteLogic') + ' strategy';
+    var hint = document.getElementById('journeyHint');
+    if (hint) hint.textContent = 'Strategy is in the prompt; persona and value prop fill in from above.';
+    try { localStorage.setItem(SKEY, id); } catch (e) {}
+  };
+  (function () {
+    var s = null;
+    try { s = localStorage.getItem(SKEY); } catch (e) {}
+    if (s === 'ds-streamline' || s === 'ds-routelogic') window.pickStrategy(s);
+  })();
+})();
+</script>
+</body>
+</html>

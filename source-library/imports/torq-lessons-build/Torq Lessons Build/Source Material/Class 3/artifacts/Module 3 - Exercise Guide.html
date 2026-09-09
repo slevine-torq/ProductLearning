@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 · Exercise Guide, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', -apple-system, sans-serif; background: #07162C; color: #ffffff; -webkit-font-smoothing: antialiased; line-height: 1.6; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 25% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  h1 { font-size: clamp(30px, 4vw, 44px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  p { color: #ffffff; }
+  strong { color: #fff; font-weight: 700; }
+  em { color: #22d3ee; font-style: normal; font-weight: 600; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 28px 100px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 34px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .meta-chip { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 18px; }
+  .lead { font-size: 17px; color: #ffffff; max-width: 820px; margin: 18px 0 8px; }
+
+  .scenario { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); border-radius: 16px; padding: 24px 26px; margin: 26px 0; }
+  .scenario h2 { font-size: 19px; color: #fff; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .scn-pick { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px; }
+  .scn-pick > div { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:16px 18px; }
+  .scn-pick h3 { font-size:15px; color:#fff; margin-bottom:6px; }
+  .scn-pick .tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#22d3ee; }
+  @media (max-width:680px){ .scn-pick{ grid-template-columns:1fr; } }
+
+  .phase { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 26px; margin: 22px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .phase-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .phase-badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 13px; color: #07162C; background: var(--acc, #22d3ee); padding: 5px 12px; border-radius: 999px; }
+  .phase-head h2 { font-size: 21px; color: #fff; }
+  .phase > p { margin: 4px 0 10px; }
+  h3.snap { font-size: 15px; color: var(--acc,#22d3ee); margin: 26px 0 4px; }
+  p.snap-d { font-size: 13.5px; color: #ffffff; margin: 0 0 6px; }
+
+  /* read-only data tables */
+  .dtable { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  .dtable th { text-align: left; padding: 9px 11px; font-family:'IBM Plex Mono',monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #ffffff; border-bottom: 1px solid rgba(96,165,250,0.2); white-space: nowrap; }
+  .dtable td { padding: 10px 11px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #ffffff; }
+  .dtable td.dt-key { font-weight: 700; color: #fff; }
+  .dtable tr:hover td { background: rgba(59,130,246,0.04); }
+
+  /* funnel bars */
+  .funnel { display:flex; flex-direction:column; gap:8px; margin: 14px 0; }
+  .funrow { display:grid; grid-template-columns: 200px 1fr 52px; gap:12px; align-items:center; }
+  .funlabel { font-size:12.5px; color:#ffffff; font-weight:700; }
+  .funtrack { height:22px; border-radius:6px; background:rgba(255,255,255,.05); overflow:hidden; }
+  .funbar { height:100%; border-radius:6px; opacity:.85; }
+  .funpct { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700; text-align:right; }
+  @media (max-width:560px){ .funrow{ grid-template-columns: 120px 1fr 44px; } }
+
+  /* heatmaps */
+  .heatmap { margin: 12px 0; overflow-x:auto; }
+  .heatmap table { border-collapse:separate; border-spacing:4px; width:100%; }
+  .heatmap th { font-family:'IBM Plex Mono',monospace; font-size:9.5px; font-weight:700; color:#ffffff; text-transform:uppercase; letter-spacing:.04em; padding:5px 4px; text-align:center; }
+  .heatmap td { text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; color:#0a1628; border-radius:7px; padding:9px 6px; min-width:46px; }
+  .heatmap td.hm-label { background:rgba(255,255,255,.05); color:#ffffff; font-family:'Poppins',sans-serif; font-size:11px; text-align:left; white-space:nowrap; }
+  .heatmap td.hm-empty { background:transparent; }
+  .hm-legend { display:flex; gap:14px; justify-content:flex-start; margin:6px 0 4px; font-size:10px; color:#ffffff; font-family:'IBM Plex Mono',monospace; flex-wrap:wrap; }
+  .hm-sw { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:middle; margin-right:4px; }
+
+  .qtable { width: 100%; border-collapse: collapse; margin: 14px 0 4px; }
+  .qtable td { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.07); font-size: 13.5px; color: #ffffff; vertical-align: top; }
+  .qtable td.q { background: rgba(255,255,255,0.02); color: #fff; font-weight: 600; width: 50%; }
+  .qtable td.q .gw { display:block; font-weight:400; color:#ffffff; font-size:12px; font-style:italic; margin-top:3px; }
+  .qtable td.a { color: #ffffff; font-style: italic; }
+
+  .callout { border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-size: 13.5px; line-height: 1.6; }
+  .callout.warn { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.22); color: #fca5a5; }
+  .callout.warn strong { color: #fff; }
+  .callout.tip { background: rgba(110,231,183,0.06); border: 1px solid rgba(110,231,183,0.2); color: #ffffff; }
+  .callout.tip strong { color: #6ee7b7; }
+  .callout.crit { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.26); color: #e9d5a0; }
+  .callout.crit strong { color: #fcd34d; }
+
+  /* Fillable answer fields + export toolbar */
+  .fill { width: 100%; background: rgba(8,18,36,0.6); border: 1px solid rgba(96,165,250,0.22); border-radius: 8px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 13.5px; line-height: 1.5; padding: 9px 11px; resize: vertical; min-height: 46px; transition: border-color .2s; }
+  input.fill { min-height: 0; }
+  .fill:focus { outline: none; border-color: #22d3ee; }
+  .fill::placeholder { color: #ffffff; }
+  .lab-toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; padding: 14px; margin: 34px -28px 0; background: linear-gradient(0deg, #07162C 72%, transparent); z-index: 30; }
+  .lab-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s, border-color .2s, color .2s; }
+  .lab-btn.primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .lab-btn.primary:hover { transform: translateY(-2px); }
+  .lab-btn.alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .lab-btn.alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .lab-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; opacity: 0; transition: opacity .3s; }
+  .lab-saved.show { opacity: 1; }
+  .lab-toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .lab-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .formula { background: linear-gradient(160deg, rgba(34,211,238,0.1), rgba(7,22,44,0.4)); border:1px solid rgba(34,211,238,0.32); border-radius: 14px; padding: 18px 22px; margin: 14px 0; font-size: 14.5px; color: #ffffff; line-height: 1.7; }
+  .formula b { color:#22d3ee; }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a:hover { color: #22d3ee; }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="#" class="back-link" role="button" aria-label="Go back to the previous page" data-ps-qa-back onclick="if(history.length>1){history.back();}return false;">← Back</a>
+      <a href="Module 3 - Slides (Shareable).html" class="back-link">← Module 3 deck</a>
+    </div>
+    <div class="meta-chip">Individual · ~25 min</div>
+  </div>
+
+  <span class="section-label">Module 3 · Exercise Guide</span>
+  <h1>Formulate your product hypothesis <span>using data</span></h1>
+  <p class="lead">Verify your Module 2 persona and friction points against three quantitative snapshots, Funnel,
+  Cohort, and Segmentation, for your chosen scenario. Your goal is to review your qualitative research alongside
+  these metrics to see where the data <em>confirms</em>, <em>contradicts</em>, or adds <em>nuance</em> to your
+  earlier findings, ultimately evolving your Module 1 Problem Hook into a formal, data-backed product hypothesis.</p>
+
+  <div class="callout tip"><strong>💡 The reflection is the exercise.</strong> Work through all three snapshots for
+  your scenario in order. After each one, answer the reflection before moving on, don’t skip ahead to the
+  hypothesis. If the data contradicts your initial hunch, that’s a win: pivot your focus to where the actual metric
+  leak is happening.</div>
+
+  <!-- SCENARIO -->
+  <div class="scenario">
+    <h2>🎯 Work only on your chosen track</h2>
+    <p>Use the scenario you committed to in Modules 1 &amp; 2, keep building in the same world.</p>
+    <div class="scn-pick">
+      <div><span class="tag">Scenario A · B2C streaming</span><h3>StreamLine Spotlight</h3><p style="font-size:13px;color:#ffffff">15,000+ titles built on volume; engagement is plateauing and churn rising as curated competitors gain share. Your initiative is <strong>StreamLine Spotlight</strong>: a premium curated space within the app.</p></div>
+      <div><span class="tag">Scenario B · B2B logistics</span><h3>RouteLogic Velocity</h3><p style="font-size:13px;color:#ffffff">An all-in-one fleet suite whose expanding scope created a gap between admin power and frontline utility. Your initiative is <strong>RouteLogic Velocity</strong>: reclaiming operational simplicity for daily users.</p></div>
+    </div>
+  </div>
+
+  <!-- PRE-WORK -->
+  <div class="phase" style="--acc:#a78bfa;">
+    <div class="phase-head"><span class="phase-badge">Pre-work · Hypothesis check</span></div>
+    <p style="font-size:14px">Before you look at any quantitative data, anchor yourself in what you already know
+    <em>qualitatively</em>. Transfer the key outputs from your Modules 1 &amp; 2 deliverables into the table below,
+    you’ll return to these after each snapshot to check whether the numbers confirm, contradict, or add nuance.</p>
+    <table class="qtable"><tr><td class="q">Role <span class='gw'>, who you are solving for (from M2)</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Goal <span class='gw'>, what this user is ultimately trying to achieve</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Friction / moment of misery <span class='gw'>, the specific pain blocking their goal</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Current workaround <span class='gw'>, the external tool or manual process they rely on (M2)</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Problem Hook <span class='gw'>, your one-sentence framing of the business crisis (M1)</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Value Proposition <span class='gw'>, the outcome your initiative promised to deliver (M1)</span></td><td class="a">✍️ Your answer…</td></tr></table>
+  </div>
+
+  <!-- STREAMLINE -->
+  <div class="phase" style="--acc:#60a5fa;">
+    <div class="phase-head"><span class="phase-badge">Scenario A · StreamLine</span><h2>Read your data snapshots</h2></div>
+    <p style="font-size:14px">Work through all three snapshots. After each, answer the reflection before moving on,
+    the reflection is the exercise. <strong>RouteLogic learners: skip to Scenario B below.</strong></p>
+    <h3 class="snap">Snapshot 1 of 3 · Engagement &amp; Funnel Health (last 90 days)</h3><p class="snap-d">Conversion funnel (% of homepage visitors who reach each stage) alongside core engagement metrics for the mobile user base.</p><div class="funnel"><div class="funrow"><div class="funlabel">Homepage Visit</div><div class="funtrack"><div class="funbar" style="width:100%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">100%</div></div><div class="funrow"><div class="funlabel">Browse Titles</div><div class="funtrack"><div class="funbar" style="width:71%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">71%</div></div><div class="funrow"><div class="funlabel">Title Detail Page</div><div class="funtrack"><div class="funbar" style="width:48%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">48%</div></div><div class="funrow"><div class="funlabel">Start Playing</div><div class="funtrack"><div class="funbar" style="width:29%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">29%</div></div><div class="funrow"><div class="funlabel">30+ min Session</div><div class="funtrack"><div class="funbar" style="width:11%;background:#fb7185"></div></div><div class="funpct" style="color:#fb7185">11%</div></div></div><table class="dtable"><thead><tr><th>Metric</th><th>Current</th><th>6 months ago</th><th>Change</th></tr></thead><tbody><tr><td class="dt-key">Daily Active Users (mobile)</td><td>1,490,000</td><td>1,890,000</td><td>▼ 21%</td></tr><tr><td class="dt-key">Avg session length</td><td>24 min</td><td>31 min</td><td>▼ 23%</td></tr><tr><td class="dt-key">Sessions reaching 30+ min</td><td>11%</td><td>19%</td><td>▼ 8 pts</td></tr><tr><td class="dt-key">Content searched then played</td><td>34%</td><td>41%</td><td>▼ 7 pts</td></tr><tr><td class="dt-key">Spotlight feature (new)</td><td>18%</td><td>N/A</td><td>·</td></tr></tbody></table><div class="callout crit"><strong>⚠ Critical signal:</strong> Only <strong>11%</strong> of visitors reach a 30+ minute session, down from 19% six months ago. The top of the funnel is holding; the problem is <em>depth of engagement</em>.</div><table class="qtable"><tr><td class="q">✍️ Does the funnel data confirm your M2 friction point, or does it tell a different story? Note where the numbers align with the qualitative pain you found and where they diverge.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If the engagement data doesn’t align with your identified friction, review the other metrics in this snapshot. Reconsider whether a different part of the funnel is a more urgent driver of the business crisis.</div>
+    <h3 class="snap">Snapshot 2 of 3 · Subscriber Retention Cohort Heatmap</h3><p class="snap-d">Read horizontally to see how a month’s group retains over time; read vertically to compare newer cohorts against older ones. <strong>Spotlight launched for the December cohort onward.</strong></p><div class="heatmap"><table><thead><tr><th>Cohort</th><th>Mo. 0</th><th>Mo. 1</th><th>Mo. 2</th><th>Mo. 3</th><th>Mo. 4</th><th>Mo. 5</th><th>Mo. 6</th></tr></thead><tbody><tr><td class="hm-label">Sep · Full Library</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">68%</td><td class="hm-cell" style="background:#86efac">51%</td><td class="hm-cell" style="background:#fcd34d">39%</td><td class="hm-cell" style="background:#f59e0b">29%</td><td class="hm-cell" style="background:#f59e0b">21%</td><td class="hm-cell" style="background:#fb7185">16%</td></tr><tr><td class="hm-label">Oct · Full Library</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">66%</td><td class="hm-cell" style="background:#86efac">49%</td><td class="hm-cell" style="background:#fcd34d">37%</td><td class="hm-cell" style="background:#f59e0b">27%</td><td class="hm-cell" style="background:#fb7185">19%</td><td class="hm-empty"></td></tr><tr><td class="hm-label">Nov · Full Library</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">63%</td><td class="hm-cell" style="background:#86efac">47%</td><td class="hm-cell" style="background:#fcd34d">34%</td><td class="hm-cell" style="background:#f59e0b">24%</td><td class="hm-empty"></td><td class="hm-empty"></td></tr><tr><td class="hm-label">Dec · Spotlight</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">74%</td><td class="hm-cell" style="background:#34d399">61%</td><td class="hm-cell" style="background:#86efac">52%</td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td></tr><tr><td class="hm-label">Jan · Spotlight</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">77%</td><td class="hm-cell" style="background:#34d399">64%</td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td></tr><tr><td class="hm-label">Feb · Spotlight</td><td class="hm-cell" style="background:#22d3ee">100%</td><td class="hm-cell" style="background:#34d399">79%</td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td><td class="hm-empty"></td></tr></tbody></table></div><div class="hm-legend"><span><span class="hm-sw" style="background:#34d399"></span>Strong (60%+)</span><span><span class="hm-sw" style="background:#86efac"></span>Healthy (45 to 59%)</span><span><span class="hm-sw" style="background:#fcd34d"></span>Watch (30 to 44%)</span><span><span class="hm-sw" style="background:#f59e0b"></span>Weak (20 to 29%)</span><span><span class="hm-sw" style="background:#fb7185"></span>Leak (&lt;20%)</span></div><div class="callout crit"><strong>⚠ Critical signal:</strong> Spotlight cohorts retain <strong>12 to 15 points higher at Month 1</strong> than Full-Library cohorts. But the Month 0 → Month 1 drop remains the single largest leak regardless of cohort type.</div><table class="qtable"><tr><td class="q">✍️ Do the retention patterns align with the workaround your M2 persona used to find content? Note what the Mo. 0→1 drop suggests about the onboarding experience your persona described as frustrating.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If the retention data contradicts your M2 findings, look at the Full Library vs. Spotlight trends again. Reconsider which specific cohort behaviour best reflects your persona’s struggle.</div>
+    <h3 class="snap">Snapshot 3 of 3 · User Segment Performance</h3><p class="snap-d">Performance by user segment, which group (Wanderers, Casuals, or Power Users) offers the highest business impact?</p><table class="dtable"><thead><tr><th>Segment</th><th>% of base</th><th>Avg monthly LTV</th><th>Sessions / wk</th><th>Primary content mix</th><th>Churn if Spotlight-exposed</th></tr></thead><tbody><tr><td class="dt-key">Power Users</td><td>22%</td><td>$14.20</td><td>4.8×</td><td>58% Curated / 22% Trending</td><td>N/A (low churn anyway)</td></tr><tr><td class="dt-key">Casual Browsers</td><td>37%</td><td>$11.40</td><td>2.3×</td><td>31% Curated / 44% Trending</td><td>, 14 pts vs non-exposed</td></tr><tr><td class="dt-key">Wanderers</td><td>41%</td><td>$8.40</td><td>1.1×</td><td>18% Curated / 61% Trending</td><td>, 22 pts vs non-exposed ✓</td></tr></tbody></table><div class="callout crit"><strong>⚠ Critical signal:</strong> <strong>Wanderers</strong> (41% of the base) have the lowest LTV and fewest sessions, yet they show the biggest churn improvement (, 22 pts) when exposed to Spotlight. Power Users are <em>not</em> the primary opportunity.</div><table class="qtable"><tr><td class="q">✍️ Does the LTV gap and the content mix (61% trending for Wanderers) confirm the moment of misery your persona described? Note which segment your persona is in and whether the data confirms their pain.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If your persona maps to a segment that is currently performing well, reconsider whether you are targeting the highest-leverage segment for your initiative.</div>
+  </div>
+
+  <!-- ROUTELOGIC -->
+  <div class="phase" style="--acc:#34d399;">
+    <div class="phase-head"><span class="phase-badge">Scenario B · RouteLogic</span><h2>Read your data snapshots</h2></div>
+    <p style="font-size:14px">Work through all three snapshots. After each, answer the reflection before moving on,
+    the reflection is the exercise. <strong>StreamLine learners: you already finished above.</strong></p>
+    <h3 class="snap">Snapshot 1 of 3 · Feature Adoption by Role (Daily Active Users)</h3><p class="snap-d">Percentage of Daily Active Users who used each feature, broken down by role.</p><table class="dtable"><thead><tr><th>Feature</th><th>Drivers</th><th>Coordinators</th><th>Managers</th><th>Strategic note</th></tr></thead><tbody><tr><td class="dt-key">Live Dispatch Board</td><td>88%</td><td>91%</td><td>34%</td><td>Core, used daily by frontline</td></tr><tr><td class="dt-key">Route Optimizer</td><td>72%</td><td>85%</td><td>28%</td><td>Core, high frontline adoption</td></tr><tr><td class="dt-key">Compliance Checklist</td><td>64%</td><td>77%</td><td>18%</td><td>High friction (see Snapshot 2)</td></tr><tr><td class="dt-key">Financial Reporting Suite</td><td>3%</td><td>8%</td><td>86%</td><td>Manager-only universe</td></tr><tr><td class="dt-key">Shift Scheduling Module</td><td>15%</td><td>42%</td><td>79%</td><td>Adoption gap at coordinator level</td></tr><tr><td class="dt-key">AI Predictive ETAs</td><td>11%</td><td>23%</td><td>9%</td><td>Headline feature, low adoption</td></tr></tbody></table><div class="callout crit"><strong>⚠ Critical signal:</strong> Drivers and Coordinators cluster on <strong>3 core features</strong>. Everything else is below 25%. AI Predictive ETAs, a headline investment, is used by only 11% of drivers.</div><table class="qtable"><tr><td class="q">✍️ Does the low adoption confirm your persona is burdened by tools they don’t use? Note whether the low scheduling adoption (42%) for coordinators matches your M2 moment of misery.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If the adoption data shows your persona is highly active in features you labelled as friction, reconsider whether their frustration stems from a different part of the toolset.</div>
+    <h3 class="snap">Snapshot 2 of 3 · Coordinator Daily Dispatch Workflow Completion</h3><p class="snap-d">Drop-off at each stage, plus time spent on every task vs. best-in-class benchmarks.</p><div class="funnel"><div class="funrow"><div class="funlabel">Open RouteLogic</div><div class="funtrack"><div class="funbar" style="width:100%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">100%</div></div><div class="funrow"><div class="funlabel">Load Today’s Fleet View</div><div class="funtrack"><div class="funbar" style="width:94%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">94%</div></div><div class="funrow"><div class="funlabel">Assign Routes via Optimizer</div><div class="funtrack"><div class="funbar" style="width:71%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">71%</div></div><div class="funrow"><div class="funlabel">Log Compliance Checks</div><div class="funtrack"><div class="funbar" style="width:48%;background:#60a5fa"></div></div><div class="funpct" style="color:#60a5fa">48%</div></div><div class="funrow"><div class="funlabel">Complete Shift Handoff</div><div class="funtrack"><div class="funbar" style="width:31%;background:#fb7185"></div></div><div class="funpct" style="color:#fb7185">31%</div></div><div class="funrow"><div class="funlabel">File Daily Report</div><div class="funtrack"><div class="funbar" style="width:18%;background:#fb7185"></div></div><div class="funpct" style="color:#fb7185">18%</div></div></div><table class="dtable"><thead><tr><th>Workflow step</th><th>Avg time (min)</th><th>Benchmark</th><th>Gap</th></tr></thead><tbody><tr><td class="dt-key">Open RouteLogic → Load Fleet</td><td>1.5</td><td>1.0</td><td>+0.5 min</td></tr><tr><td class="dt-key">Assign Routes via Optimizer</td><td>8.2</td><td>4.0</td><td>+4.2 min</td></tr><tr><td class="dt-key">Log Compliance Checks</td><td>14.6</td><td>3.0</td><td>+11.6 min</td></tr><tr><td class="dt-key">Complete Shift Handoff</td><td>11.3</td><td>4.5</td><td>+6.8 min</td></tr><tr><td class="dt-key">File Daily Report</td><td>9.7</td><td>3.0</td><td>+6.7 min</td></tr></tbody></table><div class="callout crit"><strong>⚠ Critical signal:</strong> <strong>69% of Coordinators abandon</strong> the workflow after Route Assignment. Compliance Checks take 14.6 min vs. a 3-min benchmark, nearly 5× longer. This is the primary driver of the 31 minutes of daily wasted time surfaced in the NPS data.</div><table class="qtable"><tr><td class="q">✍️ Does the workflow data match the manual process or hack you documented in M2? Note whether the specific drop-offs or time gaps explain why your persona avoids the digital tool.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If the primary bottleneck in the table isn’t where your persona struggles, review the other workflow steps. Reconsider which specific data point actually drives the workaround you identified.</div>
+    <h3 class="snap">Snapshot 3 of 3 · Account Health &amp; CSAT by Segment</h3><p class="snap-d">High-level sentiment (NPS) and feature-specific satisfaction (CSAT). The CSAT heatmap is scored on a 5.0 scale.</p><table class="dtable"><thead><tr><th>KPI</th><th>Current</th><th>2 years ago</th><th>Signal</th></tr></thead><tbody><tr><td class="dt-key">Coordinator NPS</td><td>, 12</td><td>+18</td><td>30-point collapse</td></tr><tr><td class="dt-key">Avg daily time lost (manual workarounds)</td><td>31 min</td><td>~9 min</td><td>3.4× increase</td></tr><tr><td class="dt-key">Accounts citing complexity as churn reason</td><td>4 of 5</td><td>1 of 8</td><td>Structural shift</td></tr><tr><td class="dt-key">Velocity pilot: route-assign speed</td><td>+34%</td><td>·</td><td>Hypothesis supported</td></tr></tbody></table><p class="snap-d" style="margin-top:18px"><strong>CSAT score by role × feature cluster</strong> (5.0 scale)</p><div class="heatmap"><table><thead><tr><th>Role</th><th>Core Dispatch</th><th>Compliance</th><th>Scheduling</th><th>Reporting</th><th>AI / Predictions</th></tr></thead><tbody><tr><td class="hm-label">Drivers</td><td class="hm-cell" style="background:#34d399">4.3</td><td class="hm-cell" style="background:#f59e0b">2.8</td><td class="hm-cell" style="background:#fb7185">1.9</td><td class="hm-cell" style="background:#fb7185">1.1</td><td class="hm-cell" style="background:#f59e0b">2.1</td></tr><tr><td class="hm-label">Coordinators</td><td class="hm-cell" style="background:#34d399">4.1</td><td class="hm-cell" style="background:#f59e0b">2.2</td><td class="hm-cell" style="background:#f59e0b">2.6</td><td class="hm-cell" style="background:#fb7185">1.3</td><td class="hm-cell" style="background:#f59e0b">2.4</td></tr><tr><td class="hm-label">Managers</td><td class="hm-cell" style="background:#86efac">3.6</td><td class="hm-cell" style="background:#86efac">3.9</td><td class="hm-cell" style="background:#fcd34d">3.4</td><td class="hm-cell" style="background:#34d399">4.5</td><td class="hm-cell" style="background:#fcd34d">3.1</td></tr></tbody></table></div><div class="hm-legend"><span><span class="hm-sw" style="background:#34d399"></span>Strong (4.0+)</span><span><span class="hm-sw" style="background:#86efac"></span>OK (3.5 to 3.9)</span><span><span class="hm-sw" style="background:#fcd34d"></span>Watch (3.0 to 3.4)</span><span><span class="hm-sw" style="background:#f59e0b"></span>Weak (2.0 to 2.9)</span><span><span class="hm-sw" style="background:#fb7185"></span>Critical (&lt;2.0)</span></div><div class="callout crit"><strong>⚠ Critical signal:</strong> Compliance and Scheduling are the lowest-rated clusters for Drivers and Coordinators. Managers are satisfied with Reporting (4.5) and Compliance (3.9), but the frontline is struggling, driving the NPS collapse from +18 to to 12.</div><table class="qtable"><tr><td class="q">✍️ Look at the CSAT heatmap. Which specific cell most directly maps to your persona’s friction? Note how the NPS trend justifies the urgency of your M1 Problem Hook.</td><td class="a">✍️ Add your answer…</td></tr></table><div class="callout warn"><strong>🚨 The pivot check:</strong> If your persona is currently satisfied (green) in the heatmap, review the red cells. Reconsider whether your initiative is targeting the most critical pain point in the account-health data.</div>
+  </div>
+
+  <!-- HYPOTHESIS -->
+  <div class="phase" style="--acc:#22d3ee;">
+    <div class="phase-head"><span class="phase-badge">Step 3 · Craft your hypothesis</span></div>
+    <p style="font-size:14px">Now that you’ve reviewed the three snapshots and compared each with your Module 2
+    qualitative findings, use everything to complete the table below, then draft your full hypothesis sentence.</p>
+    <table class="qtable"><tr><td class="q">Qualitative evidence (from M2) <span class='gw'>, quote the specific friction / moment of misery for your persona</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Quantitative evidence (from M3) <span class='gw'>, name the metric or data point that confirms the pain; cite the number</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Persona <span class='gw'>, role, goal, and the friction you confirmed in the reconciliation steps</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Problem you are solving <span class='gw'>, one sentence describing the specific friction this initiative removes</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Strategic outcome <span class='gw'>, what behaviour change do you expect, and how does it map to retention / revenue / churn?</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Primary success metric (initiative signal) <span class='gw'>, the leading indicator that tells you the gap is closing</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Guardrail metric (product signal) <span class='gw'>, the metric that must NOT drop; it protects your existing base</span></td><td class="a">✍️ Your answer…</td></tr><tr><td class="q">Decision window <span class='gw'>, how much time or data before you scale, pivot, or kill? minimum threshold to proceed?</span></td><td class="a">✍️ Your answer…</td></tr></table>
+
+    <h3 style="font-size:15px;color:#22d3ee;margin:22px 0 6px;">Your hypothesis statement</h3>
+    <div class="formula">Based on <b>[your qual + quant evidence]</b>, I believe that <b>[solving X]</b> for
+    <b>[persona]</b> will result in <b>[outcome]</b>, as measured by a <b>[X%]</b> change in <b>[success metric]</b>.
+    I will protect <b>[guardrail metric]</b> and will make a go/no-go decision after <b>[decision window]</b>.</div>
+    <table class="qtable"><tr><td class="q" style="width:32%">Draft your full hypothesis sentence
+    <span class="gw">, one to three sentences; quote the metric, name the persona, name the outcome</span></td>
+    <td class="a">✍️ Your hypothesis…</td></tr></table>
+
+    <div class="callout warn"><strong>📍 Deliverable:</strong> add your finalised hypothesis to your project repo, every downstream module builds on this bet. Then post your one-line
+    key-learning statement in <code>#cohort-channel</code>: how has your hypothesis evolved from your Module 1 hook?</div>
+  </div>
+
+  <div class="lab-toolbar">
+    <button class="lab-btn primary" onclick="labCopyMd()">📋 Copy as Markdown</button>
+    <button class="lab-btn alt" onclick="labDownloadMd()">⬇ Download .md</button>
+    <button class="lab-btn alt" onclick="labReset()">↺ Reset</button>
+    <span class="lab-saved" id="labSaved">✓ Saved</span>
+  </div>
+
+  <footer>
+    <span>Product School · Product Management · Module 3</span>
+    <a href="Module 3 - Slides (Shareable).html">← Back to the Module 3 deck</a>
+  </footer>
+</div>
+<div class="lab-toast" id="labToast"></div>
+
+<script>
+(function () {
+  const KEY = 'pm-m3-exercise-guide';
+  const TITLE = 'Hypothesis & Success Metrics (Module 3)';
+  const DLNAME = 'hypothesis-and-metrics.md';
+
+  const wrap = document.querySelector('.wrap');
+
+  const clean = s => (s || '').replace(/✍️/g, '').replace(/…+/g, '').replace(/\s+/g, ' ').trim().replace(/[:：]+$/, '').trim();
+  const isLabelCell = c => /\b(q|conn|prompt)\b/.test(c.className || '');
+  const isFieldCell = c => {
+    if (c.querySelector('.fill')) return false;
+    if (isLabelCell(c)) return false;
+    if (c.tagName === 'TH') return c.textContent.includes('✍️');
+    const cls = (c.className || '').trim();
+    if (/\b(ans|a)\b/.test(cls)) return c.textContent.includes('✍️');
+    if (!cls) return c.textContent.trim().startsWith('✍️');
+    return false;
+  };
+  const cells = Array.from(wrap.querySelectorAll('td, th')).filter(isFieldCell);
+  cells.forEach((cell, i) => {
+    const isHead = cell.tagName === 'TH';
+    const ph = cell.textContent.trim();
+    const row = cell.closest('tr');
+    const q = row && row.querySelector('.q');
+    let label = '';
+    if (isHead) {
+      label = clean(cell.textContent);
+    } else if (q && q !== cell) {
+      label = clean(q.textContent);
+    } else if (row) {
+      const sib = Array.from(row.children).find(td => td !== cell && td.textContent.trim());
+      label = sib ? clean(sib.textContent) : '';
+    }
+    if (!label) label = 'Response ' + (i + 1);
+    const el = document.createElement(isHead ? 'input' : 'textarea');
+    el.className = 'fill';
+    if (isHead) el.type = 'text';
+    el.dataset.k = 'f' + i;
+    el.dataset.label = label;
+    el.placeholder = ph;
+    cell.textContent = '';
+    cell.appendChild(el);
+  });
+
+  const fields = Array.from(wrap.querySelectorAll('.fill'));
+
+  function sectionFor(field) {
+    const phase = field.closest('.phase');
+    if (phase) {
+      const h = phase.querySelector('.phase-head h2');
+      if (h) return h.textContent.trim();
+      const b = phase.querySelector('.phase-badge');
+      if (b) return b.textContent.trim();
+    }
+    return 'Responses';
+  }
+
+  function load() {
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    fields.forEach(f => { if (d[f.dataset.k] != null) f.value = d[f.dataset.k]; });
+  }
+  let t;
+  function save() {
+    const d = {};
+    fields.forEach(f => d[f.dataset.k] = f.value);
+    localStorage.setItem(KEY, JSON.stringify(d));
+    const s = document.getElementById('labSaved');
+    s.classList.add('show');
+    clearTimeout(t);
+    t = setTimeout(() => s.classList.remove('show'), 1200);
+  }
+  fields.forEach(f => f.addEventListener('input', save));
+  load();
+
+  function md() {
+    const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+    const order = [];
+    const map = {};
+    fields.forEach(f => {
+      const s = sectionFor(f);
+      if (!map[s]) { map[s] = []; order.push(s); }
+      map[s].push(f);
+    });
+    let out = '# ' + TITLE + '\n';
+    order.forEach(g => {
+      out += '\n## ' + g + '\n';
+      map[g].forEach(f => { out += '- **' + f.dataset.label + ':** ' + v(f.value) + '\n'; });
+    });
+    return out;
+  }
+  function toast(m) {
+    const el = document.getElementById('labToast');
+    el.textContent = m; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1800);
+  }
+  window.labCopyMd = async function () {
+    try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+    catch (e) { toast('Copy failed, try Download'); }
+  };
+  window.labDownloadMd = function () {
+    const b = new Blob([md()], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = DLNAME;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Downloaded ' + DLNAME + ' ✓');
+  };
+  window.labReset = function () {
+    if (!confirm('Clear everything you’ve typed in this guide?')) return;
+    localStorage.removeItem(KEY);
+    fields.forEach(f => f.value = '');
+    toast('Cleared');
+  };
+})();
+</script>
+</body>
+</html>

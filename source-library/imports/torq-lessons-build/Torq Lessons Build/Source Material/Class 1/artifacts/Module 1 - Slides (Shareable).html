@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1: Develop Strategic Product Thinking · Product Management</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', -apple-system, sans-serif;
+  background: #07162C;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  padding: 80px 60px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.25) 0%, #07162C 60%);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+section.visible { opacity: 1; transform: translateY(0); }
+section.skipped { display: none; }
+
+.nav-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 6px; z-index: 100;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #333; border: none; cursor: pointer;
+  transition: all 0.3s; position: relative;
+}
+.nav-dot.active { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.5); transform: scale(1.4); }
+.nav-dot:hover { background: rgba(59,130,246,0.7); }
+.nav-dot .tooltip {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  background: #0c2244; color: #ffffff; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; border: 1px solid rgba(59,130,246,0.2);
+}
+.nav-dot:hover .tooltip { opacity: 1; }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 100;
+  background: linear-gradient(90deg, #1241B0, #3b82f6);
+  transition: width 0.3s ease;
+}
+
+h1, h2 { font-family: 'Poppins', sans-serif; }
+h1 { font-size: 56px; font-weight: 900; color: #fff; line-height: 1.1; }
+h2 { font-size: 40px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+h3 { font-size: 22px; font-weight: 700; color: #ffffff; }
+p, li { font-size: 17px; line-height: 1.7; color: #ffffff; }
+.subtitle { font-size: 20px; color: #ffffff; margin-top: 8px; margin-bottom: 32px; }
+.section-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
+  color: rgba(255,255,255,0.7); margin-bottom: 12px; font-weight: 700;
+}
+strong { color: #fff; font-weight: 700; }
+em { color: #60a5fa; font-style: normal; font-weight: 600; }
+code {
+  background: rgba(18,65,176,0.15); padding: 2px 8px; border-radius: 4px;
+  font-size: 14px; color: #60a5fa; font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+}
+ul { list-style: none; padding: 0; }
+ul li { padding: 6px 0; padding-left: 24px; position: relative; }
+ul li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 8px; height: 8px; border-radius: 2px; background: #1241B0;
+}
+
+.inner { max-width: 880px; width: 100%; text-align: left; }
+section.centered { text-align: center; }
+section.centered .inner { text-align: center; }
+section.centered ul li { padding-left: 0; }
+section.centered ul li::before { display: none; }
+
+/* HERO */
+.hero { align-items: center; text-align: center; }
+.hero h1 { font-size: 64px; margin-bottom: 4px; }
+.hero h1 span { color: #60a5fa; }
+.hero .subtitle { font-size: 22px; max-width: 660px; margin: 12px auto 28px; color: #60a5fa; }
+.hero .scroll-hint { font-size: 13px; color: #ffffff; margin-top: 32px; animation: pulse 2s ease infinite; }
+.hero .scroll-hint span { display: block; margin-top: 8px; font-size: 20px; }
+.hero-logo { position: absolute; top: 32px; left: 50%; transform: translateX(-50%); }
+.hero-logo img { height: 40px; width: auto; opacity: 0.95; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* TAGS */
+.demo-tag {
+  display: inline-block; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 6px; margin-bottom: 18px;
+}
+.tag-provocation { background: rgba(248,81,73,0.12); color: #ff7b72; }
+.tag-lecture { background: rgba(88,166,255,0.12); color: #79c0ff; }
+.tag-case { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-exercise { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-activity { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+.tag-build { background: rgba(255,123,182,0.12); color: #ff7b72; }
+.tag-break { background: rgba(100,116,139,0.12); color: #ffffff; }
+.tag-framework { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-complete { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-debrief { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+
+.lab-timer {
+  position: absolute; top: 24px; right: 32px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px 18px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600;
+  color: #60a5fa; z-index: 10;
+}
+
+/* WAYPOINTS */
+.waypoints { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 720px; }
+.waypoint {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 12px; padding: 18px 24px;
+  transition: all 0.3s ease; text-align: left;
+}
+.waypoint:hover { transform: translateX(4px); border-color: rgba(59,130,246,0.3); }
+.waypoint-num {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff; background: #1241B0;
+}
+.waypoint-text { flex: 1; }
+.waypoint-text .wt-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.waypoint-text .wt-desc { font-size: 14px; color: #ffffff; line-height: 1.5; }
+
+/* CARDS */
+.cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin: 24px 0;
+}
+.card-item {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 22px; text-align: left;
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.card-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--card-accent, #3b82f6);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.card-item:hover { border-color: var(--card-accent, #3b82f6); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.card-item:hover::before { transform: scaleX(1); }
+.card-item .card-icon { font-size: 26px; margin-bottom: 10px; }
+.card-item .card-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.card-item .card-desc { font-size: 13px; color: #ffffff; line-height: 1.5; }
+
+/* EXPECT GRID */
+.expect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.expect-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 18px; text-align: center; transition: all 0.3s ease;
+}
+.expect-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.expect-icon { font-size: 26px; margin-bottom: 8px; }
+.expect-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.expect-desc { font-size: 12.5px; color: #ffffff; line-height: 1.45; }
+
+/* ARC FLOW */
+.arc-flow { display: flex; gap: 8px; align-items: center; margin: 28px 0; flex-wrap: wrap; justify-content: center; }
+.arc-node {
+  padding: 12px 16px; border-radius: 10px; text-align: center;
+  font-size: 13px; font-weight: 700; color: #fff; min-width: 130px;
+  transition: all 0.3s ease;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+}
+.arc-node:hover { transform: scale(1.05); }
+.arc-node.active-node { box-shadow: 0 0 20px rgba(59,130,246,0.3); background: rgba(59,130,246,0.2); border: 2px solid #3b82f6; }
+.arc-arrow { color: #ffffff; font-size: 18px; }
+.arc-node .ad-num { font-size: 10px; opacity: 0.5; margin-bottom: 2px; }
+
+/* TABLE */
+.ref-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.ref-table th {
+  text-align: left; padding: 12px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff;
+  border-bottom: 1px solid rgba(59,130,246,0.15);
+}
+.ref-table td {
+  padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 15px; color: #ffffff; line-height: 1.4;
+}
+.ref-table td:first-child { font-weight: 700; color: #ffffff; white-space: nowrap; }
+.ref-table tr:hover td { background: rgba(59,130,246,0.04); }
+
+/* SECTION BREAK */
+section.section-break { padding: 0; }
+section.section-break .section-break-inner {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(59,130,246,0.25) 0%, rgba(59,130,246,0.08) 35%, #07162C 75%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 80px; text-align: left;
+}
+.section-break-inner .section-num { font-family: 'Poppins', sans-serif; font-size: 90px; font-weight: 900; color: rgba(96,165,250,0.18); line-height: 1; }
+.section-break-inner .lab-title {
+  font-size: 13px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.16em; color: #ffffff; margin-bottom: 16px;
+}
+.section-break-inner .lab-name { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.1; max-width: 820px; font-family: 'Poppins', sans-serif; }
+.section-break-inner .lab-desc { font-size: 18px; color: #ffffff; line-height: 1.6; margin-top: 16px; max-width: 680px; }
+
+/* COMPLETION / TAKEAWAYS */
+.takeaway-list { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 880px; }
+.takeaway-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 22px; transition: all 0.3s; text-align: left; }
+.takeaway-item:hover { border-color: rgba(59,130,246,0.3); transform: translateX(4px); }
+.takeaway-item p { font-size: 15px; color: #ffffff; line-height: 1.6; }
+
+.artifact-preview {
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 14px; padding: 24px; margin: 20px auto; max-width: 760px; text-align: left;
+}
+.artifact-preview .ap-title {
+  font-size: 14px; font-weight: 800; color: #60a5fa; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.artifact-preview p { font-size: 14.5px; color: #ffffff; line-height: 1.6; }
+
+/* TAKEAWAY (shareable) */
+.takeaway {
+  background: rgba(34,211,238,0.05); border-left: 3px solid #22d3ee;
+  border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 22px auto 0;
+  text-align: left; max-width: 760px;
+}
+.takeaway h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: #22d3ee; margin: 0 0 6px; }
+.takeaway p { font-size: 14px; color: #ffffff; line-height: 1.55; }
+
+/* PROMPT BLOCK */
+.prompt {
+  background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px;
+  padding: 16px 18px; margin: 16px auto 0; max-width: 760px; text-align: left;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6;
+  color: #9fd0ff; white-space: pre-wrap; overflow-x: auto;
+}
+.prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #60a5fa; display: block; margin-bottom: 8px; }
+
+/* Help hint, skip badge, sorter */
+.help-hint {
+  position: fixed; bottom: 14px; right: 18px;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  font-family: 'IBM Plex Mono', monospace; z-index: 90;
+}
+.skip-badge {
+  position: fixed; bottom: 14px; left: 18px;
+  background: rgba(248,113,113,0.2); color: #fca5a5;
+  border: 1px solid rgba(248,113,113,0.3);
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  cursor: pointer; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; z-index: 90;
+}
+.skip-badge.visible { opacity: 1; pointer-events: auto; }
+.slide-sorter {
+  position: fixed; inset: 0; background: rgba(7,22,44,0.95);
+  z-index: 200; padding: 60px; overflow-y: auto; display: none; flex-direction: column;
+}
+.slide-sorter.visible { display: flex; }
+.sorter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.sorter-title { font-size: 28px; font-weight: 800; color: #fff; font-family: 'Poppins', sans-serif; }
+.sorter-subtitle { font-size: 14px; color: #ffffff; margin-top: 4px; }
+.sorter-close { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 18px; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.sorter-close:hover { background: rgba(255,255,255,0.05); }
+.sorter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.sorter-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: all 0.2s ease; }
+.sorter-item:hover { border-color: #3b82f6; transform: translateY(-2px); }
+.sorter-item.sorter-active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
+.sorter-item.sorter-skipped { opacity: 0.4; }
+.sorter-num { font-size: 11px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.1em; }
+.sorter-label { font-size: 14px; color: #fff; margin: 4px 0 8px; font-weight: 600; }
+.sorter-skip-btn { font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; border: 0; }
+.sorter-skip-btn.skip-on { background: rgba(248,113,113,0.2); color: #fca5a5; }
+.sorter-skip-btn.skip-off { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+
+@media (max-width: 768px) {
+  section { padding: 40px 24px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .hero h1 { font-size: 40px; }
+  .cards-grid, .expect-grid { grid-template-columns: 1fr; }
+  .nav-dots { display: none; }
+}
+
+/* Centering frame for inline SVG diagrams */
+.dgm{display:flex;justify-content:center;margin:18px auto 6px;max-width:620px;}
+.dgm svg{width:100%;height:auto;}
+.dgm.wide{max-width:760px;}
+
+/* White logo chip + text wordmark chip + horizontal row */
+.logochip{background:#fff;border-radius:10px;height:42px;min-width:54px;padding:0 13px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.3);}
+.logochip img{height:22px;width:auto;max-width:110px;object-fit:contain;display:block;}
+.wordchip{display:inline-flex;align-items:center;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:11.5px;color:#ffffff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:8px 12px;}
+.logorow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+
+/* Final project, goal/deliverable/timing + INCLUDE panel */
+.fp-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:20px;align-items:stretch;
+  max-width:1000px;margin:22px auto 0;text-align:left;}
+.fp-left{display:flex;flex-direction:column;gap:12px;}
+.fp-meta{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.fp-lab{display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;
+  font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac,#60a5fa);margin-bottom:6px;}
+.fp-lab .fp-ic{font-size:15px;}
+.fp-txt{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.fp-txt b{color:#fff;}
+.fp-include{position:relative;border-radius:16px;padding:20px 24px;
+  background:linear-gradient(160deg,rgba(34,211,238,.12),rgba(7,22,44,.4));
+  border:1.5px solid rgba(34,211,238,.4);box-shadow:0 16px 40px rgba(34,211,238,.12);}
+.fp-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:13px;
+  letter-spacing:.14em;text-transform:uppercase;color:#22d3ee;margin-bottom:13px;}
+.fp-items{display:flex;flex-direction:column;gap:8px;}
+.fp-item{display:flex;align-items:center;gap:12px;}
+.fp-num{flex:none;width:26px;height:26px;border-radius:8px;background:#0e7490;color:#fff;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.fp-iname{font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:#ffffff;}
+@media (max-width:900px){.fp-grid{grid-template-columns:1fr;}}
+
+/* Old way vs new way, Feature Factory vs Value Driver */
+.oldnew{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch;max-width:1000px;margin:22px auto 0;text-align:left;}
+.on-card{border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;}
+.on-old{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.26);}
+.on-new{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.3);}
+.on-kick{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.on-old .on-kick{color:#fda4af;}
+.on-new .on-kick{color:#6ee7b7;}
+.on-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:#fff;line-height:1.1;margin-top:-4px;}
+.on-li{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:18px;position:relative;}
+.on-old .on-li::before{content:'✕';position:absolute;left:0;top:0;color:#fb7185;font-weight:800;font-size:11px;}
+.on-new .on-li::before{content:'✓';position:absolute;left:0;top:0;color:#34d399;font-weight:800;font-size:11px;}
+.on-vs{align-self:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:#ffffff;
+  width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;flex:none;}
+@media (max-width:820px){.oldnew{grid-template-columns:1fr;}.on-vs{margin:0 auto;}}
+
+/* Pillars: venn diagram beside the three lenses */
+.pillar-grid{display:grid;grid-template-columns:1.02fr 0.98fr;gap:26px;align-items:center;max-width:1060px;margin:16px auto 0;}
+.pillar-list{display:flex;flex-direction:column;gap:11px;text-align:left;}
+.pillar{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  padding:13px 16px;border-left:3px solid var(--ac,#60a5fa);}
+.pillar h4{font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;color:#fff;margin-bottom:3px;}
+.pillar p{font-size:12px;color:#ffffff;line-height:1.5;}
+@media (max-width:900px){.pillar-grid{grid-template-columns:1fr;}}
+
+/* Skill stack, numbered rows */
+.skill-grid{display:flex;flex-direction:column;gap:11px;max-width:880px;margin:22px auto 0;text-align:left;}
+.skill-row{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.skill-n{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(96,165,250,.14);color:var(--ac,#60a5fa);
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.skill-t{font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-bottom:3px;}
+.skill-d{font-size:12.5px;color:#ffffff;line-height:1.5;}
+
+/* Hub: diagram beside arbiter note */
+.hub-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:24px;align-items:center;max-width:1080px;margin:14px auto 0;}
+.hub-note{display:flex;flex-direction:column;gap:13px;text-align:left;}
+@media (max-width:900px){.hub-grid{grid-template-columns:1fr;}}
+
+/* B2C / B2B two-column */
+.aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:980px;margin:20px auto 0;text-align:left;}
+.aud-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 22px;border-top:3px solid var(--ac,#60a5fa);}
+.aud-h{font-family:'Poppins',sans-serif;font-weight:800;font-size:15.5px;color:#fff;margin-bottom:4px;}
+.aud-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;margin-bottom:11px;}
+.aud-q{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:16px;position:relative;margin-bottom:8px;}
+.aud-q::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac,#60a5fa);}
+.aud-eg{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);}
+.aud-eg .logochip{height:30px;min-width:auto;padding:0 9px;}
+.aud-eg .logochip img{height:15px;}
+@media (max-width:760px){.aud-grid{grid-template-columns:1fr;}}
+
+/* PDLC stage cards (3-up) */
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.stage-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:10px;}
+.stage-kick{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;}
+.stage-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:18px;color:#fff;line-height:1.1;margin-top:-3px;}
+.stage-phases{font-size:11px;color:#ffffff;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;}
+.stage-li{font-size:12px;color:#ffffff;line-height:1.5;padding-left:15px;position:relative;}
+.stage-li::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:2px;background:var(--ac,#60a5fa);}
+.stage-goal{margin-top:auto;font-size:11.5px;color:#ffffff;line-height:1.45;background:rgba(255,255,255,.04);border-radius:9px;padding:9px 12px;}
+.stage-goal b{color:#fff;}
+.stage-eg{font-size:11px;color:#ffffff;font-style:italic;line-height:1.45;padding-top:8px;border-top:1px solid rgba(255,255,255,.07);}
+@media (max-width:900px){.stage-grid{grid-template-columns:1fr;}}
+
+/* AI lifecycle, human vs AI split rows */
+.ailc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.ailc-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:11px;}
+.ailc-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:17px;color:var(--ac,#60a5fa);}
+.ailc-split{display:flex;flex-direction:column;gap:8px;}
+.ailc-block{border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.45;}
+.ailc-human{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.24);color:#ffffff;}
+.ailc-ai{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.26);color:#ddd2f3;}
+.ailc-block .albl{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
+.ailc-human .albl{color:#7fb0ef;}
+.ailc-ai .albl{color:#b39ef5;}
+.ailc-out{font-size:11px;color:#ffffff;font-style:italic;line-height:1.4;}
+@media (max-width:900px){.ailc-grid{grid-template-columns:1fr;}}
+
+/* Scenario cards (final project) */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1000px;margin:22px auto 0;text-align:left;}
+.scn-card{position:relative;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:11px;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(7,22,44,.4));border:1px solid rgba(255,255,255,.1);
+  border-top:3px solid var(--ac,#60a5fa);}
+.scn-tag{display:inline-flex;align-self:flex-start;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--ac,#60a5fa);
+  background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.26);border-radius:999px;padding:5px 11px;}
+.scn-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:21px;color:#fff;line-height:1.1;}
+.scn-sub{font-size:12.5px;color:#ffffff;line-height:1.3;font-weight:700;}
+.scn-desc{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.scn-risk{margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  font-weight:700;color:#fcd34d;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.28);border-radius:8px;padding:8px 11px;}
+@media (max-width:760px){.scenario-grid{grid-template-columns:1fr;}}
+
+/* Key Takeaways accents: color for emphasis, white body stays */
+.takeaway-list .takeaway-item { border-left: 3px solid var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item p strong { color: var(--tk-ac, #60a5fa) !important; }
+.takeaway-list .takeaway-item:hover { border-left-color: var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item:nth-child(3n+1) { --tk-ac: #34d399; }
+.takeaway-list .takeaway-item:nth-child(3n+2) { --tk-ac: #60a5fa; }
+.takeaway-list .takeaway-item:nth-child(3n+3) { --tk-ac: #fbbf24; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  section { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+}
+
+@media print {
+  html { scroll-snap-type: none; scroll-behavior: auto; }
+  body { background: #ffffff !important; color: #24304d !important; }
+  section { min-height: auto !important; opacity: 1 !important; transform: none !important;
+            background: #ffffff !important; padding: 26px 30px !important;
+            page-break-after: always; border-bottom: 1px solid #d5dcec; }
+  .section-break-inner, .cameras-inner { position: static !important; background: #ffffff !important;
+            padding: 26px 30px !important; }
+  .section-break-inner .section-num, .section-break-inner .lab-name { color: #0b1f44 !important; }
+  .section-break-inner .lab-desc, .section-break-inner .lab-title { color: #3a4a6b !important; }
+  h1, h2, h3, strong, .card-title, .wt-title, .rc-title { color: #0b1f44 !important; }
+  p, li, .card-desc, .expect-desc, .ref-table td, .notice-table td { color: #26324f !important; }
+  .nav-dots, .progress-bar, .scroll-hint, .lab-timer { display: none !important; }
+}
+
+</style>
+<noscript><style>section{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="nav-dots" id="navDots"></div>
+<div class="skip-badge" id="skip-badge">SECTION SKIPPED · CLICK TO RESTORE</div>
+<div class="help-hint">↑ ↓ navigate · K skip section · M section sorter</div>
+<div class="slide-sorter" id="slide-sorter">
+  <div class="sorter-header">
+    <div><div class="sorter-title">Section sorter</div>
+    <div class="sorter-subtitle">Click a card to jump · skip what you don't need</div></div>
+    <button class="sorter-close" onclick="closeSorter()">✕ Close</button>
+  </div>
+  <div class="sorter-grid" id="sorter-grid"></div>
+</div>
+<section class="hero" data-title="Module 1"><div class="inner" style="text-align:center"><div class="hero-logo"><img src="../Design/Product-School-Logo.png" alt="Product School"></div><div class="section-label">Product Management · Module 1 of 6</div><h1>Develop Strategic<br><span>Product Thinking</span></h1><p class="subtitle">Shift from executing tasks to driving strategic outcomes. Learn the core responsibilities, essential skills, and foundational mindset of a modern Product Manager, the operating system every other module builds on.</p><div class="waypoints"><div class="waypoint"><div class="waypoint-num">1</div><div class="waypoint-text"><div class="wt-title">The modern PM mindset</div><div class="wt-desc">Shift from feature factory to value driver, prioritize across customer needs, business goals, and feasibility.</div></div></div><div class="waypoint"><div class="waypoint-num">2</div><div class="waypoint-text"><div class="wt-title">The PM skill stack & role</div><div class="wt-desc">The five skills modern PMs need and how to operate as the strategic arbiter at the center of a cross-functional team.</div></div></div><div class="waypoint"><div class="waypoint-num">3</div><div class="waypoint-text"><div class="wt-title">The Product Development Life Cycle</div><div class="wt-desc">How a PM moves an idea from a hunch to a shipped product, and where AI removes the grind at every phase.</div></div></div><div class="waypoint"><div class="waypoint-num">4</div><div class="waypoint-text"><div class="wt-title">Hands-on lab: a strategic discovery map</div><div class="wt-desc">Use a sequence of AI prompts to turn generic feature-factory noise into a viable strategic framework.</div></div></div></div><div class="scroll-hint">Individual format · build one project, submit one repo<span>↓</span></div></div></section><section class="centered" data-title="Class Expectations"><div class="inner"><div class="section-label">Cohort Norms</div><h2>Class expectations</h2><p class="subtitle">A solo-format cohort runs best on a few shared habits.</p><div class="expect-grid"><div class="expect-card"><div class="expect-icon">📹</div><div class="expect-title">Cameras On</div><div class="expect-desc">Be present and visible to stay engaged and keep the session valuable.</div></div><div class="expect-card"><div class="expect-icon">⏰</div><div class="expect-title">Arrive On Time</div><div class="expect-desc">Respect everyone’s time by joining promptly, we start on schedule.</div></div><div class="expect-card"><div class="expect-icon">🤝</div><div class="expect-title">Engage to Network</div><div class="expect-desc">Join the labs and discussions to build your professional learning network.</div></div><div class="expect-card"><div class="expect-icon">🛠️</div><div class="expect-title">Tool Readiness</div><div class="expect-desc">Have your tools and accounts active before class, we won’t pause for setup.</div></div><div class="expect-card"><div class="expect-icon">🎓</div><div class="expect-title">Use Slack</div><div class="expect-desc">Keep questions, answers, and shares organised in the cohort Slack channel.</div></div><div class="expect-card"><div class="expect-icon">🎯</div><div class="expect-title">Class Momentum</div><div class="expect-desc">Deep-dive or individual questions move to after-class support to keep pace.</div></div></div></div></section><section class="centered" data-title="Introductions"><div class="inner"><span class="demo-tag tag-activity">Introductions · Slack</span><h2>Meet your instructor &amp; your peers 👋</h2><p class="subtitle">Get to know the room, then post your own intro in the cohort Slack channel.</p><div class="resp-grid"><div class="resp-card"><div class="resp-head"><div class="rh-title">Meet your instructor</div><div class="rh-sub">As they share, listen for:</div></div><div class="resp-body"><div class="resp-item"><b>Background</b><span>Their name, where they’re located, and their current role.</span></div><div class="resp-item"><b>Career</b><span>How they got into product and their field.</span></div><div class="resp-item"><b>Milestones</b><span>Significant moments along the way.</span></div></div></div><div class="resp-card"><div class="resp-head"><div class="rh-title">Introduce yourself</div><div class="rh-sub">Post in <code>#cohort-channel</code>:</div></div><div class="resp-body"><div class="resp-item"><b>Background</b><span>Your name, location, and current role.</span></div><div class="resp-item"><b>Course goals</b><span>What you hope to learn here.</span></div><div class="resp-item"><b>Fun fact</b><span>A hobby or interest outside work, and your LinkedIn.</span></div></div></div></div></div></section><section class="centered" data-title="Final Project"><div class="inner"><span class="demo-tag tag-case">Final Project</span><h2>Your final project: ship a product concept end-to-end</h2><p class="subtitle">Across the six modules you’ll take one product initiative, <em>StreamLine</em> or <em>RouteLogic</em>: from a raw problem to a launch-ready concept, building each deliverable during in-class labs. This is an <strong>individual project</strong>: your work is yours alone.</p><div class="fp-grid"><div class="fp-left"><div class="fp-meta" style="--ac:#34d399"><div class="fp-lab"><span class="fp-ic">🎯</span>Goal</div><div class="fp-txt">Demonstrate your product solution via key artifacts, then <b>share your individual insights</b>.</div></div><div class="fp-meta" style="--ac:#60a5fa"><div class="fp-lab"><span class="fp-ic">📝</span>Deliverable</div><div class="fp-txt">Your final project in a <b>GitHub repo</b>, your own copy, submitted via its repo URL in the learning portal to qualify for certification.</div></div><div class="fp-meta" style="--ac:#22d3ee"><div class="fp-lab"><span class="fp-ic">🕙</span>Timing</div><div class="fp-txt"><b>[Optional]</b> demo your work in Module 6: 5 minutes per learner. Not mandatory for certification, but everyone submits their repo.</div></div></div><div class="fp-include"><div class="fp-h">Include</div><div class="fp-items"><div class="fp-item"><span class="fp-num">1</span><span class="fp-iname">Problem Statement &amp; Hypothesis</span></div><div class="fp-item"><span class="fp-num">2</span><span class="fp-iname">Workaround Summary &amp; Journey Map</span></div><div class="fp-item"><span class="fp-num">3</span><span class="fp-iname">High-Level Roadmap, PRD &amp; Prototype</span></div><div class="fp-item"><span class="fp-num">4</span><span class="fp-iname">Experimentation Plan Overview</span></div><div class="fp-item"><span class="fp-num">5</span><span class="fp-iname">GTM Launch Plan &amp; Success Metrics</span></div><div class="fp-item"><span class="fp-num">6</span><span class="fp-iname">Individual Insights into the Process</span></div></div></div></div><div class="takeaway"><h4>📋 The brief</h4><p>You can find the full <strong>Final Project Brief</strong> here, it includes your repo template. Don’t worry about finishing today; the seed is planted from Day 1, and every lab builds one deliverable in your project repo.</p></div></div></section><section class="centered" data-title="Set Up Your Repo"><div class="inner"><span class="demo-tag tag-case">Final Project · Your Repo</span><h2>Set up your project repo, fork once, fill it as you go</h2><p class="subtitle">Everything you build lives in one place. Fork the template now; each module you complete fills in one folder. By Module 6 the repo <em>is</em> your submission.</p><div style="max-width:760px;margin:0 auto;text-align:left;background:#0c2340;border:1px solid #1a3a5c;border-radius:14px;padding:18px 24px"><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#22d3ee;font-size:14px;min-width:185px">README.md</code><span style="color:#ffffff;font-size:14px">Your project dashboard, the six deliverables at a glance.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#60a5fa;font-size:14px;min-width:185px">01-product-thinking/</code><span style="color:#ffffff;font-size:14px">M1 · your problem hook &amp; value proposition.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#60a5fa;font-size:14px;min-width:185px">02-discovery/</code><span style="color:#ffffff;font-size:14px">M2 · competitive workaround summary &amp; journey map.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#60a5fa;font-size:14px;min-width:185px">03-analytics/</code><span style="color:#ffffff;font-size:14px">M3 · finalized hypothesis &amp; success metrics.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#60a5fa;font-size:14px;min-width:185px">04-roadmap/</code><span style="color:#ffffff;font-size:14px">M4 · roadmap, PRD &amp; prototype.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><code style="font-family:'IBM Plex Mono',monospace;color:#60a5fa;font-size:14px;min-width:185px">05-experimentation/</code><span style="color:#ffffff;font-size:14px">M5 · your experimentation plan.</span></div><div style="display:flex;gap:14px;align-items:baseline;padding:9px 0"><code style="font-family:'IBM Plex Mono',monospace;color:#fbbf24;font-size:14px;min-width:185px">06-launch/</code><span style="color:#ffffff;font-size:14px">M6 · GTM plan, success dashboard &amp; individual insights.</span></div></div><div class="next-arrow-bar"><div class="nab-meta">Three steps</div><div class="nab-title"><a href="https://github.com/new?template_name=product-management-template&amp;template_owner=Product-School-Platform" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Use this template</a> → name it <code>pm-final-project</code> → commit per lab</div><div class="nab-desc">The button opens GitHub’s <em>Create a new repository</em> with the predefined <code>product-management-template</code> already selected. See the <strong>Project Repo Template</strong> page for the full structure and starter content for every file.</div></div></div></section><section class="centered" data-title="Syllabus"><div class="inner"><div class="section-label">Certification Syllabus</div><h2>Master the core skills to build products customers love</h2><p class="subtitle">Six modules take you from strategic thinking to a coordinated, measurable launch.</p><div class="cards-grid"><div class="card-item" style="--card-accent:#22d3ee"><div class="card-title" style="color:#22d3ee;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 1 · You are here</div><div class="card-title" style="margin-top:6px">Develop Strategic Product Thinking</div><div class="card-desc">Shift from executing tasks to driving outcomes, the core responsibilities, soft skills, and mindset of a modern PM.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 2</div><div class="card-title" style="margin-top:6px">Discover Product Opportunities via Qualitative Signals</div><div class="card-desc">Uncover high-value opportunities through advanced discovery and user research, balancing customer insight with business goals.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 3</div><div class="card-title" style="margin-top:6px">Use Analytics and Metrics for Data-Driven Decisions</div><div class="card-desc">Go from gut feelings to evidence, craft hypotheses, define success metrics, and leverage analytics to drive growth.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 4</div><div class="card-title" style="margin-top:6px">Build High-Velocity Product Roadmaps</div><div class="card-desc">Bridge vision and execution, master the transition to PRDs and leverage AI for rapid prototyping and proof of value.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 5</div><div class="card-title" style="margin-top:6px">Run Effective Product Experimentation</div><div class="card-desc">Master A/B testing and evidence-based decisions to confidently ship, kill, or pivot based on what experiments reveal.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 6</div><div class="card-title" style="margin-top:6px">Launch Impactful GTM Plans</div><div class="card-desc">Orchestrate a launch checklist, coordinate cross-functional teams, define channels, and track post-launch metrics.</div></div></div></div></section><section class="centered" data-title="Agenda"><div class="inner"><div class="section-label">Agenda</div><h2>What we’ll cover today</h2><div class="waypoints" style="max-width:760px;margin:24px auto"><div class="waypoint"><div class="waypoint-num">01</div><div class="waypoint-text"><div class="wt-title">The Modern PM Mindset</div><div class="wt-desc">From feature factory to value driver, how PMs prioritize, the skills they need, and where they sit in the org.</div></div></div><div class="waypoint"><div class="waypoint-num">02</div><div class="waypoint-text"><div class="wt-title">Hands-On Lab: A Strategic Discovery Map</div><div class="wt-desc">Use a sequence of AI prompts in Figma to turn generic noise into a viable strategic framework.</div></div></div><div class="waypoint"><div class="waypoint-num">03</div><div class="waypoint-text"><div class="wt-title">The Product Development Life Cycle</div><div class="wt-desc">The repeatable map from a hunch to a shipped product, and how AI accelerates every phase.</div></div></div><div class="waypoint"><div class="waypoint-num">04</div><div class="waypoint-text"><div class="wt-title">Kick Off Your Final Project</div><div class="wt-desc">Choose your scenario and draft the problem hook and value prop that anchors your whole project.</div></div></div></div></div></section><section class="section-break" data-title="The Modern PM Mindset"><div class="section-break-inner"><div class="section-num">01</div><div class="lab-title">Section 01</div><div class="lab-name">The Modern PM Mindset</div><div class="lab-desc">A PM’s day is a flood of urgent requests from Sales, Support, and Executives. Your value isn’t in how fast you process them, it’s in turning that noise into a clear, defensible direction.</div></div></section><section class="centered" data-title="Q&amp;A · The PM Identity Crisis"><div class="inner"><span class="demo-tag tag-activity">Instructor-Led Q&amp;A · 10 min</span><h2>The PM identity crisis</h2><p class="subtitle">Unmute and share, drop it in chat, or post in <code>#cohort-channel</code>.</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:780px;margin:22px auto"><div class="ref-card"><div class="ref-num">💬</div><div class="ref-q">A PM’s day is a flood of requests from Sales, Support, and Executives, and all of them are <em>“urgent.”</em> What do you think is the primary source of confusion or friction that <strong>keeps a product team from moving forward</strong>?</div></div></div><div class="takeaway"><h4>The takeaway</h4><p>Most friction comes from a missing <strong>shared North Star</strong>. When everything is urgent, nothing is a priority, teams feel like they’re running in circles and stakeholders don’t understand why their request is sitting in a 500-item backlog. Your real value isn’t how fast you process requests; it’s how effectively you provide <strong>clarity</strong> by moving from the <em>how</em> of shipping to the <em>why</em> of the business.</p></div></div></section><section class="centered" data-title="From Feature Factory to Value Driver"><div class="inner"><span class="demo-tag tag-lecture">The new PM mandate</span><h2>From feature factory to value driver</h2><p class="subtitle">The most important evolution you’ll make: moving from measuring output (how many features shipped, did we hit the date?) to driving outcomes. Execution still matters, but a perfect feature shipped on time can still fail to solve the underlying problem.</p><div class="oldnew"><div class="on-card on-old"><div class="on-kick">Old way · order-taker</div><div class="on-h">The Feature Factory</div><div class="on-li">Acts as a task manager, turning requests into tickets</div><div class="on-li">Focused on shipping a specific feature or output on time</div><div class="on-li">Asks: “How fast can we build this?”</div><div class="on-li">Measures success by the release date</div></div><div class="on-vs">→</div><div class="on-card on-new"><div class="on-kick">New way · value driver</div><div class="on-h">The Strategic Architect</div><div class="on-li">Acts as a strategic architect, turning ambiguity into outcomes</div><div class="on-li">Focused on solving a pain point and protecting the customer</div><div class="on-li">Asks: “Does this deliver the right value?”</div><div class="on-li">Measures success by business impact and iteration</div></div></div><div class="takeaway"><h4>This isn’t “shipping doesn’t matter”</h4><p>It’s about ensuring every release <strong>actually moves the needle</strong>: moving from being a task-taker to being a problem-solver. Success is a measurable change in user behavior, not a date on a calendar.</p></div></div></section><section class="centered" data-title="The Three Pillars of Prioritization"><div class="inner"><span class="demo-tag tag-framework">The three pillars of prioritization</span><h2>How PMs decide what’s worth building</h2><p class="subtitle">Remember that flood of requests? This is the tool you use to handle it. Run every “urgent” ask through these three lenses, the highest-impact work sits where all three overlap.</p><div class="pillar-grid"><div class="dgm wide" style="margin:0;max-width:520px"><svg viewBox="0 0 680 470" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The three pillars of prioritization: customer needs, business goals, and feasibility overlap at the highest-impact work"><circle cx="340" cy="170" r="132" fill="#34d399" fill-opacity="0.12" stroke="#34d399" stroke-width="2"/><circle cx="258" cy="300" r="132" fill="#fbbf24" fill-opacity="0.12" stroke="#fbbf24" stroke-width="2"/><circle cx="422" cy="300" r="132" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-width="2"/><circle cx="340" cy="257" r="46" fill="#0b1f3b" stroke="rgba(255,255,255,.5)" stroke-width="1.4"/><text x="340" y="253" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="13" fill="#fff">Highest-</text><text x="340" y="270" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="13" fill="#fff">impact work</text><text x="340" y="70" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="16" fill="#34d399">Customer Needs</text><text x="340" y="90" text-anchor="middle" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">If we build it, does it</text><text x="340" y="105" text-anchor="middle" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">solve the user’s frustration?</text><text x="118" y="360" text-anchor="start" font-family="Poppins,sans-serif" font-weight="800" font-size="16" fill="#fbbf24">Business Goals</text><text x="118" y="380" text-anchor="start" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">Does this move a metric</text><text x="118" y="395" text-anchor="start" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">that matters to the company?</text><text x="562" y="360" text-anchor="end" font-family="Poppins,sans-serif" font-weight="800" font-size="16" fill="#60a5fa">Feasibility</text><text x="562" y="380" text-anchor="end" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">Can we actually</text><text x="562" y="395" text-anchor="end" font-family="Lato,sans-serif" font-size="11.5" fill="#aab4cc">build this well?</text></svg></div><div class="pillar-list"><div class="pillar" style="--ac:#34d399"><h4>Customer Needs</h4><p>Identify which user problems are the most painful and important to solve. <em>If we build it, does it actually solve the user’s frustration?</em></p></div><div class="pillar" style="--ac:#fbbf24"><h4>Business Goals</h4><p>Ensure that solving those problems supports growth, revenue, or strategic retention. <em>Does this move a metric that matters?</em></p></div><div class="pillar" style="--ac:#60a5fa"><h4>Feasibility &amp; Resources</h4><p>Evaluate what can realistically be built and maintained given time and technical constraints. <em>Can we actually build this well?</em></p></div></div></div><div class="takeaway"><h4>You will constantly face trade-offs</h4><p>Features users love that take six months to build. Quick business wins that annoy power users. A “loud” bug that affects 1% of users. By using these three pillars, you <strong>stop being an order-taker</strong> and become the person who keeps the team focused on the highest-impact work.</p></div></div></section><section class="centered" data-title="The PM Skill Stack"><div class="inner"><span class="demo-tag tag-framework">The PM skill stack</span><h2>Five skills that move you from passenger to driver</h2><p class="subtitle">You don’t need to be the absolute expert in every area, but you have to be fluent in all of them to move from being a passenger in the development process to being the one driving it.</p><div class="skill-grid"><div class="skill-row" style="--ac:#fbbf24"><div class="skill-n">1</div><div><div class="skill-t">Strategic Thinking</div><div class="skill-d">The bridge between the big idea and the actual release, connecting high-level objectives and signals to a roadmap that ships impact, not just features.</div></div></div><div class="skill-row" style="--ac:#fb7185"><div class="skill-n">2</div><div><div class="skill-t">Communication</div><div class="skill-d">Driving alignment and influence across cross-functional partners by providing clear context and the ‘why’. You have the responsibility but rarely the direct authority.</div></div></div><div class="skill-row" style="--ac:#60a5fa"><div class="skill-n">3</div><div><div class="skill-t">Data Literacy</div><div class="skill-d">Moving beyond vanity metrics to identify the leading indicators of product health, using data to remove emotion from the room.</div></div></div><div class="skill-row" style="--ac:#34d399"><div class="skill-n">4</div><div><div class="skill-t">Customer &amp; Market Insights</div><div class="skill-d">Translating user pain and market shifts into actionable product opportunities, looking past what users say they want to the friction they actually feel.</div></div></div><div class="skill-row" style="--ac:#22d3ee"><div class="skill-n">5</div><div><div class="skill-t">AI Fluency</div><div class="skill-d">Understanding architecture and constraints well enough to leverage AI to scale your judgment and solve user problems efficiently, without being hand-held by engineering.</div></div></div></div></div></section><section class="centered" data-title="The PM Role"><div class="inner"><span class="demo-tag tag-lecture">The PM role</span><h2>You sit at the center, as the strategic arbiter</h2><p class="subtitle">Being at the center doesn’t mean you’re the “boss” of these teams. It means you’re the only person whose job is to see the whole picture and connect people, ideas, and goals.</p><div class="hub-grid"><div class="dgm wide" style="margin:0;max-width:560px"><svg viewBox="0 0 760 470" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The product manager sits at the center of a cross-functional team, connecting six partner functions"><line x1="380" y1="235" x2="380.0" y2="67.0" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="305.0" y="47.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#60a5fa" stroke-width="1.6"/><text x="380.0" y="71.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">Engineering</text><line x1="380" y1="235" x2="525.5" y2="151.0" stroke="#22d3ee" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="450.5" y="131.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#22d3ee" stroke-width="1.6"/><text x="525.5" y="155.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">AI &amp; Data</text><line x1="380" y1="235" x2="525.5" y2="319.0" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="450.5" y="299.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#fbbf24" stroke-width="1.6"/><text x="525.5" y="323.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">Business &amp; Strategy</text><line x1="380" y1="235" x2="380.0" y2="403.0" stroke="#fb7185" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="305.0" y="383.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#fb7185" stroke-width="1.6"/><text x="380.0" y="407.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">Marketing &amp; GTM</text><line x1="380" y1="235" x2="234.5" y2="319.0" stroke="#34d399" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="159.5" y="299.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#34d399" stroke-width="1.6"/><text x="234.5" y="323.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">Customer &amp; Research</text><line x1="380" y1="235" x2="234.5" y2="151.0" stroke="#a78bfa" stroke-width="1.6" stroke-opacity="0.5" stroke-dasharray="2 6"/><rect x="159.5" y="131.0" width="150" height="40" rx="11" fill="#0d2342" stroke="#a78bfa" stroke-width="1.6"/><text x="234.5" y="155.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="12.5" fill="#e6ecf7">Design / UX</text><circle cx="380" cy="235" r="58" fill="url(#pmhubc)" stroke="rgba(96,165,250,.55)" stroke-width="2"/><defs><radialGradient id="pmhubc" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="#1b3a66"/><stop offset="1" stop-color="#0c2340"/></radialGradient></defs><text x="380" y="229" text-anchor="middle" font-size="20">👋</text><text x="380" y="253" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="17" fill="#fff">YOU</text></svg></div><div class="hub-note"><div class="takeaway" style="margin:0"><h4>Act as the strategic arbiter</h4><p>While AI tools can synthesize data, only you can decide which direction is worth the team’s effort. Your value is in <strong>judgment, discernment, and your ability to execute</strong>.</p></div><div class="takeaway" style="margin:0"><h4>Connect the dots</h4><p>You ensure Marketing isn’t promising something Engineering can’t build, and that business goals aren’t crushing the user experience. Great PMs <strong>anticipate where the industry and customers are headed</strong> so the product delivers long-term value.</p></div></div></div></div></section><section class="centered" data-title="Adapting the PM Mindset · B2C vs B2B"><div class="inner"><span class="demo-tag tag-framework">Market dynamics</span><h2>Adapting the PM mindset: B2C vs. B2B</h2><p class="subtitle">Your core skills stay the same, but the way you provide the <em>“why”</em> changes with your market. You can’t run a B2C playbook in a B2B environment and expect to succeed.</p><div class="aud-grid"><div class="aud-card" style="--ac:#34d399"><div class="aud-tag">B2C · Optimize for mass behavior</div><div class="aud-h">Play a game of scale</div><div class="aud-q">Engage millions of users at scale</div><div class="aud-q">Drive fast experimentation and data loops</div><div class="aud-q">Optimize for user emotion and daily habits</div><div class="aud-q">Heavy focus on growth and frictionless UX</div><div class="aud-eg"><div class="logochip"><img src="../Design/logos/spotify.png" alt="Spotify" loading="lazy"></div><div class="logochip"><img src="../Design/logos/netflix.png" alt="Netflix" loading="lazy"></div></div></div><div class="aud-card" style="--ac:#60a5fa"><div class="aud-tag">B2B · Drive business ROI</div><div class="aud-h">Solve high-stakes problems</div><div class="aud-q">Solve problems for high-value clients</div><div class="aud-q">Navigate long sales cycles and deep discovery</div><div class="aud-q">Prioritize workflow efficiency and security</div><div class="aud-q">Focus on stakeholder needs and scalability</div><div class="aud-eg"><div class="logochip"><img src="../Design/logos/snowflake.png" alt="Snowflake" loading="lazy"></div><div class="logochip"><img src="../Design/logos/atlassian.svg" alt="Atlassian" loading="lazy"></div><div class="logochip"><img src="../Design/logos/tableau.png" alt="Tableau" loading="lazy"></div></div></div></div><div class="takeaway"><h4>Your job is to filter the noise</h4><p>In B2C you filter <strong>data noise</strong>: looking at loops from millions of users. In B2B you filter <strong>stakeholder noise</strong>: the person using the tool often isn’t the one who bought it, so your “why” is rooted in ROI and workflow efficiency.</p></div></div></section><section class="section-break" data-title="Hands-On Lab: Build a Strategic Discovery Map"><div class="section-break-inner"><div class="section-num">02</div><div class="lab-title">Section 02</div><div class="lab-name">Hands-On Lab: Build a Strategic Discovery Map</div><div class="lab-desc">AI will happily generate a tidy feature list. Your job is to spot where that output is just noise, and to use your product judgment to turn it into something strategically useful.</div></div></section><section class="centered" data-title="Lab · Build a Strategic Discovery Map"><div class="inner"><div class="lab-timer">⏱ 15 min</div><span class="demo-tag tag-exercise">Hands-on Lab · Individual</span><h2>Build a strategic discovery map</h2><p class="subtitle">Run a sequence of three prompts in any AI tool to build a product mindmap that evolves from a generic feature list of <em>noise</em> into a viable strategic framework. The goal: find the failure points of AI-generated maps and see exactly where a PM’s judgment is required.</p><div class="flow-steps"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">🌫️</div></div><div class="fs-title">Generate the baseline</div><div class="fs-text">Run the shallow prompt (“Create a mindmap for a water tracking app”). Identify one feature you couldn’t strategically defend to an engineer.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">🧱</div></div><div class="fs-title">Add a structural upgrade</div><div class="fs-text">Give the AI Modern PM context, a real scenario with features, user needs, and problems. Spot a feature that looks correct but has zero strategic weight.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">🎯</div></div><div class="fs-title">Run the strategic polish</div><div class="fs-text">Layer in JTBD, effort vs. impact, monetization trade-offs, and retention risks. Flag where there’s a real strategic tension to debate.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">🔍</div></div><div class="fs-title">Compare V1 vs. V3</div><div class="fs-text">Did the AI get smarter, or did <em>your</em> added product knowledge force it to be useful? Take screenshots of the before and after.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">📣</div></div><div class="fs-title">Share your takeaway</div><div class="fs-text">Post your V1 vs. V3 maps in <code>#cohort-channel</code> with one line: how does this prove the PM thinks while the AI executes?</div></div></div><div class="takeaway"><h4>The AI didn’t invent the strategy, you did</h4><p>By framing the prompt with specific product knowledge (JTBD, effort/impact, retention), you converted a feature-factory tool into a strategic engine. <strong>The AI executed. You, the PM, thought.</strong></p></div><a class="lab-walkthrough" href="Module 1 - Exercise 1 Guide.html">📘 Open the Exercise 1 guide &amp; prompts →</a></div></section><section class="centered" data-title="Quick Debrief"><div class="inner"><span class="demo-tag tag-debrief">Quick debrief · 2 min</span><h2>Your key learning statement</h2><p class="subtitle">In one sentence, unmute or post in <code>#cohort-channel</code>:</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:700px;margin:22px auto"><div class="ref-card"><div class="ref-num">💡</div><div class="ref-q">What was the most interesting difference you found between your three discovery maps, and what does it tell you about <strong>where AI ends and the PM begins</strong>?</div></div></div><div class="takeaway"><h4>The pattern</h4><p>The more specific your product context, the better the output. AI organization is not the same as strategy, <strong>just because the AI can create groups doesn’t mean it knows what’s a good use of engineering’s time.</strong></p></div></div></section><section class="centered" data-title="Break"><div class="inner"><span class="demo-tag tag-break">Break · 5 min</span><h2 style="font-size:64px">Take a beat ☕</h2><p class="subtitle">Five-minute break, you’ve earned it.</p></div></section><section class="cameras-section" data-title="Cameras On"><div class="cameras-inner"><div class="cameras-layout"><div class="cameras-left"><img class="cameras-logo" src="../Design/Product-School-Logo.png" alt="Product School"><div class="cameras-card"><h2>Reminder! 🚨</h2><div class="cameras-arrow">→ Cameras On</div><p>It’s always better to see your smiling face. Be present and visible to stay engaged and keep interactions valuable.</p></div></div><div class="cameras-photo-strip"><img src="../Design/cameras-on.png" alt="Cameras On"></div></div></div></section><section class="section-break" data-title="The Product Development Life Cycle"><div class="section-break-inner"><div class="section-num">03</div><div class="lab-title">Section 03</div><div class="lab-name">The Product Development Life Cycle</div><div class="lab-desc">The PDLC is the industry-standard map for taking an idea from a hunch to a finished product. It’s a series of strategic, repeatable decisions that move you from guessing what users want to knowing what the market needs.</div></div></section><section class="centered" data-title="The Product Development Life Cycle"><div class="inner"><span class="demo-tag tag-framework">The Product Development Life Cycle</span><h2>From a hunch to a shipped product, and back</h2><p class="subtitle">Naming conventions vary company to company, but the underlying logic is the same: reduce risk early, build with quality in the middle, and keep learning after launch. The loop never really ends.</p><div class="dgm wide" style="max-width:600px"><svg viewBox="0 0 720 470" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The product development life cycle as a seven-phase loop from discovery to iteration and back"><defs><marker id="pdarr" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#5f7aa6"/></marker></defs><path d="M 399.7 68.8 A 168 168 0 0 1 462.9 99.2" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 512.4 161.3 A 168 168 0 0 1 528.0 229.6" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 510.3 307.0 A 168 168 0 0 1 466.6 361.9" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 395.1 396.3 A 168 168 0 0 1 324.9 396.3" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 253.4 361.9 A 168 168 0 0 1 209.7 307.0" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 192.0 229.6 A 168 168 0 0 1 207.6 161.3" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><path d="M 257.1 99.2 A 168 168 0 0 1 320.3 68.8" fill="none" stroke="#39507a" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#pdarr)"/><circle cx="360.0" cy="64.0" r="30" fill="#0d2748" stroke="#34d399" stroke-width="2.4"/><text x="360.0" y="71.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#34d399">1</text><text x="360.0" y="22.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Discovery</text><circle cx="491.3" cy="127.3" r="30" fill="#0d2748" stroke="#34d399" stroke-width="2.4"/><text x="491.3" y="134.3" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#34d399">2</text><text x="527.3" y="102.6" text-anchor="start" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Research</text><circle cx="523.8" cy="269.4" r="30" fill="#0d2748" stroke="#60a5fa" stroke-width="2.4"/><text x="523.8" y="276.4" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#60a5fa">3</text><text x="568.6" y="283.6" text-anchor="start" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Design</text><circle cx="432.9" cy="383.4" r="30" fill="#0d2748" stroke="#60a5fa" stroke-width="2.4"/><text x="432.9" y="390.4" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#60a5fa">4</text><text x="452.9" y="428.8" text-anchor="start" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Development</text><circle cx="287.1" cy="383.4" r="30" fill="#0d2748" stroke="#60a5fa" stroke-width="2.4"/><text x="287.1" y="390.4" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#60a5fa">5</text><text x="267.1" y="428.8" text-anchor="end" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Testing</text><circle cx="196.2" cy="269.4" r="30" fill="#0d2748" stroke="#fbbf24" stroke-width="2.4"/><text x="196.2" y="276.4" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#fbbf24">6</text><text x="151.4" y="283.6" text-anchor="end" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Launch</text><circle cx="228.7" cy="127.3" r="30" fill="#0d2748" stroke="#fbbf24" stroke-width="2.4"/><text x="228.7" y="134.3" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="19" fill="#fbbf24">7</text><text x="192.7" y="102.6" text-anchor="end" font-family="Poppins,sans-serif" font-weight="700" font-size="13" fill="#e6ecf7">Iteration</text><text x="360" y="228" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="22" fill="#fff">PDLC</text><text x="360" y="250" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7fa6dd">hunch → shipped → learned</text></svg></div><div class="takeaway"><h4>Your safety net</h4><p>This framework ensures you aren’t a feature factory shipping random requests, but a <strong>strategist who can justify every step of the journey</strong>: from the first signal to the post-launch data loop.</p></div></div></section><section class="centered" data-title="The PM Across the Lifecycle"><div class="inner"><span class="demo-tag tag-lecture">The PM across the lifecycle</span><h2>What the PM actually does at each stage</h2><p class="subtitle">The same Netflix “Play Something” feature, traced through the whole cycle, from a vague signal to a measured outcome.</p><div class="stage-grid"><div class="stage-card" style="--ac:#34d399"><div class="stage-kick">Early stages</div><div class="stage-name">Discover</div><div class="stage-phases">Discovery · Research</div><div><div class="stage-li">Synthesize messy data into a structured problem statement</div><div class="stage-li">Prioritize the “why”, pick the highest-impact problems</div><div class="stage-li">Define what a winning outcome looks like before work begins</div></div><div class="stage-goal"><b>Goal:</b> Identify a promising opportunity worth the expensive resources of design and engineering.</div><div class="stage-eg">🎬 A Netflix PM sees users scroll 20 min without playing a title → “How might we help users find a movie faster?”</div></div><div class="stage-card" style="--ac:#60a5fa"><div class="stage-kick">Execution stages</div><div class="stage-name">Build</div><div class="stage-phases">Design · Development · Testing</div><div><div class="stage-li">Guide design and engineering to deliver the intended <em>why</em></div><div class="stage-li">Balance technical constraints and timelines without losing the goal</div><div class="stage-li">Confirm the build solves the original pain and meets quality bars</div></div><div class="stage-goal"><b>Goal:</b> Build a high-quality solution that effectively solves the user problem.</div><div class="stage-eg">🎬 The PM and designer prototype where the “Play Something” button lives; engineering ships a simpler logic first to keep it fast.</div></div><div class="stage-card" style="--ac:#fbbf24"><div class="stage-kick">Final stages</div><div class="stage-name">Deliver</div><div class="stage-phases">Launch · Iteration</div><div><div class="stage-li">Orchestrate the release with marketing and support</div><div class="stage-li">Monitor data and feedback against your success metrics</div><div class="stage-li">Decide whether to double down, pivot, or move on</div></div><div class="stage-goal"><b>Goal:</b> Deliver to market and evolve based on actual user behavior.</div><div class="stage-eg">🎬 Netflix rolls “Play Something” to 10% first, then checks: did average scroll time actually drop by 5 minutes?</div></div></div></div></section><section class="centered" data-title="The AI-Powered Product Life Cycle"><div class="inner"><span class="demo-tag tag-framework">The AI-powered life cycle</span><h2>Move through the PDLC at 10x speed</h2><p class="subtitle">Your value is in the decisions you make. AI removes the grind, offload high-volume data processing and documentation so you can focus on the high-value calls that drive outcomes.</p><div class="ailc-grid"><div class="ailc-card" style="--ac:#34d399"><div class="ailc-name">1 · Discover</div><div class="ailc-split"><div class="ailc-block ailc-human"><span class="albl">PM · Human</span>PM inputs qualitative user feedback and strategy.</div><div class="ailc-block ailc-ai"><span class="albl">AI · Assistance</span>Analyzes hours of UXR video and text.</div></div><div class="ailc-out">→ A summary doc with key pain points and quotes.</div></div><div class="ailc-card" style="--ac:#60a5fa"><div class="ailc-name">2 · Design</div><div class="ailc-split"><div class="ailc-block ailc-human"><span class="albl">PM · Human</span>PM defines strategic trade-offs and success criteria.</div><div class="ailc-block ailc-ai"><span class="albl">AI · Assistance</span>Converts insights into PRD drafts and generates code for interactive prototypes.</div></div><div class="ailc-out">→ A multi-section PRD and an interactive prototype UI.</div></div><div class="ailc-card" style="--ac:#fbbf24"><div class="ailc-name">3 · Deliver</div><div class="ailc-split"><div class="ailc-block ailc-human"><span class="albl">PM · Human</span>PM makes launch decisions and plans GTM strategy.</div><div class="ailc-block ailc-ai"><span class="albl">AI · Assistance</span>Assists with GTM copy, blog posts, and test scenarios.</div></div><div class="ailc-out">→ A launch-ready checklist and campaign materials.</div></div></div><div class="takeaway"><h4>Continuous iteration</h4><p>AI ensures every <strong>human decision is backed by synthesized evidence</strong> and every <strong>strategic plan is supported by rapid, high-quality artifacts</strong>: closing the loop faster, every cycle.</p></div></div></section><section class="section-break" data-title="Kick Off Your Final Project"><div class="section-break-inner"><div class="section-num">04</div><div class="lab-title">Section 04</div><div class="lab-name">Kick Off Your Final Project</div><div class="lab-desc">This is your commitment moment. Pick the scenario you’ll carry through all six modules, then define the why behind it: the problem hook and value proposition that everything else builds on.</div></div></section><section class="centered" data-title="Choose Your Scenario"><div class="inner"><span class="demo-tag tag-case">Final project · choose your path</span><h2>Choose your scenario</h2><p class="subtitle">Pick the one that aligns with your interests or current work. There’s <strong>no switching after today</strong>: every lab and deliverable builds on this specific problem.</p><div class="scenario-grid"><div class="scn-card" style="--ac:#34d399"><span class="scn-tag">Scenario 1 · B2C</span><div class="scn-name">StreamLine Spotlight</div><div class="scn-sub">The Discovery Plateau, library volume is up, but engagement is down.</div><div class="scn-desc">A decade of “more is better” gave StreamLine 15,000 titles but a brand seen as a warehouse of mid-tier content. Lead the <em>Spotlight</em> initiative to pivot toward curation and win back segments that value quality over volume.</div><div class="scn-risk">Likely risk · Value</div></div><div class="scn-card" style="--ac:#60a5fa"><span class="scn-tag">Scenario 2 · B2B</span><div class="scn-name">RouteLogic Velocity</div><div class="scn-sub">The Utility Crisis, platform complexity is now an administrative burden.</div><div class="scn-desc">RouteLogic’s all-in-one suite became so powerful it slows the frontline coordinators who rely on it, pushing enterprise accounts toward leaner rivals. Lead the <em>Velocity</em> initiative to audit the experience and restore the promise of speed.</div><div class="scn-risk">Likely risk · Usability</div></div></div><div class="takeaway"><h4>Bringing your own?</h4><p>You may use a real, instructor-approved initiative from your own organization. You’ll follow the same framework and deliver the same artifacts, just bring your own metrics and context to each lab.</p></div></div></section><section class="centered" data-title="Exercise · Problem Hook &amp; Value Prop"><div class="inner"><div class="lab-timer">⏱ 15 min</div><span class="demo-tag tag-exercise">Individual exercise · Solo</span><h2>Draft your problem hook &amp; value prop</h2><p class="subtitle">Kick off your final project by defining the <em>why</em>. Bridge the company’s strategic crisis to a specific user’s moment of misery, no technical detail yet, just the strategic tension and the human frustration.</p><div class="reflection-grid" style="grid-template-columns:repeat(2,1fr)"><div class="ref-card"><div class="ref-num">01</div><div class="ref-q"><b>Pick your path ·</b> Commit to StreamLine or RouteLogic, don’t spend more than two minutes.</div></div><div class="ref-card"><div class="ref-num">02</div><div class="ref-q"><b>Strategic crisis ·</b> If the company does nothing for 12 months, what happens?</div></div><div class="ref-card"><div class="ref-num">03</div><div class="ref-q"><b>Moment of misery ·</b> What workaround is the user forced into because the product fails them?</div></div><div class="ref-card"><div class="ref-num">04</div><div class="ref-q"><b>Hook &amp; value prop ·</b> One urgent sentence on the risk + pain, then who it’s for, the value, and the urgent why.</div></div></div><div class="takeaway"><h4>Then cold-read your own hook</h4><p>Step away, come back, and read it as a skeptical stakeholder would, silently, with no explanation. If <em>you</em> don’t feel the urgency, that’s your data. Optionally swap with a peer in <code>#cohort-channel</code> for a fresh cold-read.</p></div><a class="lab-walkthrough" href="Module 1 - Exercise 2 Guide.html">📘 Complete this activity in the exercise guide →</a></div></section><section class="centered" data-title="Key Takeaways"><div class="inner"><span class="demo-tag tag-complete">Key takeaways</span><h2>Module 1 in four lines</h2><div class="takeaway-list"><div class="takeaway-item"><p><strong>Product Managers are strategic architects, not feature factories.</strong> Your value is driving measurable outcomes, prioritizing customer pain and feasibility over simply completing administrative tasks.</p></div><div class="takeaway-item"><p><strong>A shared North Star is the antidote to “everything is urgent.”</strong> Aligning daily iterations with leading behavioral indicators, not vanity metrics, ensures every product decision creates genuine value.</p></div><div class="takeaway-item"><p><strong>The PDLC turns guessing into knowing.</strong> A repeatable series of decisions takes an idea from a hunch to a shipped product, reducing risk early and learning continuously after launch.</p></div><div class="takeaway-item"><p><strong>AI-native PMs offload the grind to focus on judgment.</strong> Automating synthesis and documentation frees you to define the <em>why</em> behind every decision and move through the lifecycle at 10x speed.</p></div></div></div></section><section class="centered" data-title="Extra Practice &amp; Next Session"><div class="inner"><span class="demo-tag tag-debrief">Extra practice · Optional</span><h2>Dig deeper on your own</h2><div class="ep-grid"><div class="ep-card"><div class="ep-num">01</div><div class="ep-title">Audit your own product backlog</div><div class="ep-desc">Apply the Three Pillars prompt from the Figma lab to a real initiative at your org. Categorize your backlog into customer needs, business goals, and feasibility, then cut or defer what doesn’t qualify.</div></div><div class="ep-card"><div class="ep-num">02</div><div class="ep-title">Stress-test the opposite scenario</div><div class="ep-desc">Draft a problem hook and hypothesis for the scenario you didn’t choose. Can you find the moment of misery and strategic crisis in a business model that’s less familiar to you?</div></div></div><div class="next-arrow-bar"><div class="nab-meta">⏩ Next session · Module 2</div><div class="nab-title">Discover Product Opportunities via Qualitative Signals</div><div class="nab-desc">Synthesize qualitative data and competitive intel into actionable journey maps and personas, moving beyond surface observations to high-impact opportunities that prioritize outcomes over outputs.</div></div><div class="takeaway"><h4>📍 Project deliverable check</h4><p>Complete your <strong>Problem Hook &amp; Value Proposition</strong> in your final project repo so you stay on track for the final project.</p></div></div></section><section class="centered" data-title="Resources &amp; Templates"><div class="inner"><span class="demo-tag tag-lecture">Resources &amp; Templates</span><h2>Everything from today, in one place</h2><p class="subtitle">Deepen what we covered and get ready to build your final project.</p><div class="cards-grid" style="grid-template-columns:repeat(2,1fr);max-width:760px;margin-left:auto;margin-right:auto"><a class="card-item" href="../Final Project Brief.html" style="--card-accent:#22d3ee;text-decoration:none;display:block"><div class="card-icon">📋</div><div class="card-title">Final Project Brief &amp; Deliverables</div><div class="card-desc">The full StreamLine / RouteLogic scenarios, the repo template, and FAQs for your project.</div></a><a class="card-item" href="Product Management Repo Template.html" style="--card-accent:#2dd4bf;text-decoration:none;display:block"><div class="card-icon">🗄️</div><div class="card-title">Project Repo Template</div><div class="card-desc">Fork the template repo, README dashboard + one folder per module. Set this up today.</div></a><a class="card-item" href="Module 1 - Exercise 1 Guide.html" style="--card-accent:#60a5fa;text-decoration:none;display:block"><div class="card-icon">🧭</div><div class="card-title">Exercise 1 Guide</div><div class="card-desc">AI-prompt walkthrough to build your strategic discovery map.</div></a><a class="card-item" href="Module 1 - Exercise 2 Guide.html" style="--card-accent:#22d3ee;text-decoration:none;display:block"><div class="card-icon">🧭</div><div class="card-title">Exercise 2 Guide</div><div class="card-desc">Draft, cold-read, and commit your problem hook &amp; value proposition.</div></a><a class="card-item" href="Module 1 - Problem Hook Builder.html" style="--card-accent:#34d399;text-decoration:none;display:block"><div class="card-icon">🧮</div><div class="card-title">Problem Hook Builder</div><div class="card-desc">Interactive worksheet to draft, cold-read, and export your problem hook and value proposition.</div></a><a class="card-item" href="Module 1 - Notes (Shareable).html" style="--card-accent:#a78bfa;text-decoration:none;display:block"><div class="card-icon">🗂️</div><div class="card-title">Notes, Glossary &amp; Reference Card</div><div class="card-desc">Shareable notes, the module glossary, and the PM mindset reference card.</div></a></div></div></section><section class="centered" data-title="Q&amp;A"><div class="inner"><span class="demo-tag tag-activity">Q&amp;A</span><h2>Questions?</h2><p class="subtitle">A chance to dive deeper into anything we covered today. Async learners: drop your questions in <code>#cohort-channel</code> and the instructor responds in-thread.</p></div></section>
+<script>
+const sections = Array.from(document.querySelectorAll('section'));
+const navDotsContainer = document.getElementById('navDots');
+let currentIdx = 0;
+let sorterVisible = false;
+
+const STORAGE_KEY = 'skip-sections-' + document.title.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 60);
+const skippedSections = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+
+function saveSkips() { localStorage.setItem(STORAGE_KEY, JSON.stringify([...skippedSections])); }
+
+function applySkips() {
+  sections.forEach((sec, i) => sec.classList.toggle('skipped', skippedSections.has(i)));
+  rebuildDots();
+}
+
+function rebuildDots() {
+  navDotsContainer.innerHTML = '';
+  sections.forEach((sec, i) => {
+    if (skippedSections.has(i)) return;
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    const title = sec.dataset.title || 'Section';
+    dot.innerHTML = `<span class="tooltip">${title}</span>`;
+    dot.dataset.idx = i;
+    dot.onclick = () => sections[i].scrollIntoView({ behavior: 'smooth' });
+    navDotsContainer.appendChild(dot);
+  });
+}
+
+function getActiveSections() { return sections.map((s, i) => i).filter(i => !skippedSections.has(i)); }
+
+function updateProgress(idx) {
+  currentIdx = idx;
+  const active = getActiveSections();
+  const posInActive = active.indexOf(idx);
+  const progress = posInActive >= 0 ? (posInActive + 1) / active.length * 100 : 0;
+  document.getElementById('progressBar').style.width = progress + '%';
+  const dots = navDotsContainer.querySelectorAll('.nav-dot');
+  dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.idx) === idx));
+  document.getElementById('skip-badge').classList.toggle('visible', skippedSections.has(idx));
+}
+
+function toggleSkip(idx) {
+  if (skippedSections.has(idx)) skippedSections.delete(idx);
+  else skippedSections.add(idx);
+  saveSkips();
+  applySkips();
+  updateProgress(currentIdx);
+  if (sorterVisible) renderSorter();
+}
+
+function nextActive(from, dir) {
+  let i = from + dir;
+  while (i >= 0 && i < sections.length) {
+    if (!skippedSections.has(i)) return i;
+    i += dir;
+  }
+  return -1;
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const idx = sections.indexOf(entry.target);
+      updateProgress(idx);
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(sec => observer.observe(sec));
+
+function renderSorter() {
+  const grid = document.getElementById('sorter-grid');
+  grid.innerHTML = '';
+  sections.forEach((sec, i) => {
+    const isSkipped = skippedSections.has(i);
+    const isCurrent = i === currentIdx;
+    const div = document.createElement('div');
+    div.className = 'sorter-item' + (isSkipped ? ' sorter-skipped' : '') + (isCurrent ? ' sorter-active' : '');
+    const title = sec.dataset.title || 'Section';
+    div.innerHTML = `
+      <div class="sorter-num">Section ${i + 1}</div>
+      <div class="sorter-label">${title}</div>
+      <button class="sorter-skip-btn ${isSkipped ? 'skip-on' : 'skip-off'}"
+              onclick="event.stopPropagation(); toggleSkip(${i})">
+        ${isSkipped ? '↩ Unskip' : '⊘ Skip'}
+      </button>`;
+    div.addEventListener('click', () => { sections[i].scrollIntoView({ behavior: 'smooth' }); closeSorter(); });
+    grid.appendChild(div);
+  });
+}
+function openSorter() { sorterVisible = true; renderSorter(); document.getElementById('slide-sorter').classList.add('visible'); }
+function closeSorter() { sorterVisible = false; document.getElementById('slide-sorter').classList.remove('visible'); }
+
+document.getElementById('skip-badge').addEventListener('click', () => toggleSkip(currentIdx));
+
+document.addEventListener('keydown', (e) => {
+  if (sorterVisible) {
+    if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') { e.preventDefault(); closeSorter(); }
+    return;
+  }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, 1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, -1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'k' || e.key === 'K') { toggleSkip(currentIdx); }
+  else if (e.key === 'm' || e.key === 'M') { openSorter(); }
+});
+
+applySkips();
+sections[0].classList.add('visible');
+</script>
+</body>
+</html>

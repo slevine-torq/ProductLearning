@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scoring and Sequencing Your Backlog — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.step { margin: var(--sp-6) 0; }
+.step-head { margin-bottom: var(--sp-2); }
+.step-head .num {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-1);
+}
+.step-head h3 { font-size: var(--fs-lg); }
+
+.prompt { background: var(--torq-dark-ink); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-6); position: relative; margin: var(--sp-3) 0; }
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono); font-size: var(--fs-sm);
+  color: #E8EFFF; line-height: 1.7; white-space: pre-wrap;
+  word-break: break-word; display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22); border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3); min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+.copy-prompt[data-state="done"] { background: var(--torq-status-green); border-color: var(--torq-status-green); color: var(--torq-white); }
+
+.canvas {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow-lg);
+  overflow: hidden;
+  margin: var(--sp-4) 0;
+}
+.canvas-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  align-items: center; justify-content: space-between;
+}
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-1);
+  min-height: 44px; cursor: pointer;
+}
+.check-list input[type="checkbox"] {
+  flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0;
+  accent-color: var(--torq-blue); cursor: pointer;
+}
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn {
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--torq-white); background: var(--torq-blue);
+  border: 0; border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); min-height: 44px;
+  cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .btn, .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .canvas { box-shadow: none; break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 4 &middot; Task 2 of 6</p>
+    <h1>Scoring and sequencing your backlog</h1>
+    <p class="standfirst">A hands-on lab: get an AI baseline on your real backlog fast, then override it with the evidence only you have.</p>
+    <div class="meta">
+      <span><b>Course</b> High-Velocity Product Roadmaps</span>
+      <span><b>Hands-on</b> ~25 min</span>
+      <span><b>Artifact</b> Now/Next/Later Roadmap</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">Pull a real backlog from your current engagement — ten to fifteen items is plenty. This lab scores it against effort and value using AI as a fast first pass, then puts your own judgment in charge of the final call.</p>
+
+  <div class="callout">
+    <span class="label">Before you start</span>
+    <p>Confirm your engagement's AI policy before pasting real backlog details into an AI tool. If that's off-limits here, use a backlog from a product you know well as a user instead — the discipline being practiced is the same either way.</p>
+  </div>
+
+  <section id="lab">
+    <h2>Three-step scoring lab</h2>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 1 &middot; Set a human baseline</span>
+        <h3>Flag two or three instinctive quick wins</h3>
+      </div>
+      <p>Before touching AI, scan the backlog and flag two or three items that look like obvious quick wins to you. You'll check the AI's output against this baseline in Step 3.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 2 &middot; Get an AI baseline</span>
+        <h3>Deploy the scoring prompt</h3>
+      </div>
+      <p>Fill in your real anchors and backlog, then run it.</p>
+      <div class="prompt">
+        <button class="copy-prompt" type="button" data-prompt="p1">Copy</button>
+        <pre><code id="p1">Act as a senior product manager scoring a backlog against effort and value.
+
+Strategic anchors:
+- Success metric: <span class="ph">[the metric this initiative is actually trying to move]</span>
+- Guardrail metric: <span class="ph">[what must not get worse]</span>
+- Constraints: <span class="ph">[team size, timeline, or other real limits]</span>
+
+For each item, give:
+- Value (1-5): 1 = doesn't touch the success metric, 5 = directly moves it
+- Effort (1-5): 1 = days of work, 5 = a major build
+- Quadrant: Quick Win / Major Project / Fill-In / Time Sinker
+- One-sentence rationale tied to the anchors above, not general best practice
+
+Be ruthless about items that came from an internal ask rather than real evidence.
+
+Backlog:
+<span class="ph">[paste your real backlog items here]</span></code></pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="num">Step 3 &middot; Audit and override</span>
+        <h3>Your judgment is the actual deliverable</h3>
+      </div>
+      <p>Compare the AI's scores against your Step 1 instincts. Where did it inflate an item that no real evidence backs up? Where did it undervalue something your research already supports? Override the scores, finalize the quadrants, and sort into Now, Next, Later, and Cut.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label">The AI gives you speed, not the call</span>
+      <p>It can score fast and defend its reasoning. It can't tell the difference between a request backed by real evidence and one that's just loud. That's still entirely on you.</p>
+    </div>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the Now/Next/Later Roadmap</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">The top item in your Now lane carries forward into Task 3 and Task 5's PRD lab.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Now/Next/Later Roadmap</h3>
+          <p>Torq Product Practice &middot; built on a real backlog</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">List your Now lane — 2 to 4 items, all quick wins.</span>
+            <span class="why">If Now has more than four items, it isn't actually a filter yet.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">List your Next lane — the major projects worth scheduling deliberately.</span>
+            <span class="why">High value, high effort — these need a real plan, not a slot.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">List your Later lane and your Cut List.</span>
+            <span class="why">Cut items need a one-line reason — that's what keeps them cut.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">Name one place you overrode the AI, and why.</span>
+            <span class="why">This is the part of the exercise that's actually your judgment on record.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>AI is fast at scoring, not at knowing what's real.</b> It can't distinguish evidence-backed requests from loud ones — that audit stays yours.</li>
+      <li><b>A short Now lane is a sign of discipline, not timidity.</b> If everything's a quick win, nothing actually is.</li>
+      <li><b>Every cut needs a written reason.</b> That's what stops a killed item from quietly resurfacing next sprint.</li>
+      <li><b>The override, not the score, is the real deliverable.</b> It's the one place your judgment is visible on the page.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 3 — Scoping With MVP and MoSCoW.</p>
+    <p>Torq Product Practice &middot; Course 4: High-Velocity Product Roadmaps</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "torq.c4t2.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+
+  function readState() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function writeState(state) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* no-op */ }
+  }
+
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+
+  function canvasAsText() {
+    var out = ["NOW/NEXT/LATER ROADMAP", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    return out.join("\n");
+  }
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () {
+      btn.textContent = originalLabel;
+      btn.removeAttribute("data-state");
+    }, 2000);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = canvasAsText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () {
+        flash(copyBtn, "Copied", "Copy as text");
+      }, function () {
+        flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+      });
+    } else {
+      flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+    }
+  });
+
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "now-next-later-roadmap.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) {
+      flash(downloadBtn, "Use Copy instead", "Download as .md");
+    }
+  });
+
+  var copyPromptBtns = document.querySelectorAll(".copy-prompt");
+  Array.prototype.forEach.call(copyPromptBtns, function (btn) {
+    btn.addEventListener("click", function (evt) {
+      var el = evt.currentTarget;
+      var id = el.getAttribute("data-prompt");
+      var codeEl = document.getElementById(id);
+      var text = codeEl ? codeEl.textContent : "";
+      var original = "Copy";
+      if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+        window.navigator.clipboard.writeText(text).then(function () {
+          flash(el, "Copied", original);
+        }, function () {
+          flash(el, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", original);
+        });
+      } else {
+        flash(el, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", original);
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

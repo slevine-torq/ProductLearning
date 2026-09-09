@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 · Exercise 1 Guide, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', -apple-system, sans-serif; background: #07162C; color: #ffffff; -webkit-font-smoothing: antialiased; line-height: 1.6; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 25% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  h1 { font-size: clamp(30px, 4vw, 44px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  p { color: #ffffff; }
+  strong { color: #fff; font-weight: 700; }
+  em { color: #22d3ee; font-style: normal; font-weight: 600; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 40px 28px 100px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 34px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .meta-chip { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 18px; }
+  .lead { font-size: 17px; color: #ffffff; max-width: 800px; margin: 18px 0 8px; }
+
+  .scenario { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); border-radius: 16px; padding: 24px 26px; margin: 26px 0; }
+  .scenario h2 { font-size: 19px; color: #fff; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .scenario ul { list-style: none; margin: 12px 0 0; }
+  .scenario ul li { font-size: 14.5px; color: #ffffff; padding: 5px 0 5px 22px; position: relative; }
+  .scenario ul li::before { content: '▸'; position: absolute; left: 0; color: #22d3ee; }
+  .scenario .stat { color: #fff; font-weight: 700; }
+  .scn-pick { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px; }
+  .scn-pick > div { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:16px 18px; }
+  .scn-pick h3 { font-size:15px; color:#fff; margin-bottom:6px; }
+  .scn-pick .tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#22d3ee; }
+  @media (max-width:680px){ .scn-pick{ grid-template-columns:1fr; } }
+
+  .phase { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 26px; margin: 22px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .phase-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .phase-badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 13px; color: #07162C; background: var(--acc, #22d3ee); padding: 5px 12px; border-radius: 999px; }
+  .phase-head h2 { font-size: 21px; color: #fff; }
+  .phase > p { margin: 4px 0 10px; }
+
+  .qtable { width: 100%; border-collapse: collapse; margin: 14px 0 4px; }
+  .qtable td { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.07); font-size: 13.5px; color: #ffffff; vertical-align: top; }
+  .qtable td.q { background: rgba(255,255,255,0.02); color: #fff; font-weight: 600; width: 58%; }
+  .qtable td.a { color: #ffffff; font-style: italic; }
+
+  .promptbox { background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px; padding: 18px 20px; margin: 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.65; color: #9fd0ff; white-space: pre-wrap; }
+  .prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #22d3ee; display: block; margin-bottom: 10px; }
+
+  /* Embedded UXR datasets */
+  .ds-intro { font-size: 13px; color: #ffffff; margin: 4px 0 10px; }
+  .ds { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-left: 4px solid var(--acc,#22d3ee); border-radius: 12px; margin: 12px 0; overflow: hidden; }
+  .ds > summary { cursor: pointer; list-style: none; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .ds > summary::-webkit-details-marker { display: none; }
+  .ds .ds-t { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .ds .ds-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #07162C; background: var(--acc,#22d3ee); padding: 4px 9px; border-radius: 999px; }
+  .ds .ds-actions { display: flex; gap: 8px; }
+  .ds-mini { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 11.5px; padding: 7px 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(34,211,238,0.35); background: rgba(34,211,238,0.1); color: #22d3ee; transition: all .15s; }
+  .ds-mini:hover { background: rgba(34,211,238,0.2); }
+  .ds-body { padding: 0 18px 16px; }
+  .ds-count { font-size: 12px; color: #ffffff; margin: 2px 0 8px; }
+  .ds-h { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #60a5fa; font-weight: 800; margin: 14px 0 8px; }
+  .ds-h.bug { color: #fca5a5; }
+  .ent { background: rgba(8,18,36,0.5); border: 1px solid rgba(255,255,255,0.07); border-radius: 9px; padding: 11px 14px; margin: 7px 0; font-size: 13px; color: #ffffff; }
+  .ent .src { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #22d3ee; display: block; margin-bottom: 3px; letter-spacing: .02em; }
+  .ent.bug .src { color: #fca5a5; }
+
+  .callout { border-radius: 12px; padding: 16px 18px; margin: 16px 0; font-size: 14px; line-height: 1.6; }
+  .callout.warn { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.22); color: #fca5a5; }
+  .callout.warn strong { color: #fff; }
+  .callout.tip { background: rgba(110,231,183,0.06); border: 1px solid rgba(110,231,183,0.2); color: #ffffff; }
+  .callout.tip strong { color: #6ee7b7; }
+
+  /* Fillable answer fields + export toolbar */
+  .fill { width: 100%; background: rgba(8,18,36,0.6); border: 1px solid rgba(96,165,250,0.22); border-radius: 8px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 13.5px; line-height: 1.5; padding: 9px 11px; resize: vertical; min-height: 46px; transition: border-color .2s; }
+  input.fill { min-height: 0; }
+  .fill:focus { outline: none; border-color: #22d3ee; }
+  .fill::placeholder { color: #ffffff; }
+  .lab-toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; padding: 14px; margin: 34px -28px 0; background: linear-gradient(0deg, #07162C 72%, transparent); z-index: 30; }
+  .lab-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s, border-color .2s, color .2s; }
+  .lab-btn.primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .lab-btn.primary:hover { transform: translateY(-2px); }
+  .lab-btn.alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .lab-btn.alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .lab-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; opacity: 0; transition: opacity .3s; }
+  .lab-saved.show { opacity: 1; }
+  .lab-toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .lab-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a:hover { color: #22d3ee; }
+
+  /* Scenario picker, selectable */
+  .scn-pick > div { cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s; position: relative; }
+  .scn-pick > div:hover { border-color: rgba(34,211,238,0.45); background: rgba(34,211,238,0.05); }
+  .scn-pick > div.sel { border-color: #22d3ee; background: rgba(34,211,238,0.09); box-shadow: 0 0 0 1px #22d3ee inset; }
+  .scn-pick > div.sel::after { content: '✓ Selected'; position: absolute; top: 12px; right: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #22d3ee; }
+  .scn-pick > div:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
+  .scn-hint { font-size: 13px; color: #ffffff; margin-top: 10px; }
+
+  /* Prompt: injected data + copy */
+  .prompt-actions { display: flex; align-items: center; gap: 12px; margin: 10px 0 4px; flex-wrap: wrap; }
+  .prompt-data { color: #ffffff; }
+  .prompt-data.empty { color: #ffffff; font-style: italic; }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="#" class="back-link" role="button" aria-label="Go back to the previous page" data-ps-qa-back onclick="if(history.length>1){history.back();}return false;">← Back</a>
+      <a href="Module 2 - Slides (Shareable).html" class="back-link">← Module 2 deck</a>
+    </div>
+    <div class="meta-chip">Individual · ~15 min</div>
+  </div>
+
+  <span class="section-label">Module 2 · Exercise 1 Guide</span>
+  <h1>Leverage AI synthesis for discovery</h1>
+  <p class="lead">Use Claude to transform a messy collection of UXR notes and bug reports into a structured <strong>Product Health &amp; Insights Summary</strong>. You’ll first establish a manual baseline of user pain, then use a pre-built “Lead PM” prompt to synthesize the full data set, and finally <em>audit</em> the AI’s output to find where it captured, or missed, the critical strategic nuance. Success is measured by your ability to audit the AI against your own human instincts.</p>
+
+  <div class="callout tip"><strong>💡 A note on prompting:</strong> this lab is about <strong>product judgment</strong>, not prompt engineering. We’ve provided an optimized prompt so you can get straight to the insights. (Want to master prompting? See the AI Product Management course.) <br><br><strong>Pro tip:</strong> you don’t always have to write prompts from scratch, you can “shop” for pre-built logic in AI marketplaces and import specialized markdowns, called <em>Skills</em>, into your workflow.</div>
+
+  <!-- SCENARIO -->
+  <div class="scenario">
+    <h2>🎯 Pick your project path</h2>
+    <p>Use the data collateral for the scenario you committed to in Module 1. Work the rest of the certification in this same world.</p>
+    <div class="scn-pick">
+      <div role="button" tabindex="0" data-scn="ds-streamline" onclick="pickScenario('ds-streamline')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickScenario('ds-streamline')}"><span class="tag">Scenario A</span><h3>StreamLine Spotlight</h3><p style="font-size:13.5px;color:#ffffff">Restore brand authority and win back users by prioritizing human-led curation and restoration over mass-market scale.</p></div>
+      <div role="button" tabindex="0" data-scn="ds-routelogic" onclick="pickScenario('ds-routelogic')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickScenario('ds-routelogic')}"><span class="tag">Scenario B</span><h3>RouteLogic Velocity</h3><p style="font-size:13.5px;color:#ffffff">Reclaim operational simplicity by stripping away legacy noise so the tool is the fastest for everyday work.</p></div>
+    </div>
+    <p class="scn-hint">👆 Pick your scenario. Its dataset opens below <em>and</em> drops straight into the prompt in Step 2, so you copy the prompt and your data in one go.</p>
+  </div>
+
+  <!-- EXERCISE 1 -->
+  <div class="phase" style="--acc:#60a5fa;">
+    <div class="phase-head"><span class="phase-badge">Exercise 1 · 15 min</span></div>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 1 · Establish your truth baseline</h3>
+    <p style="font-size:14px">Before you touch the AI, know what’s in the data. Without a baseline, you won’t know if the AI is hallucinating or over-simplifying user pain. Open the <strong>UXR Notes &amp; Bugs Data</strong> for your chosen path below, scan the raw text for ~5 minutes, don’t categorize yet. Then log three specific moments of misery / pain points or technical red flags that jump out as high-stakes.</p>
+
+    <div id="uxr-data">
+      <p class="ds-intro">Your dataset, expand your scenario, then <strong>Copy</strong> it straight into the prompt in Step 2 (or <strong>Download .md</strong> to keep a Word/text copy). Both scenarios are here; use the one you committed to in Module 1.</p>
+
+      <details class="ds" style="--acc:#22d3ee" open>
+        <summary>
+          <span class="ds-t"><span class="ds-tag">Scenario A · B2C</span> StreamLine Spotlight</span>
+          <span class="ds-actions">
+            <button type="button" class="ds-mini" onclick="dsCopy('ds-streamline', this)">📋 Copy</button>
+            <button type="button" class="ds-mini" onclick="dsDownload('ds-streamline','StreamLine - UXR Notes & Bugs.md')">⬇ .md</button>
+          </span>
+        </summary>
+        <div class="ds-body">
+          <div class="ds-count">12 user-research notes · 10 bug reports · streaming platform, discovery &amp; curation focus</div>
+          <div id="ds-streamline">
+            <div class="ds-h">User research notes</div>
+            <div class="ent"><span class="src">UXR-01 · Priya, 34, heavy viewer (14 yrs)</span>"I open the app, scroll for like twenty minutes, and close it without watching anything. There's 15,000 titles but nothing I actually want. I ended up going back to a DVD."</div>
+            <div class="ent"><span class="src">UXR-02 · Marcus, 41, film buff</span>"The 'Because you watched' row is a joke, it recommended three more action sequels because I watched one. I'm not a genre, I'm a person. I miss when a human curator would surface a hidden gem."</div>
+            <div class="ent"><span class="src">UXR-03 · Aisha, 27, casual</span>"Honestly I just re-watch the same four comfort shows. Discovering anything new feels like a chore, so I don't."</div>
+            <div class="ent"><span class="src">UXR-04 · Tom, 52, lapsed subscriber</span>"I cancelled last year. It became a warehouse. Volume went up, quality of my evenings went down. A competitor emails me two hand-picked films a week and I watch both."</div>
+            <div class="ent"><span class="src">UXR-05 · Dana, 30, power user</span>"The autoplay trailer starts blasting before I've even read the title. I've muted my whole TV because of it. Five times in one session last night."</div>
+            <div class="ent"><span class="src">UXR-06 · Ken, 38</span>"I added a film to My List on my phone on the train. Got home, opened the TV app, gone. Not there. So I never found it again."</div>
+            <div class="ent"><span class="src">UXR-07 · Lucia, 45</span>"Search is useless unless I know the exact title. I typed 'slow quiet French drama' and got a Fast &amp; Furious film. How?"</div>
+            <div class="ent"><span class="src">UXR-08 · Raj, 29</span>"It froze on the loading spinner for a full minute, then kicked me to the home screen. I gave up and opened YouTube."</div>
+            <div class="ent"><span class="src">UXR-09 · Beth, 60</span>"Everything on the home screen is loud and new. I want 'quiet Sunday' or 'something my book club would like'. There's no way to browse by mood."</div>
+            <div class="ent"><span class="src">UXR-10 · Sam, 33</span>"I trust a recommendation from a friend more than the algorithm. The algorithm just wants me to keep scrolling, not to actually find something good."</div>
+            <div class="ent"><span class="src">UXR-11 · Nadia, 48</span>"I paused a documentary at 40 minutes on my tablet. Next day on the TV it started from zero. Couldn't find where I was. Never finished it."</div>
+            <div class="ent"><span class="src">UXR-12 · Older focus group (aggregate)</span>"Three of six participants said the sheer number of choices made them anxious and they'd rather someone 'just tell me what's good tonight.'"</div>
+            <div class="ds-h bug">Bug reports</div>
+            <div class="ent bug"><span class="src">BUG-1042 · Sev: High</span>Playback drops to home screen after ~60s buffering on Smart TV app (Samsung Tizen 2021+). Repro 7/10. Users report "gave up, switched app."</div>
+            <div class="ent bug"><span class="src">BUG-1058 · Sev: Critical</span>"My List" / watchlist does not sync between mobile and TV. Items added on one device do not appear on another. 340+ support tickets this quarter.</div>
+            <div class="ent bug"><span class="src">BUG-1061 · Sev: High</span>Resume-playback position not saved across devices; title restarts at 0:00 on a different device. Top driver of "couldn't finish" complaints.</div>
+            <div class="ent bug"><span class="src">BUG-1077 · Sev: Medium</span>Autoplay trailer audio plays at full volume ignoring the user's last volume setting; no way to disable autoplay in settings.</div>
+            <div class="ent bug"><span class="src">BUG-1080 · Sev: Medium</span>Search returns irrelevant results for natural-language / descriptive queries; only exact-title matching works.</div>
+            <div class="ent bug"><span class="src">BUG-1091 · Sev: High</span>"Because you watched" recommends near-duplicate titles from the same franchise; low diversity, users flag as "repetitive."</div>
+            <div class="ent bug"><span class="src">BUG-1099 · Sev: Low</span>Subtitle timing drifts ~2s out of sync on titles longer than 90 min. Intermittent.</div>
+            <div class="ent bug"><span class="src">BUG-1104 · Sev: Low</span>Cover-art thumbnails occasionally fail to load on slow connections, showing grey placeholders on the home rows.</div>
+            <div class="ent bug"><span class="src">BUG-1110 · Sev: Medium</span>App cold-start time on older TVs averages 11s; users perceive the app as "slow to open."</div>
+            <div class="ent bug"><span class="src">BUG-1121 · Sev: Low</span>Continue Watching row shows already-finished titles for up to 48h after completion.</div>
+          </div>
+        </div>
+      </details>
+
+      <details class="ds" style="--acc:#34d399">
+        <summary>
+          <span class="ds-t"><span class="ds-tag" style="background:#34d399">Scenario B · B2B</span> RouteLogic Velocity</span>
+          <span class="ds-actions">
+            <button type="button" class="ds-mini" style="border-color:rgba(52,211,153,0.4);background:rgba(52,211,153,0.12);color:#34d399" onclick="dsCopy('ds-routelogic', this)">📋 Copy</button>
+            <button type="button" class="ds-mini" style="border-color:rgba(52,211,153,0.4);background:rgba(52,211,153,0.12);color:#34d399" onclick="dsDownload('ds-routelogic','RouteLogic - UXR Notes & Bugs.md')">⬇ .md</button>
+          </span>
+        </summary>
+        <div class="ds-body">
+          <div class="ds-count">12 user-research notes · 10 bug reports · B2B logistics, frontline-utility focus</div>
+          <div id="ds-routelogic">
+            <div class="ds-h" style="color:#34d399">User research notes</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-01 · Diego, delivery driver, 3 yrs</span>"To mark a stop delivered I tap through three screens. In the rain, at a doorstep, with a package in one hand. I've started just texting my dispatcher instead."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-02 · Fleet dispatcher, mid-size 3PL</span>"I reassign a route and the driver doesn't see it for ten, fifteen minutes. By then they've driven the wrong way. We keep a WhatsApp group as the real system."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-03 · Elena, driver</span>"The app crashed mid-route and lost my remaining stops. I had to call the office to read them to me off a screen. Twenty minutes gone."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-04 · Ops manager, enterprise account</span>"It does everything, which is the problem. My frontline people use maybe 5% of it and can't find that 5%. We're evaluating a leaner competitor that just does routing well."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-05 · Sam, driver</span>"Route optimization sent me down a road that's been closed for months. It doesn't know about traffic or the loading dock round the back. I override it every day."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-06 · Priti, driver, rural routes</span>"No signal in half my area and the app is useless offline. Stop list won't load. I screenshot my route every morning as a backup."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-07 · Warehouse lead</span>"Proof-of-delivery photos take forever to upload and half fail. Drivers don't know if it worked, so they retake three times."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-08 · New driver, week 2</span>"Nobody can onboard on this in a day. There are menus inside menus. I still don't know where 'report a failed delivery' is."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-09 · Dispatcher, night shift</span>"Status updates from drivers lag on my dashboard. A stop shows 'in progress' when it was delivered an hour ago. I can't trust the board."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-10 · Regional manager</span>"The admin reporting is genuinely powerful, that's why we bought it. But the daily driver experience is dragging down adoption and now renewal is at risk."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-11 · Driver, 6 yrs</span>"Every update adds a button. Nothing gets removed. The 'start route' I use 30 times a day is now buried under features I've never touched."</div>
+            <div class="ent"><span class="src" style="color:#34d399">UXR-12 · Driver focus group (aggregate)</span>"Five of seven drivers keep a paper manifest 'just in case the app dies.' All seven said speed of the core actions matters more than any new feature."</div>
+            <div class="ds-h bug">Bug reports</div>
+            <div class="ent bug"><span class="src">BUG-2031 · Sev: Critical</span>App crashes mid-route on Android 12/13 when the stop list exceeds ~40 stops; remaining route is lost and must be reloaded from the server.</div>
+            <div class="ent bug"><span class="src">BUG-2044 · Sev: Critical</span>Dispatch reassignments take 8–15 min to propagate to the driver app; no push notification on route change. Drivers act on stale routes.</div>
+            <div class="ent bug"><span class="src">BUG-2050 · Sev: High</span>Offline mode fails to cache the stop list; app shows a blank route with no connectivity. Blocks rural routes entirely.</div>
+            <div class="ent bug"><span class="src">BUG-2055 · Sev: High</span>"Mark delivered" requires 3 taps across 3 screens; no single-tap completion. Top frontline complaint; drives off-platform workarounds.</div>
+            <div class="ent bug"><span class="src">BUG-2061 · Sev: High</span>Proof-of-delivery photo upload fails silently on weak signal (~35% failure); no retry queue, no success confirmation.</div>
+            <div class="ent bug"><span class="src">BUG-2068 · Sev: Medium</span>Route optimization ignores road closures and known access constraints (loading docks, one-way streets); no way to save local overrides.</div>
+            <div class="ent bug"><span class="src">BUG-2072 · Sev: Medium</span>Driver status changes lag 20–60 min on the dispatcher dashboard; "in progress" shown for completed stops.</div>
+            <div class="ent bug"><span class="src">BUG-2079 · Sev: Medium</span>Core actions (Start Route, Mark Delivered) are buried 2–3 levels deep after recent feature additions; no configurable home screen.</div>
+            <div class="ent bug"><span class="src">BUG-2085 · Sev: Low</span>GPS pin drifts up to 200m in dense urban areas, causing incorrect "arrived at stop" auto-detection.</div>
+            <div class="ent bug"><span class="src">BUG-2090 · Sev: Low</span>New-user onboarding tutorial cannot be re-opened after first launch; no in-app help for "report failed delivery."</div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <table class="qtable">
+      <tr><td class="q">Moment of misery / red flag #1 (e.g., “user gave up after 3 tries”)</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Moment of misery / red flag #2</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Moment of misery / red flag #3</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 2 · Build and deploy your prompt</h3>
+    <p style="font-size:14px">Use the optimized prompt below to process the data, this lets you skip the manual sorting and move straight to analysis. Once you’ve <strong>picked your scenario above</strong>, its dataset is already dropped into the <em>Input Data</em> section of the prompt, so there’s no copy-pasting the data separately. Just hit <strong>📋 Copy prompt + my data</strong>, open Claude, start a new chat, paste, and send.</p>
+    <div class="callout warn"><strong>⚠️ Heads up:</strong> if you haven’t created a Claude account yet, do it now, your instructor won’t pause to troubleshoot login errors. Your learning platform included sign-up instructions before the cohort began.</div>
+    <div class="promptbox" id="leadPrompt"><span class="prompt-label">The Lead PM prompt</span>Role: You are a Lead Product Manager. You have been provided with raw user
+interview notes and bug reports.
+
+Task: Perform a thematic synthesis of the provided data into a professional
+"Product Health & Insights Summary." Your goal is to transform raw, fragmented
+data into an executive-level overview.
+
+Instructions for Output:
+- Executive Summary: a 3-sentence summary of overall product health, focusing on
+  the tension between technical stability and the user experience.
+- Thematic Synthesis: group all issues into logical categories (e.g., Technical
+  Stability, Discovery/UX, Algorithmic Curation, Platform Sync). Do not use raw
+  data tables. For each category, give a concise narrative summary, then use
+  bullet points to list specific pain points with their severity
+  (Critical / High / Medium / Low).
+
+Constraints:
+- Do NOT include a "Roadmap" or "Actionable Recommendations" section.
+- Synthesize recurring issues rather than listing every individual bug report.
+- Maintain a professional, objective, analytical tone.
+- Aggregate low-priority items into a single line titled "Minor Technical Debt."
+
+Input Data:
+<span id="promptData" class="prompt-data empty">[Pick Scenario A or B above, your dataset drops in here]</span></div>
+    <div class="prompt-actions">
+      <button type="button" class="ds-mini" id="copyPromptBtn" onclick="copyLeadPrompt()">📋 Copy prompt + my data</button>
+      <span class="scn-hint" id="copyPromptHint" style="margin:0">No scenario picked yet, pick one above and it drops into the prompt.</span>
+    </div>
+
+    <p style="font-size:14px;margin-top:14px">Paste the summary Claude gives you back here, this is the core artifact of the lab, and you’ll reuse it in Exercise 2:</p>
+    <table class="qtable">
+      <tr><td class="q">Product Health &amp; Insights Summary (Claude's output)</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 3 · Audit, compare &amp; refine</h3>
+    <p style="font-size:14px">You are the pilot. Decide whether the AI co-pilot’s synthesis is accurate or whether it missed the nuance of the human experience. Review the output and compare its themes against your three standouts from Step 1.</p>
+    <table class="qtable">
+      <tr><td class="q">Did the AI catch the specific moment of misery / pain point you found in Step 1?</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Did it smooth over a critical frustration into a generic bullet point?</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Did the AI try to suggest features or a roadmap despite the constraints?</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <p style="font-size:14px;margin-top:12px">If the AI’s categories feel too broad, drill down with this follow-up:</p>
+    <div class="promptbox"><span class="prompt-label">Follow-up · drill down</span>Drill down into the [Specific Category] with more focus on the technical evidence.</div>
+    <p style="font-size:14px;margin-top:12px">Finally, note any <strong>logic leaks</strong>: places where the AI overstepped your judgment or hallucinated.</p>
+    <table class="qtable">
+      <tr><td class="q">Logic leak / hallucination #1 (e.g., “AI suggested a new search bar feature, roadmap leak”)</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Logic leak / hallucination #2</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <div class="callout warn">Save your Executive Summary, you’ll reuse it in Exercise 2 to build your persona and journey map. Post a one-line reflection in <code>#cohort-channel</code>: where did the AI need <em>your</em> judgment to stay honest to the data?</div>
+  </div>
+
+  <div class="lab-toolbar">
+    <button class="lab-btn primary" onclick="labCopyMd()">📋 Copy as Markdown</button>
+    <button class="lab-btn alt" onclick="labDownloadMd()">⬇ Download .md</button>
+    <button class="lab-btn alt" onclick="labReset()">↺ Reset</button>
+    <span class="lab-saved" id="labSaved">✓ Saved</span>
+  </div>
+
+  <footer>
+    <span>Product School · Product Management · Module 2</span>
+    <a href="Module 2 - Slides (Shareable).html">← Back to the Module 2 deck</a>
+  </footer>
+</div>
+<div class="lab-toast" id="labToast"></div>
+
+<script>
+  function dsText(id) { return document.getElementById(id).innerText.replace(/\n{3,}/g, '\n\n').trim(); }
+  function dsToast(m) { const el = document.getElementById('labToast'); el.textContent = m; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); }
+  function dsCopy(id, btn) {
+    navigator.clipboard.writeText(dsText(id)).then(() => {
+      const o = btn.innerHTML; btn.innerHTML = '✓ Copied';
+      dsToast('Dataset copied, paste it into the prompt ✓');
+      setTimeout(() => { btn.innerHTML = o; }, 1600);
+    }).catch(() => dsToast('Copy failed, use ⬇ .md instead'));
+  }
+  function dsDownload(id, fname) {
+    const b = new Blob([dsText(id)], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = fname; a.click(); URL.revokeObjectURL(a.href);
+    dsToast('Downloaded ' + fname + ' ✓');
+  }
+
+  // ── Scenario picker → drop the chosen dataset into the Lead PM prompt ──
+  var CHOSEN_KEY = 'pm-m2-ex1-scenario';
+  function pickScenario(id) {
+    document.querySelectorAll('.scn-pick > div').forEach(function (c) {
+      c.classList.toggle('sel', c.getAttribute('data-scn') === id);
+    });
+    // open the chosen dataset, collapse the other
+    document.querySelectorAll('#uxr-data .ds').forEach(function (d) {
+      var body = d.querySelector('[id^="ds-"]');
+      d.open = !!(body && body.id === id);
+    });
+    // inject the raw data straight into the prompt
+    var pd = document.getElementById('promptData');
+    if (pd) { pd.textContent = dsText(id); pd.classList.remove('empty'); }
+    var isA = id === 'ds-streamline';
+    var btn = document.getElementById('copyPromptBtn');
+    if (btn) btn.textContent = '📋 Copy prompt + ' + (isA ? 'StreamLine' : 'RouteLogic') + ' data';
+    var hint = document.getElementById('copyPromptHint');
+    if (hint) hint.textContent = 'Scenario ' + (isA ? 'A · StreamLine' : 'B · RouteLogic') + ' data is in the prompt, copy it and paste into Claude.';
+    try { localStorage.setItem(CHOSEN_KEY, id); } catch (e) {}
+  }
+  window.pickScenario = pickScenario;
+
+  function copyLeadPrompt() {
+    var box = document.getElementById('leadPrompt');
+    var pd = document.getElementById('promptData');
+    if (!box) return;
+    if (!pd || pd.classList.contains('empty')) {
+      dsToast('Pick your scenario above first ☝️');
+      var picker = document.querySelector('.scn-pick');
+      if (picker) picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    var c = box.cloneNode(true);
+    var lbl = c.querySelector('.prompt-label'); if (lbl) lbl.remove();
+    var text = c.textContent.replace(/\n{3,}/g, '\n\n').trim();
+    navigator.clipboard.writeText(text).then(function () {
+      dsToast('Prompt + your data copied, paste into Claude ✓');
+    }).catch(function () { dsToast('Copy failed, use the dataset ⬇ .md instead'); });
+  }
+  window.copyLeadPrompt = copyLeadPrompt;
+
+  // restore a prior scenario choice
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem(CHOSEN_KEY); } catch (e) {}
+    if (saved === 'ds-streamline' || saved === 'ds-routelogic') pickScenario(saved);
+  })();
+</script>
+<script>
+(function () {
+  const KEY = 'pm-m2-labguide-ex1';
+  const TITLE = 'AI Synthesis, Product Health & Insights Summary (Module 2)';
+  const DLNAME = 'ai-synthesis.md';
+
+  const wrap = document.querySelector('.wrap');
+
+  const clean = s => (s || '').replace(/✍️/g, '').replace(/…+/g, '').replace(/\s+/g, ' ').trim().replace(/[:：]+$/, '').trim();
+  const isLabelCell = c => /\b(q|conn|prompt)\b/.test(c.className || '');
+  const isFieldCell = c => {
+    if (c.querySelector('.fill')) return false;
+    if (isLabelCell(c)) return false;
+    if (c.tagName === 'TH') return c.textContent.includes('✍️');
+    const cls = (c.className || '').trim();
+    if (/\b(ans|a)\b/.test(cls)) return c.textContent.includes('✍️');
+    if (!cls) return c.textContent.trim().startsWith('✍️');
+    return false;
+  };
+  const cells = Array.from(wrap.querySelectorAll('td, th')).filter(isFieldCell);
+  cells.forEach((cell, i) => {
+    const isHead = cell.tagName === 'TH';
+    const ph = cell.textContent.trim();
+    const row = cell.closest('tr');
+    const q = row && row.querySelector('.q');
+    let label = '';
+    if (isHead) {
+      label = clean(cell.textContent);
+    } else if (q && q !== cell) {
+      label = clean(q.textContent);
+    } else if (row) {
+      const sib = Array.from(row.children).find(td => td !== cell && td.textContent.trim());
+      label = sib ? clean(sib.textContent) : '';
+    }
+    if (!label) label = 'Response ' + (i + 1);
+    const el = document.createElement(isHead ? 'input' : 'textarea');
+    el.className = 'fill';
+    if (isHead) el.type = 'text';
+    el.dataset.k = 'f' + i;
+    el.dataset.label = label;
+    el.placeholder = ph;
+    cell.textContent = '';
+    cell.appendChild(el);
+  });
+
+  const fields = Array.from(wrap.querySelectorAll('.fill'));
+
+  function sectionFor(field) {
+    const phase = field.closest('.phase');
+    if (phase) { const h = phase.querySelector('.phase-head h2'); if (h) return h.textContent.trim(); }
+    return 'Responses';
+  }
+
+  function load() {
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    fields.forEach(f => { if (d[f.dataset.k] != null) f.value = d[f.dataset.k]; });
+  }
+  let t;
+  function save() {
+    const d = {};
+    fields.forEach(f => d[f.dataset.k] = f.value);
+    localStorage.setItem(KEY, JSON.stringify(d));
+    const s = document.getElementById('labSaved');
+    s.classList.add('show');
+    clearTimeout(t);
+    t = setTimeout(() => s.classList.remove('show'), 1200);
+  }
+  fields.forEach(f => f.addEventListener('input', save));
+  load();
+
+  function md() {
+    const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+    const order = [];
+    const map = {};
+    fields.forEach(f => {
+      const s = sectionFor(f);
+      if (!map[s]) { map[s] = []; order.push(s); }
+      map[s].push(f);
+    });
+    let out = '# ' + TITLE + '\n';
+    order.forEach(g => {
+      out += '\n## ' + g + '\n';
+      map[g].forEach(f => { out += '- **' + f.dataset.label + ':** ' + v(f.value) + '\n'; });
+    });
+    return out;
+  }
+  function toast(m) {
+    const el = document.getElementById('labToast');
+    el.textContent = m; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1800);
+  }
+  window.labCopyMd = async function () {
+    try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+    catch (e) { toast('Copy failed, try Download'); }
+  };
+  window.labDownloadMd = function () {
+    const b = new Blob([md()], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = DLNAME;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Downloaded ' + DLNAME + ' ✓');
+  };
+  window.labReset = function () {
+    if (!confirm('Clear everything you’ve typed in this guide?')) return;
+    localStorage.removeItem(KEY);
+    fields.forEach(f => f.value = '');
+    toast('Cleared');
+  };
+})();
+</script>
+</body>
+</html>

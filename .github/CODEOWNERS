@@ -1,0 +1,8 @@
+# Replace this placeholder with the maintainer team used by the Torq organization.
+# Branch protection should require a CODEOWNER review before merging to main.
+* @slevine-torq
+
+/source-library/ @slevine-torq
+/programs/ @slevine-torq
+/course-starters/ @slevine-torq
+/README.md @slevine-torq

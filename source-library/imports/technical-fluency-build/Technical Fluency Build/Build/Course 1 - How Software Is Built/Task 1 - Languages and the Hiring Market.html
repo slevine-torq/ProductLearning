@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<!-- Built from _TASK-TEMPLATE-TIERED.html. Tokens inlined, not @import'ed.
+     #43A8FF is 2.5:1 on white — rules, dividers and gradient stops only, never text. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Languages, and the hiring market attached — Technical Fluency for Transform Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CANONICAL TOKENS — do not edit values ===== */
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient: linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --torq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* DERIVED — canonical dark-ink at alpha, not new brand hexes.
+     The kit has no muted-text token; muted passes 5.3:1 on white. */
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+/* ===== A11Y (required — do not remove) ===== */
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+/* ===== LAYOUT + HERO ===== */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+/* ===== TABLES ===== */
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th { font-weight: 700; color: var(--torq-dark-ink); border-bottom: 2px solid var(--torq-blue); }
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 22%; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+/* ===== CALLOUT (regulated-client note, key framing) ===== */
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+
+/* ===== TAKEAWAYS (every Task ends with these) ===== */
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ===== TIER READS (required — every Task carries one) =====
+   Three labeled reads, all visible, never gated. The sky-blue rule
+   between tiers is a DIVIDER, never text — #43A8FF is 2.5:1 on white
+   and fails for type. Labels use #2D53F2 (5.8:1). */
+.tiers {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow);
+  overflow: hidden;
+  margin: var(--sp-6) 0;
+}
+.tiers-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+}
+.tiers-head .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-1);
+}
+.tiers-head p { margin: 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.tier { padding: var(--sp-4) var(--sp-6); border-top: 2px solid var(--torq-sky-blue); }
+.tier:first-of-type { border-top: 0; }
+.tier .tier-label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.tier p { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+.tier p:last-child { margin-bottom: 0; }
+.tier .move { display: block; margin-top: var(--sp-2); color: var(--ink-muted); }
+.tier .move b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* ============================================================
+   OPTIONAL COMPONENTS — delete any you don't use.
+   ============================================================ */
+
+/* OPTIONAL · numbered list with big numerals (skill stacks, step lists) */
+.numbered { list-style: none; margin: var(--sp-4) 0 0; padding: 0; counter-reset: sk; }
+.numbered li {
+  counter-increment: sk; position: relative;
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.numbered li:first-child { border-top: 0; }
+.numbered li::before {
+  content: counter(sk);
+  position: absolute; left: 0; top: var(--sp-4);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+.numbered .name { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+
+/* OPTIONAL · plain divided list (definitions, lenses, checks) */
+.plain-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.plain-list li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); }
+.plain-list li:first-child { border-top: 0; padding-top: 0; }
+.plain-list b { color: var(--torq-dark-ink); }
+
+/* OPTIONAL · formula box (fill-in-the-blank sentence patterns) */
+.formula {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0;
+  box-shadow: var(--torq-shadow);
+  font-size: var(--fs-lg); font-weight: 600; line-height: 1.6;
+}
+.formula .tag {
+  display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  color: var(--torq-blue); background: var(--torq-soft-bg);
+  padding: 2px 8px; border-radius: 6px; margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · not-this / this comparison */
+.compare { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.compare li { padding: var(--sp-3) 0; border-top: 1px solid var(--rule-hair); font-size: var(--fs-sm); }
+.compare li:first-child { border-top: 0; }
+.compare .bad, .compare .good { display: block; }
+.compare .bad { color: var(--ink-muted); }
+.compare .bad::before {
+  content: "Not this"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-red); margin-right: var(--sp-2);
+}
+.compare .good { margin-top: var(--sp-2); font-weight: 600; }
+.compare .good::before {
+  content: "This"; display: inline-block; font-size: var(--fs-xs); font-weight: 700;
+  text-transform: uppercase; color: var(--torq-status-green); margin-right: var(--sp-2);
+}
+
+/* OPTIONAL · copyable prompt block (AI exercises) */
+.prompt { background: var(--torq-dark-ink); padding: var(--sp-4) var(--sp-6); position: relative; }
+.prompt pre { margin: 0; }
+.prompt code {
+  font-family: var(--torq-font-mono); font-size: var(--fs-sm);
+  color: #E8EFFF; line-height: 1.7; white-space: pre-wrap;
+  word-break: break-word; display: block;
+}
+.prompt .ph { color: var(--torq-sky-blue); }
+.copy-prompt {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  background: rgba(255,255,255,0.12); color: var(--torq-white);
+  border: 1px solid rgba(255,255,255,0.22); border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3); min-height: 32px; cursor: pointer;
+}
+.copy-prompt:hover { background: rgba(255,255,255,0.2); }
+
+/* OPTIONAL · bordered example / stage card */
+.card {
+  border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow); padding: var(--sp-6); margin-bottom: var(--sp-4);
+}
+.card .kicker {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-1);
+}
+.card .example {
+  background: var(--torq-soft-bg); border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.card .example b { color: var(--torq-dark-ink); font-weight: 600; }
+
+/* OPTIONAL · dashed optional-extra box */
+.optional {
+  border: 1px dashed var(--torq-border-gray); border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6); margin: var(--sp-6) 0 0;
+}
+.optional .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--sp-2);
+}
+
+/* ===== RESPONSIVE / MOTION / PRINT ===== */
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+  .copy-prompt { position: static; margin-bottom: var(--sp-3); display: block; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .copy-prompt, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .card, .formula, .tiers { box-shadow: none; break-inside: avoid; }
+  .tier { break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Technical Fluency &middot; Course 1 &middot; Task&nbsp;1&nbsp;of&nbsp;5</p>
+    <h1>Languages, and the hiring market attached</h1>
+    <p class="standfirst">The four things every web product is built from, what each one tells you about the team that built it, and one small tell worth not making.</p>
+    <div class="meta">
+      <span><b>Course</b> How Software Is Built</span>
+      <span><b>Read time</b> ~8 min</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">A language is never only a technical choice. It comes with a hiring market, a body of existing code, and a set of things that are cheap or expensive to change later. You don't need to write any of it. You need to know what a client has told you when they name one.</p>
+
+  <section id="not-languages">
+    <h2>First, the small tell</h2>
+    <p><b>HTML and CSS are not programming languages.</b> They describe structure and appearance; they don't express logic. Calling them programming languages in an engineering room is a minor thing that gets noticed, and it's the kind of error that makes people quietly discount the rest of what you say.</p>
+    <p>The useful framing: HTML is the content and its meaning, CSS is how it looks, JavaScript is what happens when you interact with it. Every web product you'll ever see on an engagement is those three, plus whatever is behind them.</p>
+  </section>
+
+  <section id="html">
+    <h2>HTML &mdash; where accessibility actually lives</h2>
+    <p>HTML is declarative markup. The part that matters to you is <b>semantic</b> HTML: using the right element for the job, so a heading is a heading and a button is a button. Screen readers and search engines both depend on that.</p>
+    <p>Which leads to the read that's worth having. A page can look immaculate and still be unusable with a screen reader, because accessibility is determined by the markup underneath rather than by the visual design on top. If a client's product has never had an accessibility audit, that's a finding you can raise on your own authority.</p>
+  </section>
+
+  <section id="css">
+    <h2>CSS &mdash; and the question that changes every UI estimate</h2>
+    <p>CSS controls appearance through cascading rules. Modern layout is Flexbox and Grid; modern styling is usually organised as a <b>design system</b> &mdash; a set of named tokens for color, spacing, and type that components draw from.</p>
+    <p>Here is why you care. "It's just CSS" is true for changing one color. It is false for a layout change on a product with no design system, where the same change becomes an audit of every page. Those two situations produce estimates that differ by an order of magnitude, and they sound identical in a status meeting.</p>
+    <div class="formula">
+      <span class="tag">Ask early</span>Is there a design system &mdash; and does the team actually use it?
+    </div>
+    <p class="section-note">Ask before you agree to any visual-change estimate, not after. A design system is a capital asset; its absence is a recurring tax on every future UI change, and that makes it a legitimate line item in a transformation business case rather than an engineering preference.</p>
+  </section>
+
+  <section id="js">
+    <h2>JavaScript and TypeScript</h2>
+    <p><b>JavaScript</b> runs in every browser, and through Node.js it runs on servers too. It has the largest developer population of any language, which cuts both ways: hiring risk is low, and code-quality variance is high, because the barrier to entry is low.</p>
+    <p><b>TypeScript</b> is a type layer on top of JavaScript. You write types, a compiler checks them, and then they vanish &mdash; what actually runs is JavaScript. That's the whole idea.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">What it buys</th><th scope="col">What it costs</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Plain JavaScript</th><td>Nothing to configure; anyone can contribute immediately</td><td>In a large codebase, a real and compounding drag on velocity &mdash; the compiler catches nothing for you</td></tr>
+          <tr><th scope="row">TypeScript</th><td>Whole categories of bug caught before the code runs; the code documents itself</td><td>Adding types to an existing untyped codebase is its own project, not an incremental tidy-up</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note"><b>"Is the codebase typed?" is one of the fastest reads available on engineering maturity.</b> It's a single question, an engineer will answer it in four words, and it correlates with how safely a new team can pick the work up after Torq leaves. On an engagement judged partly on clean handoff, that matters more than it first appears.</p>
+  </section>
+
+  <div class="callout">
+    <span class="label">Regulated client?</span>
+    <p>If you're engaged with a healthcare, aerospace &amp; defense, or financial-services client, accessibility is likely a legal exposure and a procurement requirement rather than a quality goal &mdash; and a remediation program needs legal/compliance review, a longer approval cycle, and scheduling early rather than at the end. Public-sector work in particular tends to make conformance a contractual condition, not a backlog item.</p>
+  </div>
+
+  <!-- ===== TIER READS — required on every Task. Never gate or collapse. ===== -->
+  <section id="tiers">
+    <h2>The same content, read three ways</h2>
+    <div class="tiers">
+      <div class="tiers-head">
+        <span class="label">All three reads, always visible</span>
+        <p>Find yours, then read the other two anyway &mdash; that's how you know what the conversation above you sounds like.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 1 &mdash; a level deeper</span>
+        <p>Know which of the four you're hearing about, and don't call HTML or CSS a programming language. That alone keeps you out of the two most common mistakes a non-engineer makes in a stack conversation.</p>
+        <p class="move"><b>The move:</b> when someone names a language, ask what part of the product it runs.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 2 &mdash; the trade-off you can discuss</span>
+        <p>Two trade-offs are yours to raise. The design-system question, because it decides what a UI change costs. And the typing question, because retrofitting types onto a large untyped codebase is a project someone has to fund, and pretending it's incremental is how it never happens.</p>
+        <p class="move"><b>The move:</b> "does a design system exist?" before any visual-change estimate leaves the room.</p>
+      </div>
+      <div class="tier">
+        <span class="tier-label">Tier 3 &mdash; strategic &amp; risk read</span>
+        <p>Design-system investment is one of the more defensible line items in a transformation case, because the return is measurable: every subsequent UI change gets cheaper. Missing accessibility is exposure with a legal shape. An untyped codebase raises the cost and risk of the handoff you're contractually promising.</p>
+        <p class="move"><b>The move:</b> price the absence of a design system as a recurring tax, not a one-off fix.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>A language is a choice with a hiring market attached.</b> Naming one tells you about the team and the code as much as the technology.</li>
+      <li><b>HTML and CSS are not programming languages.</b> They describe structure and appearance; calling them otherwise is a small, costly tell.</li>
+      <li><b>Accessibility is decided in the markup, not the design.</b> A beautiful page can be unusable, and no audit is a finding.</li>
+      <li><b>"Is there a design system?" changes every UI estimate.</b> One token change versus an audit of every screen, and both sound the same in a meeting.</li>
+      <li><b>"Is the codebase typed?" is the fastest maturity read you have.</b> Four words to ask, and it predicts how cleanly you can hand off.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 2 &mdash; The languages behind the logic.</p>
+    <p>Technical Fluency for Transform Practice &middot; Course 1: How Software Is Built</p>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

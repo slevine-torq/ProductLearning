@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Your Experiment Brief — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2; --torq-blue-mid:    #3A79F8; --torq-sky-blue:    #43A8FF;
+  --torq-dark-ink:    #10213D; --torq-soft-bg:     #F6F9FF; --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2; --torq-white:       #FFFFFF;
+  --torq-status-green: #00B050; --torq-status-red:   #E5484D; --torq-status-amber: #F5A623;
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+  --ink-muted:  rgba(16,33,61,0.66); --ink-faint:  rgba(16,33,61,0.42); --rule-hair:  rgba(16,33,61,0.10);
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem; --fs-lg: 1.25rem; --fs-xl: 1.625rem; --fs-2xl: 2.125rem;
+  --r-sm: 8px; --r-lg: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--torq-white); color: var(--torq-dark-ink); font-family: var(--torq-font-body); font-size: var(--fs-base); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 2.5px solid var(--torq-blue); outline-offset: 3px; border-radius: 4px; }
+[data-surface="dark"] a:focus-visible, [data-surface="dark"] button:focus-visible { outline-color: var(--torq-sky-blue); outline-offset: 2px; }
+.skip-link { position: absolute; left: -9999px; top: var(--sp-2); background: var(--torq-white); color: var(--torq-blue); padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10; }
+.skip-link:focus { left: var(--sp-4); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 var(--sp-6); }
+.hero { background: var(--torq-dark-ink); color: var(--torq-white); padding: var(--sp-8) 0 var(--sp-6); }
+.hero .eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3); }
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst { font-size: var(--fs-lg); color: rgba(255,255,255,0.78); margin: 0; font-weight: 400; max-width: 60ch; }
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,0.14); font-size: var(--fs-sm); color: rgba(255,255,255,0.66); }
+.meta b { color: var(--torq-white); font-weight: 600; }
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+section { margin-bottom: var(--sp-8); }
+section > h2 { font-size: var(--fs-xl); color: var(--torq-blue); margin-bottom: var(--sp-3); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--rule-hair); }
+.callout { background: var(--torq-soft-bg); border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-6); margin: var(--sp-4) 0; }
+.callout .label { display: block; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--torq-blue); margin-bottom: var(--sp-2); }
+.callout p:last-child { margin-bottom: 0; }
+.scenario { border-left: 3px solid var(--torq-blue); padding: var(--sp-1) 0 var(--sp-1) var(--sp-4); margin: var(--sp-4) 0; }
+.scenario p { margin-bottom: var(--sp-2); }
+.scenario p:last-child { margin-bottom: 0; }
+.lab-steps { list-style: none; margin: 0; padding: 0; counter-reset: ls; }
+.lab-steps > li { counter-increment: ls; position: relative; padding: var(--sp-6) 0 var(--sp-6) var(--sp-12); border-top: 1px solid var(--rule-hair); }
+.lab-steps > li:first-child { border-top: 0; padding-top: var(--sp-2); }
+.lab-steps > li::before { content: counter(ls); position: absolute; left: 0; top: var(--sp-6); width: 32px; height: 32px; border-radius: 50%; background: var(--torq-blue); color: var(--torq-white); display: grid; place-items: center; font-size: var(--fs-sm); font-weight: 700; }
+.lab-steps > li:first-child::before { top: var(--sp-2); }
+.lab-steps .step-name { display: block; font-size: var(--fs-lg); font-weight: 700; margin-bottom: var(--sp-2); }
+.lab-steps .step-help { font-size: var(--fs-sm); color: var(--ink-muted); margin-bottom: var(--sp-3); }
+.field-label { display: block; font-weight: 600; font-size: var(--fs-sm); margin-bottom: var(--sp-2); }
+.field-hint { display: block; font-weight: 400; color: var(--ink-faint); font-size: var(--fs-xs); margin-top: 2px; }
+textarea, select, input[type="text"] {
+  font: inherit; width: 100%; border: 1px solid var(--torq-border-gray); border-radius: var(--r-sm);
+  padding: var(--sp-3); background: var(--torq-white); color: var(--torq-dark-ink); margin-bottom: var(--sp-4);
+}
+textarea { resize: vertical; min-height: 64px; }
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2310213D' stroke-width='1.6'%3E%3Cpath d='M5 7l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+@media (max-width: 560px) { .row-2 { grid-template-columns: 1fr; } }
+.brief-preview { border: 1px solid var(--torq-border-gray); border-radius: var(--r-lg); box-shadow: var(--torq-shadow-lg); overflow: hidden; margin: var(--sp-4) 0; }
+.brief-head { background: var(--torq-soft-bg); border-bottom: 1px solid var(--torq-border-gray); padding: var(--sp-4) var(--sp-6); display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; justify-content: space-between; }
+.brief-head h3 { font-size: var(--fs-lg); margin: 0; }
+.brief-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.brief-body { padding: var(--sp-2) var(--sp-6) var(--sp-6); }
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn { font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--torq-white); background: var(--torq-blue); border: 0; border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); min-height: 44px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+.preview-out { white-space: pre-wrap; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: var(--fs-sm); background: var(--torq-soft-bg); border: 1px solid var(--torq-border-gray); border-radius: var(--r-sm); padding: var(--sp-4); line-height: 1.7; min-height: 120px; }
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li { counter-increment: t; position: relative; padding: var(--sp-3) 0 var(--sp-3) var(--sp-12); border-top: 1px solid var(--rule-hair); }
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before { content: counter(t); position: absolute; left: 0; top: var(--sp-3); width: 28px; height: 28px; border-radius: 50%; background: var(--torq-soft-bg); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); display: grid; place-items: center; font-size: var(--fs-sm); font-weight: 700; }
+.lesson-foot { border-top: 1px solid var(--torq-border-gray); padding-top: var(--sp-4); margin-top: var(--sp-8); font-size: var(--fs-sm); color: var(--ink-muted); }
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+@media (max-width: 480px) { :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media print { .btn, .skip-link { display: none !important; } body { font-size: 11pt; } .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); } .hero .standfirst, .meta { color: var(--ink-muted); } .hero .eyebrow { color: var(--torq-blue); } .brief-preview { box-shadow: none; break-inside: avoid; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 5 &middot; Task 4 of 7</p>
+    <h1>Lab: design your experiment brief</h1>
+    <p class="standfirst">Everything from Tasks 1–3 comes together here. You'll write a real, complete experiment brief — pulling inputs straight from the metrics and roadmap work you've already built in this program.</p>
+    <div class="meta">
+      <span><b>Course</b> Product Experimentation</span>
+      <span><b>Read time</b> ~10 min, hands-on</span>
+      <span><b>Artifact</b> Experiment Brief</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">This lab isn't hypothetical. Use the metric you picked in Course 3 and the feature you scoped in Course 4 as your real inputs — the brief you write here is the same document you'd hand an engineer or a client stakeholder before a test goes live.</p>
+
+  <section id="scenario">
+    <h2>Scenario: the Loopline onboarding step</h2>
+    <div class="scenario">
+      <p>You've been working the Loopline account through this program — the roadmap in Course 4 Task 1, the MoSCoW scope in Task 3, the PRD in Task 4. One line from that PRD is still just an assumption: the team believes a shorter setup flow will get more new teams to invite a second teammate in their first week, which is the outcome-level signal from Course 3 that actually predicts long-term retention for a helpdesk tool like Loopline.</p>
+      <p>Nobody's tested it. That's this lab. If you're not working a Loopline scenario, swap in your own — a real feature you've scoped, with a real metric attached — and fill the brief in around that instead.</p>
+    </div>
+  </section>
+
+  <section id="lab">
+    <h2>Build the brief, step by step</h2>
+    <ol class="lab-steps">
+      <li>
+        <span class="step-name">Ground it in a real metric</span>
+        <p class="step-help">Go back to the metric you chose in Course 3. What's the outcome, and what proxy or leading indicator will you actually watch during the test?</p>
+        <label class="field-label" for="metric">Primary metric<span class="field-hint">e.g. "% of new teams that invite a second teammate within 7 days"</span></label>
+        <textarea id="metric" rows="2"></textarea>
+      </li>
+      <li>
+        <span class="step-name">Pull the change from your scoped work</span>
+        <p class="step-help">Look at what you scoped in Course 4 — the MVP cut from the MoSCoW exercise, or a specific PRD requirement. Pick one discrete, testable change from it.</p>
+        <label class="field-label" for="change">The change under test<span class="field-hint">One change only — if it's two, split it into two tests</span></label>
+        <textarea id="change" rows="2"></textarea>
+      </li>
+      <li>
+        <span class="step-name">Write the hypothesis</span>
+        <p class="step-help">Use the formula from Task 3: the change, the persona, the expected outcome, the size and timeframe, the guardrail that must hold.</p>
+        <label class="field-label" for="hypothesis">Full hypothesis statement</label>
+        <textarea id="hypothesis" rows="3"></textarea>
+      </li>
+      <li>
+        <span class="step-name">Pick the method and justify it</span>
+        <p class="step-help">Use the matching table from Task 2. Given your traffic and the risk of this change, which of the four methods fits — and why not the others?</p>
+        <div class="row-2">
+          <div>
+            <label class="field-label" for="method">Method</label>
+            <select id="method">
+              <option value="">Choose one</option>
+              <option>Full A/B test</option>
+              <option>Multivariate test</option>
+              <option>Fake-door / smoke test</option>
+              <option>Staged rollout</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="split">Traffic split</label>
+            <input type="text" id="split" placeholder="e.g. 50/50, or 10/10">
+          </div>
+        </div>
+        <label class="field-label" for="justify">Why this method, not the others</label>
+        <textarea id="justify" rows="2"></textarea>
+      </li>
+      <li>
+        <span class="step-name">Set control, variant, and guardrails</span>
+        <p class="step-help">Control is the product as it exists in the Course 4 PRD today. The variant is your one change. Name at least one metric you're not willing to let slip.</p>
+        <label class="field-label" for="control">Control / Variant</label>
+        <textarea id="control" rows="2" placeholder="Control: ... / Variant: ..."></textarea>
+        <label class="field-label" for="guardrail">Guardrail metric(s)</label>
+        <input type="text" id="guardrail" placeholder="e.g. Time-to-first-value doesn't regress">
+      </li>
+    </ol>
+  </section>
+
+  <section id="preview">
+    <h2>Your experiment brief</h2>
+    <div class="brief-preview">
+      <div class="brief-head">
+        <div>
+          <h3>Experiment Brief</h3>
+          <p>Auto-built from your answers above &middot; Torq Product Practice</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="brief-body">
+        <div class="preview-out" id="previewOut">Fill in the fields above — your brief builds itself here.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>A brief is only as good as its inputs.</b> Pulling from real Course 3/4 work — not a made-up scenario — is what makes this exercise transfer to actual work.</li>
+      <li><b>One change, one hypothesis, one primary metric.</b> If your brief needs "and" to describe the change, it's two tests wearing one brief.</li>
+      <li><b>The method choice needs a stated reason.</b> "Because it's what we always do" isn't a justification — traffic and risk are.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 5 — Reading Results Honestly.</p>
+    <p>Torq Product Practice &middot; Course 5: Product Experimentation</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "torq.c5t4.lab";
+  var fieldIds = ["metric", "change", "hypothesis", "method", "split", "justify", "control", "guardrail"];
+  var out = document.getElementById("previewOut");
+
+  function readState() { try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+  function writeState(state) { try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { } }
+
+  function buildText() {
+    var v = {};
+    fieldIds.forEach(function (id) { v[id] = document.getElementById(id).value.trim(); });
+    var any = Object.keys(v).some(function (k) { return v[k]; });
+    if (!any) { return ""; }
+    var lines = [];
+    lines.push("EXPERIMENT BRIEF");
+    lines.push("Torq Product Practice");
+    lines.push("");
+    lines.push("Primary metric: " + (v.metric || "—"));
+    lines.push("Change under test: " + (v.change || "—"));
+    lines.push("");
+    lines.push("Hypothesis:");
+    lines.push(v.hypothesis || "—");
+    lines.push("");
+    lines.push("Method: " + (v.method || "—") + (v.split ? "  (split: " + v.split + ")" : ""));
+    lines.push("Rationale: " + (v.justify || "—"));
+    lines.push("");
+    lines.push("Control / Variant: " + (v.control || "—"));
+    lines.push("Guardrail(s): " + (v.guardrail || "—"));
+    return lines.join("\n");
+  }
+
+  function refresh() {
+    var text = buildText();
+    out.textContent = text || "Fill in the fields above — your brief builds itself here.";
+  }
+
+  var saved = readState();
+  fieldIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (saved[id] !== undefined) { el.value = saved[id]; }
+    el.addEventListener("input", function () {
+      var state = readState();
+      state[id] = el.value;
+      writeState(state);
+      refresh();
+    });
+    el.addEventListener("change", function () {
+      var state = readState();
+      state[id] = el.value;
+      writeState(state);
+      refresh();
+    });
+  });
+  refresh();
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () { btn.textContent = originalLabel; btn.removeAttribute("data-state"); }, 2000);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = buildText() || out.textContent;
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () { flash(copyBtn, "Copied", "Copy as text"); }, function () { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); });
+    } else { flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text"); }
+  });
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var text = buildText() || out.textContent;
+      var blob = new Blob([text], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "experiment-brief.md";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) { flash(downloadBtn, "Use Copy instead", "Download as .md"); }
+  });
+})();
+</script>
+
+</body>
+</html>

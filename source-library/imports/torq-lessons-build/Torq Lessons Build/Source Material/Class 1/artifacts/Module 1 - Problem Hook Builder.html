@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problem Hook Builder, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', sans-serif; background: #07162C; color: #ffffff; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  strong { color: #fff; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 7px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 36px 26px 120px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 32px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 16px; }
+  h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 900; color: #fff; line-height: 1.12; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  .lead { font-size: 16px; color: #ffffff; max-width: 760px; margin: 16px 0 4px; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 12px; margin: 26px 0 8px; }
+  .pbar { flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .pfill { height: 100%; width: 0%; background: linear-gradient(90deg, #0e7490, #22d3ee); transition: width .35s ease; }
+  .pcount { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; white-space: nowrap; }
+
+  .card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px 26px; margin: 18px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 12px; color: #07162C; background: var(--acc, #22d3ee); padding: 4px 11px; border-radius: 999px; }
+  .card-head h2 { font-size: 19px; color: #fff; }
+  .card > p.hint { font-size: 13.5px; color: #ffffff; margin: 2px 0 14px; }
+
+  .field { margin: 16px 0; }
+  .field label { display: block; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; color: #ffffff; margin-bottom: 7px; }
+  .field .sub { font-weight: 400; color: #ffffff; font-size: 12.5px; }
+  textarea, input[type=text] { width: 100%; background: rgba(8,18,36,0.7); border: 1px solid rgba(96,165,250,0.22); border-radius: 10px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 14.5px; padding: 12px 14px; resize: vertical; transition: border-color .2s; }
+  textarea:focus, input[type=text]:focus { outline: none; border-color: #22d3ee; }
+  textarea { min-height: 74px; }
+  .iftf-grid { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; }
+  .iftf-grid .k { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 12px; color: #22d3ee; }
+  @media (max-width: 640px) { .iftf-grid { grid-template-columns: 1fr; } .iftf-grid .k { margin-top: 6px; } }
+
+  .opts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .opt { flex: 1; min-width: 130px; }
+  .opt input { position: absolute; opacity: 0; }
+  .opt label { display: block; text-align: center; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; color: #ffffff; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 11px 10px; transition: all .2s; margin: 0; }
+  .opt input:checked + label { color: #fff; border-color: var(--acc, #22d3ee); background: rgba(34,211,238,0.14); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+
+  .preview { background: linear-gradient(160deg, rgba(34,211,238,0.08), rgba(7,22,44,0.5)); border: 1px solid rgba(34,211,238,0.3); border-radius: 16px; padding: 22px 24px; margin: 22px 0; }
+  .preview h3 { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #22d3ee; margin-bottom: 12px; }
+  .preview .pv-line { font-size: 15px; color: #ffffff; line-height: 1.6; margin-bottom: 12px; }
+  .preview .pv-line:last-child { margin-bottom: 0; }
+  .preview .pv-line b { color: #fff; }
+  .preview .pv-empty { color: #ffffff; font-style: italic; }
+
+  .toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 16px; margin: 26px -26px -120px; background: linear-gradient(0deg, #07162C 70%, transparent); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s; }
+  .btn-primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .btn-alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; align-self: center; opacity: 0; transition: opacity .3s; }
+  .saved.show { opacity: 1; }
+  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="#" class="back-link" role="button" aria-label="Go back to the previous page" data-ps-qa-back onclick="if(history.length>1){history.back();}return false;">← Back</a>
+      <a href="Module 1 - Exercise 2 Guide.html" class="back-link">← Exercise 2 guide</a>
+    </div>
+    <a href="Module 1 - Slides (Shareable).html" class="back-link">Module 1 deck →</a>
+  </div>
+
+  <span class="section-label">Module 1 · Interactive Builder</span>
+  <h1>Problem Hook <span>Builder</span></h1>
+  <p class="lead">Bridge your scenario’s strategic crisis to a specific user’s moment of misery, then assemble the problem hook and value proposition that anchor your whole final project. Everything autosaves to this browser, when you’re done, copy or download it as Markdown and commit it to your project repo (01-product-thinking/).</p>
+
+  <div class="progress-wrap">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pcount" id="pcount">0 / 7 complete</div>
+  </div>
+
+  <!-- SCENARIO -->
+  <div class="card" style="--acc:#22d3ee;">
+    <div class="card-head"><span class="badge">Step 1 · Commit</span><h2>Choose your path</h2></div>
+    <p class="hint">There’s no switching after today, every lab builds on this. Don’t spend more than two minutes.</p>
+    <div class="field">
+      <div class="opts" data-radio="scenario" style="--acc:#22d3ee;">
+        <span class="opt"><input type="radio" name="scenario" id="s-sl" value="StreamLine Spotlight (B2C)"><label for="s-sl">StreamLine · B2C</label></span>
+        <span class="opt"><input type="radio" name="scenario" id="s-rl" value="RouteLogic Velocity (B2B)"><label for="s-rl">RouteLogic · B2B</label></span>
+        <span class="opt"><input type="radio" name="scenario" id="s-own" value="My own initiative"><label for="s-own">My own initiative</label></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGIC CRISIS -->
+  <div class="card" style="--acc:#fb7185;">
+    <div class="card-head"><span class="badge">Step 2 · Crisis</span><h2>The strategic crisis</h2></div>
+    <p class="hint">The big-picture business risk, what the company stands to lose if the status quo continues.</p>
+    <div class="field">
+      <label>If the company does nothing for 12 months… <span class="sub">, what happens to its market position?</span></label>
+      <textarea data-k="crisis" placeholder="If we do nothing for 12 months, the company will…"></textarea>
+    </div>
+  </div>
+
+  <!-- MOMENT OF MISERY -->
+  <div class="card" style="--acc:#fbbf24;">
+    <div class="card-head"><span class="badge">Step 3 · Misery</span><h2>The moment of misery</h2></div>
+    <p class="hint">Move past “the app is slow” to the specific workaround the user is forced into because the product fails them.</p>
+    <div class="field">
+      <label>The user is currently forced to… <span class="sub">, Google, spreadsheets, group texts, a competitor?</span></label>
+      <textarea data-k="misery" placeholder="The user is currently forced to…"></textarea>
+    </div>
+  </div>
+
+  <!-- PROBLEM HOOK -->
+  <div class="card" style="--acc:#60a5fa;">
+    <div class="card-head"><span class="badge">Step 4 · Hook</span><h2>Your problem hook</h2></div>
+    <p class="hint">One punchy sentence fusing the business risk and the user pain, your pitch for why this is the most important thing to work on now.</p>
+    <div class="field">
+      <label>Problem hook</label>
+      <textarea data-k="hook" placeholder="We must solve [business risk] by addressing [user pain]…"></textarea>
+    </div>
+  </div>
+
+  <!-- VALUE PROP -->
+  <div class="card" style="--acc:#34d399;">
+    <div class="card-head"><span class="badge">Step 5 · Value prop</span><h2>Your value proposition</h2></div>
+    <p class="hint">Explicitly state who it’s for, the new value, and why it’s urgent to launch now.</p>
+    <div class="field">
+      <div class="iftf-grid">
+        <span class="k">FOR (WHO)</span><input type="text" data-k="vp_who" placeholder="the specific user or segment this serves">
+        <span class="k">WE WILL (VALUE)</span><input type="text" data-k="vp_value" placeholder="the new value the initiative provides">
+        <span class="k">BECAUSE (WHY NOW)</span><input type="text" data-k="vp_why" placeholder="why it is urgent to launch now">
+      </div>
+    </div>
+  </div>
+
+  <!-- SELF REVIEW -->
+  <div class="card" style="--acc:#a78bfa;">
+    <div class="card-head"><span class="badge">Step 6 · Cold-read</span><h2>Stress-test your own hook</h2></div>
+    <p class="hint">Read it back as a skeptical stakeholder. If you don’t feel the urgency, that’s your data.</p>
+    <div class="field">
+      <label>Is the business risk high-stakes enough to justify a new initiative? <span class="sub">, and is the misery systemic, not an edge case?</span></label>
+      <textarea data-k="review" placeholder="Reading it cold, the strongest part is… the weakest part is… I’ll sharpen…"></textarea>
+    </div>
+  </div>
+
+  <!-- LIVE PREVIEW -->
+  <div class="preview">
+    <h3>📄 Your Slide 1, live preview</h3>
+    <div class="pv-line"><b>Scenario:</b> <span id="pv-scenario" class="pv-empty">choose a path above…</span></div>
+    <div class="pv-line"><b>Problem hook:</b> <span id="pv-hook" class="pv-empty">your hook will appear here…</span></div>
+    <div class="pv-line"><b>Value proposition:</b> <span id="pv-vp" class="pv-empty">For [who], we will [value] because [why now]…</span></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="copyMd()">📋 Copy as Markdown</button>
+    <button class="btn btn-alt" onclick="downloadMd()">⬇ Download .md</button>
+    <button class="btn btn-alt" onclick="resetAll()">↺ Reset</button>
+    <span class="saved" id="saved">✓ Saved</span>
+  </div>
+</div>
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+const KEY = 'pm-m1-problem-hook-builder';
+const fields = Array.from(document.querySelectorAll('[data-k]'));
+const radios = Array.from(document.querySelectorAll('[data-radio]'));
+
+function load() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  fields.forEach(f => { if (data[f.dataset.k] != null) f.value = data[f.dataset.k]; });
+  radios.forEach(g => {
+    const name = g.dataset.radio;
+    if (data['_' + name]) {
+      const el = g.querySelector(`input[value="${CSS.escape(data['_' + name])}"]`);
+      if (el) el.checked = true;
+    }
+  });
+  render();
+}
+
+function gather() {
+  const data = {};
+  fields.forEach(f => data[f.dataset.k] = f.value);
+  radios.forEach(g => {
+    const sel = g.querySelector('input:checked');
+    data['_' + g.dataset.radio] = sel ? sel.value : '';
+  });
+  return data;
+}
+
+let savedTimer;
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(gather()));
+  const s = document.getElementById('saved');
+  s.classList.add('show');
+  clearTimeout(savedTimer);
+  savedTimer = setTimeout(() => s.classList.remove('show'), 1200);
+  render();
+}
+
+function render() {
+  const d = gather();
+  // progress
+  const checks = [d._scenario, d.crisis, d.misery, d.hook, (d.vp_who && d.vp_value && d.vp_why), d.review, d._scenario];
+  const done = checks.filter(Boolean).length;
+  const total = checks.length;
+  document.getElementById('pfill').style.width = (done / total * 100) + '%';
+  document.getElementById('pcount').textContent = done + ' / ' + total + ' complete';
+  // preview
+  const set = (id, val, fallback) => {
+    const el = document.getElementById(id);
+    if (val && val.trim()) { el.textContent = val.trim(); el.classList.remove('pv-empty'); }
+    else { el.textContent = fallback; el.classList.add('pv-empty'); }
+  };
+  set('pv-scenario', d._scenario, 'choose a path above…');
+  set('pv-hook', d.hook, 'your hook will appear here…');
+  let vp = '';
+  if (d.vp_who || d.vp_value || d.vp_why) {
+    vp = `For ${d.vp_who || '[who]'}, we will ${d.vp_value || '[value]'} because ${d.vp_why || '[why now]'}.`;
+  }
+  set('pv-vp', vp, 'For [who], we will [value] because [why now]…');
+}
+
+function md() {
+  const d = gather();
+  const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+  const vp = (d.vp_who || d.vp_value || d.vp_why)
+    ? `For ${d.vp_who || '[who]'}, we will ${d.vp_value || '[value]'} because ${d.vp_why || '[why now]'}.`
+    : '_(not filled in)_';
+  return `# Problem Hook & Value Proposition, Module 1
+
+- **Scenario:** ${v(d._scenario)}
+
+## Strategic crisis
+${v(d.crisis)}
+
+## Moment of misery
+${v(d.misery)}
+
+## Problem hook
+${v(d.hook)}
+
+## Value proposition
+${vp}
+
+## Cold-read self-review
+${v(d.review)}
+`;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+async function copyMd() {
+  try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+  catch (e) { toast('Copy failed, try download'); }
+}
+
+function downloadMd() {
+  const blob = new Blob([md()], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'problem-hook.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Downloaded problem-hook.md ✓');
+}
+
+function resetAll() {
+  if (!confirm('Clear everything in this builder?')) return;
+  localStorage.removeItem(KEY);
+  fields.forEach(f => f.value = '');
+  radios.forEach(g => g.querySelectorAll('input').forEach(i => i.checked = false));
+  render();
+  toast('Builder reset');
+}
+
+fields.forEach(f => f.addEventListener('input', save));
+radios.forEach(g => g.addEventListener('change', save));
+load();
+</script>
+</body>
+</html>

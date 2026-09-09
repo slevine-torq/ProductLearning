@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choosing Metrics That Matter — Torq Product Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --torq-blue:        #2D53F2;
+  --torq-blue-mid:    #3A79F8;
+  --torq-sky-blue:    #43A8FF;
+
+  --torq-dark-ink:    #10213D;
+  --torq-soft-bg:     #F6F9FF;
+  --torq-border-gray: #E5E5E9;
+  --torq-light-gray:  #F2F2F2;
+  --torq-white:       #FFFFFF;
+
+  --torq-status-green: #00B050;
+  --torq-status-red:   #E5484D;
+
+  --torq-hero-gradient:   linear-gradient(120deg, #2D53F2, #3A79F8 55%, #43A8FF);
+
+  --torq-shadow:    0 1px 3px rgba(16,33,61,0.06), 0 4px 12px rgba(16,33,61,0.04);
+  --torq-shadow-lg: 0 4px 12px rgba(16,33,61,0.08), 0 12px 32px rgba(16,33,61,0.08);
+
+  --torq-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Aptos, Calibri, Helvetica, Arial, sans-serif;
+
+  --ink-muted:  rgba(16,33,61,0.66);
+  --ink-faint:  rgba(16,33,61,0.42);
+  --rule-hair:  rgba(16,33,61,0.10);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --fs-xs: 0.8125rem; --fs-sm: 0.9375rem; --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;   --fs-xl: 1.625rem;  --fs-2xl: 2.125rem;
+
+  --r-sm: 8px; --r-lg: 14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--torq-white);
+  color: var(--torq-dark-ink);
+  font-family: var(--torq-font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+p { margin: 0 0 var(--sp-4); }
+a { color: var(--torq-blue); text-underline-offset: 2px; }
+
+:focus { outline: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2.5px solid var(--torq-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+[data-surface="dark"] a:focus-visible,
+[data-surface="dark"] button:focus-visible {
+  outline-color: var(--torq-sky-blue);
+  outline-offset: 2px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2);
+  background: var(--torq-white); color: var(--torq-blue);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-sm); z-index: 10;
+}
+.skip-link:focus { left: var(--sp-4); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+.hero {
+  background: var(--torq-dark-ink);
+  color: var(--torq-white);
+  padding: var(--sp-8) 0 var(--sp-6);
+}
+.hero .eyebrow {
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--torq-sky-blue); margin-bottom: var(--sp-3);
+}
+.hero h1 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-3); }
+.hero .standfirst {
+  font-size: var(--fs-lg); color: rgba(255,255,255,0.78);
+  margin: 0; font-weight: 400; max-width: 58ch;
+}
+.hero-rule { height: 3px; background: var(--torq-hero-gradient); }
+.meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  font-size: var(--fs-sm); color: rgba(255,255,255,0.66);
+}
+.meta b { color: var(--torq-white); font-weight: 600; }
+
+main { padding: var(--sp-8) 0 var(--sp-12); }
+.lede { font-size: var(--fs-lg); color: var(--ink-muted); margin-bottom: var(--sp-8); }
+
+section { margin-bottom: var(--sp-8); }
+section > h2 {
+  font-size: var(--fs-xl); color: var(--torq-blue);
+  margin-bottom: var(--sp-3); padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule-hair);
+}
+section > h3 { font-size: var(--fs-lg); margin: var(--sp-6) 0 var(--sp-3); }
+.section-note { font-size: var(--fs-sm); color: var(--ink-muted); margin: var(--sp-3) 0 0; }
+
+.table-scroll { overflow-x: auto; margin: var(--sp-4) 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th, td {
+  text-align: left; padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--torq-border-gray); vertical-align: top;
+}
+thead th {
+  font-weight: 700; color: var(--torq-dark-ink);
+  border-bottom: 2px solid var(--torq-blue);
+}
+thead th .sub {
+  display: block; font-weight: 500; font-size: var(--fs-xs);
+  color: var(--ink-muted); margin-top: 2px; text-transform: none;
+}
+tbody th { font-weight: 600; color: var(--ink-muted); width: 24%; }
+
+.callout {
+  background: var(--torq-soft-bg);
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-6) 0;
+}
+.callout .label {
+  display: block; font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--torq-blue); margin-bottom: var(--sp-2);
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.plain-list { list-style: none; margin: var(--sp-4) 0 0; padding: 0; }
+.plain-list li { padding: var(--sp-4) 0; border-top: 1px solid var(--rule-hair); }
+.plain-list li:first-child { border-top: 0; padding-top: 0; }
+.plain-list .name { display: block; font-weight: 700; color: var(--torq-dark-ink); margin-bottom: var(--sp-1); }
+
+.canvas {
+  border: 1px solid var(--torq-border-gray);
+  border-radius: var(--r-lg);
+  box-shadow: var(--torq-shadow-lg);
+  overflow: hidden;
+  margin: var(--sp-4) 0;
+}
+.canvas-head {
+  background: var(--torq-soft-bg);
+  border-bottom: 1px solid var(--torq-border-gray);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  align-items: center; justify-content: space-between;
+}
+.canvas-head h3 { font-size: var(--fs-lg); margin: 0; }
+.canvas-head p { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--ink-muted); }
+.canvas-body { padding: var(--sp-2) var(--sp-6) var(--sp-4); }
+
+.check-list { list-style: none; margin: 0; padding: 0; }
+.check-list li { border-top: 1px solid var(--rule-hair); }
+.check-list li:first-child { border-top: 0; }
+.check-list label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-1);
+  min-height: 44px; cursor: pointer;
+}
+.check-list input[type="checkbox"] {
+  flex: 0 0 auto; width: 20px; height: 20px; margin: 3px 0 0;
+  accent-color: var(--torq-blue); cursor: pointer;
+}
+.check-list .q { font-weight: 600; display: block; }
+.check-list .why { display: block; font-size: var(--fs-sm); color: var(--ink-muted); }
+.check-list input:checked + .txt .q { color: var(--ink-muted); text-decoration: line-through; }
+
+.btn-row { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.btn {
+  font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--torq-white); background: var(--torq-blue);
+  border: 0; border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4); min-height: 44px;
+  cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--torq-blue-mid); }
+.btn[data-state="done"] { background: var(--torq-status-green); }
+.btn.secondary { background: var(--torq-white); color: var(--torq-blue); border: 1px solid var(--torq-border-gray); }
+.btn.secondary:hover { background: var(--torq-soft-bg); }
+
+.takeaways { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.takeaways li {
+  counter-increment: t; position: relative;
+  padding: var(--sp-3) 0 var(--sp-3) var(--sp-12);
+  border-top: 1px solid var(--rule-hair);
+}
+.takeaways li:first-child { border-top: 0; }
+.takeaways li::before {
+  content: counter(t);
+  position: absolute; left: 0; top: var(--sp-3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--torq-soft-bg); color: var(--torq-blue);
+  border: 1px solid var(--torq-border-gray);
+  display: grid; place-items: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+.lesson-foot {
+  border-top: 1px solid var(--torq-border-gray);
+  padding-top: var(--sp-4); margin-top: var(--sp-8);
+  font-size: var(--fs-sm); color: var(--ink-muted);
+}
+.lesson-foot b { color: var(--torq-dark-ink); font-weight: 600; }
+
+@media (max-width: 480px) {
+  :root { --fs-2xl: 1.75rem; --fs-xl: 1.375rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media print {
+  .btn, .skip-link { display: none !important; }
+  body { font-size: 11pt; }
+  .hero { background: none; color: var(--torq-dark-ink); padding: 0 0 var(--sp-4); }
+  .hero .standfirst, .meta { color: var(--ink-muted); }
+  .hero .eyebrow { color: var(--torq-blue); }
+  .canvas { box-shadow: none; break-inside: avoid; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hero" data-surface="dark">
+  <div class="wrap">
+    <p class="eyebrow">Torq Product Practice &middot; Course 3 &middot; Task 1 of 5</p>
+    <h1>Choosing metrics that matter</h1>
+    <p class="standfirst">Any dashboard can show you a number going up. Your job is knowing which numbers actually prove something changed for the better — and which ones just feel good to report.</p>
+    <div class="meta">
+      <span><b>Course</b> Analytics &amp; Metrics for Product Decisions</span>
+      <span><b>Read time</b> ~8 min</span>
+      <span><b>Artifact</b> Metric Quality Check</span>
+    </div>
+  </div>
+</header>
+<div class="hero-rule"></div>
+
+<main id="main">
+<div class="wrap">
+
+  <p class="lede">A metric going up isn't automatically good news. Total clicks, total signups, total dollars moved — all of these can climb while the thing they're supposed to represent gets worse. Learning to tell the difference is most of what this course teaches.</p>
+
+  <section id="vanity">
+    <h2>Vanity metrics versus real ones</h2>
+    <p>A <b>vanity metric</b> — a term that entered product vocabulary through Eric Ries's early startup writing — measures an action. A real metric proves an outcome. Total dollars moved through a new payment feature counts clicks; the percentage of users who still hold a higher balance thirty days later proves the feature actually helped someone save. Only one of those survives being reported to a skeptical stakeholder.</p>
+    <p class="section-note">The test: could the number go up while the user is objectively worse off? If yes, it's measuring activity, not value.</p>
+  </section>
+
+  <section id="pillars">
+    <h2>Three questions, three traps</h2>
+    <p>Before you commit to tracking anything, run it through three questions — and watch for the three ways experienced people still get fooled.</p>
+
+    <ul class="plain-list">
+      <li>
+        <span class="name">What does this actually prove — usage, or value?</span>
+        A metric can climb because a feature got used, without proving anyone's situation improved. Know which claim you're actually making.
+      </li>
+      <li>
+        <span class="name">Can your work actually move it?</span>
+        Total revenue moves for a hundred reasons that have nothing to do with your release. Pick something narrow enough that a change in it is attributable to what you shipped.
+      </li>
+      <li>
+        <span class="name">What are you willing to let get worse?</span>
+        Every real metric needs a counter-metric watching for collateral damage — a spike in signups that quietly tanks retention isn't a win, it's a trade you didn't notice you made.
+      </li>
+    </ul>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Trap</th><th scope="col">What it looks like</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Chasing activity</th><td>Reporting a click-through rate as if it were proof of value</td></tr>
+          <tr><th scope="row">Numbers without research</th><td>A metric moves and nobody can say why — the "why" only ever lives in qualitative evidence, not the dashboard</td></tr>
+          <tr><th scope="row">Trusting the average</th><td>An overall number holds steady while it's actually masking one segment doing great and another quietly churning</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="leading">
+    <h2>Leading indicators beat lagging results</h2>
+    <p>A <b>lagging result</b> tells you what already happened — by the time it moves, the outcome is locked in. A <b>leading indicator</b> is something you can influence today that predicts the lagging result later. For a new onboarding flow, seven-day retention is lagging — a week gone by the time it drops. The percentage of users who complete the first real action in session one is leading, and it's the one you can actually push on this sprint.</p>
+    <p class="section-note">Win the leading indicator and you've bought yourself a real shot at the lagging one. Chase the lagging one directly and you're just watching a number you can't move.</p>
+  </section>
+
+  <section id="canvas">
+    <h2>Your artifact: the Metric Quality Check</h2>
+    <p class="section-note" style="margin:0 0 var(--sp-3)">Take a metric that's actually being reported on your current engagement and stress-test it.</p>
+
+    <div class="canvas">
+      <div class="canvas-head">
+        <div>
+          <h3>Metric Quality Check</h3>
+          <p>Torq Product Practice &middot; run on a real reported number</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn secondary" type="button" id="copyBtn">Copy as text</button>
+          <button class="btn" type="button" id="downloadBtn">Download as .md</button>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <ul class="check-list">
+          <li><label>
+            <input type="checkbox" data-k="q1">
+            <span class="txt"><span class="q">Name a metric that's currently being tracked or reported on this engagement.</span>
+            <span class="why">Pull a real one from an actual dashboard or deck.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q2">
+            <span class="txt"><span class="q">Could this number go up while the user's situation got worse?</span>
+            <span class="why">If yes, you've found a vanity metric hiding in plain sight.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q3">
+            <span class="txt"><span class="q">Can this team's actual work move it, or is it too broad?</span>
+            <span class="why">Total revenue moves for reasons that have nothing to do with any one release.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q4">
+            <span class="txt"><span class="q">Name the counter-metric nobody's watching.</span>
+            <span class="why">Every real win risks a trade-off somewhere else — find it before someone else does.</span></span>
+          </label></li>
+          <li><label>
+            <input type="checkbox" data-k="q5">
+            <span class="txt"><span class="q">Is this leading or lagging — and is there a better leading indicator available?</span>
+            <span class="why">If it's lagging, name the earlier signal that actually predicts it.</span></span>
+          </label></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="takeaways">
+    <h2>Key takeaways</h2>
+    <ol class="takeaways">
+      <li><b>A rising number isn't automatically good news.</b> Test whether it could climb while the user is objectively worse off.</li>
+      <li><b>Every metric needs a counter-metric.</b> A win that quietly breaks something else isn't a win — it's an unnoticed trade.</li>
+      <li><b>Only track what your work can actually move.</b> A metric too broad to attribute to your release is a metric you can't act on.</li>
+      <li><b>Leading indicators are where the leverage is.</b> A lagging result only tells you what already happened.</li>
+    </ol>
+  </section>
+
+  <div class="lesson-foot">
+    <p><b>Next:</b> Task 2 — The AARRR Funnel &amp; the Outcome Hierarchy.</p>
+    <p>Torq Product Practice &middot; Course 3: Analytics &amp; Metrics for Product Decisions</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "torq.c3t1.canvas";
+  var boxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+
+  function readState() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function writeState(state) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* no-op */ }
+  }
+
+  var saved = readState();
+  Array.prototype.forEach.call(boxes, function (box) {
+    if (saved[box.getAttribute("data-k")]) { box.checked = true; }
+    box.addEventListener("change", function (evt) {
+      var el = evt.currentTarget;
+      var state = readState();
+      state[el.getAttribute("data-k")] = el.checked;
+      writeState(state);
+    });
+  });
+
+  function canvasAsText() {
+    var out = ["METRIC QUALITY CHECK", "Torq Product Practice", ""];
+    Array.prototype.forEach.call(document.querySelectorAll(".check-list li"), function (li) {
+      var done = li.querySelector('input[type="checkbox"]').checked;
+      out.push((done ? "[x] " : "[ ] ") + li.querySelector(".q").textContent.trim());
+      out.push("    " + li.querySelector(".why").textContent.trim());
+    });
+    return out.join("\n");
+  }
+
+  function flash(btn, label, originalLabel) {
+    btn.textContent = label;
+    btn.setAttribute("data-state", "done");
+    window.setTimeout(function () {
+      btn.textContent = originalLabel;
+      btn.removeAttribute("data-state");
+    }, 2000);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  var copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", function () {
+    var text = canvasAsText();
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(text).then(function () {
+        flash(copyBtn, "Copied", "Copy as text");
+      }, function () {
+        flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+      });
+    } else {
+      flash(copyBtn, fallbackCopy(text) ? "Copied" : "Press Ctrl+C", "Copy as text");
+    }
+  });
+
+  var downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.addEventListener("click", function () {
+    try {
+      var blob = new Blob([canvasAsText()], { type: "text/markdown" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "metric-quality-check.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flash(downloadBtn, "Downloaded", "Download as .md");
+    } catch (e) {
+      flash(downloadBtn, "Use Copy instead", "Download as .md");
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2: Discover Product Opportunities via Qualitative Signals · Product Management</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', -apple-system, sans-serif;
+  background: #07162C;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  padding: 80px 60px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.25) 0%, #07162C 60%);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+section.visible { opacity: 1; transform: translateY(0); }
+section.skipped { display: none; }
+
+.nav-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 6px; z-index: 100;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #333; border: none; cursor: pointer;
+  transition: all 0.3s; position: relative;
+}
+.nav-dot.active { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.5); transform: scale(1.4); }
+.nav-dot:hover { background: rgba(59,130,246,0.7); }
+.nav-dot .tooltip {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  background: #0c2244; color: #ffffff; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; border: 1px solid rgba(59,130,246,0.2);
+}
+.nav-dot:hover .tooltip { opacity: 1; }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 100;
+  background: linear-gradient(90deg, #1241B0, #3b82f6);
+  transition: width 0.3s ease;
+}
+
+h1, h2 { font-family: 'Poppins', sans-serif; }
+h1 { font-size: 56px; font-weight: 900; color: #fff; line-height: 1.1; }
+h2 { font-size: 40px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+h3 { font-size: 22px; font-weight: 700; color: #ffffff; }
+p, li { font-size: 17px; line-height: 1.7; color: #ffffff; }
+.subtitle { font-size: 20px; color: #ffffff; margin-top: 8px; margin-bottom: 32px; }
+.section-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
+  color: rgba(255,255,255,0.7); margin-bottom: 12px; font-weight: 700;
+}
+strong { color: #fff; font-weight: 700; }
+em { color: #60a5fa; font-style: normal; font-weight: 600; }
+code {
+  background: rgba(18,65,176,0.15); padding: 2px 8px; border-radius: 4px;
+  font-size: 14px; color: #60a5fa; font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+}
+ul { list-style: none; padding: 0; }
+ul li { padding: 6px 0; padding-left: 24px; position: relative; }
+ul li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 8px; height: 8px; border-radius: 2px; background: #1241B0;
+}
+
+.inner { max-width: 880px; width: 100%; text-align: left; }
+section.centered { text-align: center; }
+section.centered .inner { text-align: center; }
+section.centered ul li { padding-left: 0; }
+section.centered ul li::before { display: none; }
+
+/* HERO */
+.hero { align-items: center; text-align: center; }
+.hero h1 { font-size: 64px; margin-bottom: 4px; }
+.hero h1 span { color: #60a5fa; }
+.hero .subtitle { font-size: 22px; max-width: 660px; margin: 12px auto 28px; color: #60a5fa; }
+.hero .scroll-hint { font-size: 13px; color: #ffffff; margin-top: 32px; animation: pulse 2s ease infinite; }
+.hero .scroll-hint span { display: block; margin-top: 8px; font-size: 20px; }
+.hero-logo { position: absolute; top: 32px; left: 50%; transform: translateX(-50%); }
+.hero-logo img { height: 40px; width: auto; opacity: 0.95; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* TAGS */
+.demo-tag {
+  display: inline-block; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 6px; margin-bottom: 18px;
+}
+.tag-provocation { background: rgba(248,81,73,0.12); color: #ff7b72; }
+.tag-lecture { background: rgba(88,166,255,0.12); color: #79c0ff; }
+.tag-case { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-exercise { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-activity { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+.tag-build { background: rgba(255,123,182,0.12); color: #ff7b72; }
+.tag-break { background: rgba(100,116,139,0.12); color: #ffffff; }
+.tag-framework { background: rgba(210,153,34,0.12); color: #e3b341; }
+.tag-complete { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.tag-debrief { background: rgba(188,140,255,0.12); color: #d2a8ff; }
+
+.lab-timer {
+  position: absolute; top: 24px; right: 32px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px 18px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600;
+  color: #60a5fa; z-index: 10;
+}
+
+/* WAYPOINTS */
+.waypoints { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 720px; }
+.waypoint {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 12px; padding: 18px 24px;
+  transition: all 0.3s ease; text-align: left;
+}
+.waypoint:hover { transform: translateX(4px); border-color: rgba(59,130,246,0.3); }
+.waypoint-num {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff; background: #1241B0;
+}
+.waypoint-text { flex: 1; }
+.waypoint-text .wt-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.waypoint-text .wt-desc { font-size: 14px; color: #ffffff; line-height: 1.5; }
+
+/* CARDS */
+.cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin: 24px 0;
+}
+.card-item {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 22px; text-align: left;
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.card-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--card-accent, #3b82f6);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.card-item:hover { border-color: var(--card-accent, #3b82f6); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.card-item:hover::before { transform: scaleX(1); }
+.card-item .card-icon { font-size: 26px; margin-bottom: 10px; }
+.card-item .card-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.card-item .card-desc { font-size: 13px; color: #ffffff; line-height: 1.5; }
+
+/* EXPECT GRID */
+.expect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.expect-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 18px; text-align: center; transition: all 0.3s ease;
+}
+.expect-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.expect-icon { font-size: 26px; margin-bottom: 8px; }
+.expect-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.expect-desc { font-size: 12.5px; color: #ffffff; line-height: 1.45; }
+
+/* ARC FLOW */
+.arc-flow { display: flex; gap: 8px; align-items: center; margin: 28px 0; flex-wrap: wrap; justify-content: center; }
+.arc-node {
+  padding: 12px 16px; border-radius: 10px; text-align: center;
+  font-size: 13px; font-weight: 700; color: #fff; min-width: 130px;
+  transition: all 0.3s ease;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+}
+.arc-node:hover { transform: scale(1.05); }
+.arc-node.active-node { box-shadow: 0 0 20px rgba(59,130,246,0.3); background: rgba(59,130,246,0.2); border: 2px solid #3b82f6; }
+.arc-arrow { color: #333; font-size: 18px; }
+.arc-node .ad-num { font-size: 10px; opacity: 0.5; margin-bottom: 2px; }
+
+/* TABLE */
+.ref-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.ref-table th {
+  text-align: left; padding: 12px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff;
+  border-bottom: 1px solid rgba(59,130,246,0.15);
+}
+.ref-table td {
+  padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px; color: #ffffff; line-height: 1.4;
+}
+.ref-table td:first-child { font-weight: 700; color: #ffffff; white-space: nowrap; }
+.ref-table tr:hover td { background: rgba(59,130,246,0.04); }
+
+/* SECTION BREAK */
+section.section-break { padding: 0; }
+section.section-break .section-break-inner {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(59,130,246,0.25) 0%, rgba(59,130,246,0.08) 35%, #07162C 75%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 80px; text-align: left;
+}
+.section-break-inner .section-num { font-family: 'Poppins', sans-serif; font-size: 90px; font-weight: 900; color: rgba(96,165,250,0.18); line-height: 1; }
+.section-break-inner .lab-title {
+  font-size: 13px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.16em; color: rgba(255,255,255,0.5); margin-bottom: 16px;
+}
+.section-break-inner .lab-name { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.1; max-width: 820px; font-family: 'Poppins', sans-serif; }
+.section-break-inner .lab-desc { font-size: 18px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-top: 16px; max-width: 680px; }
+
+/* COMPLETION / TAKEAWAYS */
+.takeaway-list { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; max-width: 880px; }
+.takeaway-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 22px; transition: all 0.3s; text-align: left; }
+.takeaway-item:hover { border-color: rgba(59,130,246,0.3); transform: translateX(4px); }
+.takeaway-item p { font-size: 15px; color: #ffffff; line-height: 1.6; }
+
+.artifact-preview {
+  background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 14px; padding: 24px; margin: 20px auto; max-width: 760px; text-align: left;
+}
+.artifact-preview .ap-title {
+  font-size: 14px; font-weight: 800; color: #60a5fa; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.artifact-preview p { font-size: 14.5px; color: #ffffff; line-height: 1.6; }
+
+/* TAKEAWAY (shareable) */
+.takeaway {
+  background: rgba(34,211,238,0.05); border-left: 3px solid #22d3ee;
+  border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 22px auto 0;
+  text-align: left; max-width: 760px;
+}
+.takeaway h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: #22d3ee; margin: 0 0 6px; }
+.takeaway p { font-size: 14px; color: #ffffff; line-height: 1.55; }
+
+/* PROMPT BLOCK */
+.prompt {
+  background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px;
+  padding: 16px 18px; margin: 16px auto 0; max-width: 760px; text-align: left;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.6;
+  color: #9fd0ff; white-space: pre-wrap; overflow-x: auto;
+}
+.prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #60a5fa; display: block; margin-bottom: 8px; }
+
+/* Help hint, skip badge, sorter */
+.help-hint {
+  position: fixed; bottom: 14px; right: 18px;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  font-family: 'IBM Plex Mono', monospace; z-index: 90;
+}
+.skip-badge {
+  position: fixed; bottom: 14px; left: 18px;
+  background: rgba(248,113,113,0.2); color: #fca5a5;
+  border: 1px solid rgba(248,113,113,0.3);
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  cursor: pointer; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; z-index: 90;
+}
+.skip-badge.visible { opacity: 1; pointer-events: auto; }
+.slide-sorter {
+  position: fixed; inset: 0; background: rgba(7,22,44,0.95);
+  z-index: 200; padding: 60px; overflow-y: auto; display: none; flex-direction: column;
+}
+.slide-sorter.visible { display: flex; }
+.sorter-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.sorter-title { font-size: 28px; font-weight: 800; color: #fff; font-family: 'Poppins', sans-serif; }
+.sorter-subtitle { font-size: 14px; color: #ffffff; margin-top: 4px; }
+.sorter-close { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 18px; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.sorter-close:hover { background: rgba(255,255,255,0.05); }
+.sorter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.sorter-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: all 0.2s ease; }
+.sorter-item:hover { border-color: #3b82f6; transform: translateY(-2px); }
+.sorter-item.sorter-active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
+.sorter-item.sorter-skipped { opacity: 0.4; }
+.sorter-num { font-size: 11px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.1em; }
+.sorter-label { font-size: 14px; color: #fff; margin: 4px 0 8px; font-weight: 600; }
+.sorter-skip-btn { font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; border: 0; }
+.sorter-skip-btn.skip-on { background: rgba(248,113,113,0.2); color: #fca5a5; }
+.sorter-skip-btn.skip-off { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+
+@media (max-width: 768px) {
+  section { padding: 40px 24px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .hero h1 { font-size: 40px; }
+  .cards-grid, .expect-grid { grid-template-columns: 1fr; }
+  .nav-dots { display: none; }
+}
+
+/* ============================================================
+   MODULE 1, Autonomous AI Agents · visual specifics
+   ============================================================ */
+
+/* VS split (Generators vs Orchestrators) */
+.vs-split { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; margin: 24px 0; }
+.vs-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; text-align: left; }
+.vs-panel.gen { border-color: rgba(136,153,187,0.3); }
+.vs-panel.orch { border-color: rgba(59,130,246,0.4); background: rgba(59,130,246,0.06); }
+.vs-kicker { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
+.vs-panel.gen .vs-kicker { color: #ffffff; }
+.vs-panel.orch .vs-kicker { color: #60a5fa; }
+.vs-panel h3 { font-size: 20px; color: #fff; margin-bottom: 10px; }
+.vs-panel p { font-size: 14px; line-height: 1.6; }
+.vs-example { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 13px; color: #ffffff; }
+.vs-example .vse-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff; display: block; margin-bottom: 4px; }
+.vs-badge { display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 18px; color: #60a5fa; padding: 0 22px; }
+
+/* Anatomy of an agent, white infographic card (matches source slide) */
+.agent-diagram { position: relative; width: 880px; max-width: 100%; aspect-ratio: 880 / 460; margin: 16px auto 6px;
+  background: #fbfcfe; border: 1px solid #e3e8f0; border-radius: 22px; box-shadow: 0 22px 55px rgba(0,0,0,0.4); }
+.agent-diagram .ad-loop { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; }
+.ad-el { position: absolute; z-index: 2; transform: translate(-50%,-50%); }
+.ad-title { font-family: 'Poppins', sans-serif; font-weight: 800; color: #1241B0; font-size: 17px; line-height: 1.15; }
+.ad-sub { font-family: 'Lato', sans-serif; color: #ffffff; font-size: 11.5px; line-height: 1.4; margin-top: 4px; }
+.ad-left-text { width: 150px; text-align: right; }
+.ad-right-text { width: 178px; text-align: left; }
+.ad-center-text { width: 360px; text-align: center; }
+.ad-brain { width: 12.5%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 42% 34%, #5b97ff, #1240b0 58%, #0a2a78);
+  box-shadow: 0 0 34px rgba(37,99,235,0.6), inset 0 0 20px rgba(173,206,255,0.45);
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
+  outline: 2px dashed #9cb4e6; outline-offset: 7px; }
+.ad-pill { display: inline-flex; align-items: center; gap: 6px; justify-content: center; flex-wrap: nowrap; }
+.ad-pill span { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; color: #27407a;
+  background: #eef3fc; border: 1px solid #cdddf5; border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
+.ad-pill i { color: #ffffff; font-style: normal; font-size: 12px; }
+.ad-tools { display: flex; align-items: center; gap: 14px; }
+.ad-badges { display: flex; flex-direction: column; gap: 12px; }
+.ad-badge { width: 40px; height: 40px; border-radius: 50%; border: 1.5px dashed #9cb4e6; background: #f1f6fe;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.ad-mem-icons { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; opacity: 0.78; }
+
+/* LLM vs Agent, structured comparison matrix */
+.va-matrix { display: grid; grid-template-columns: 190px 30px 1fr 32px 1fr; align-items: stretch;
+  row-gap: 11px; column-gap: 0; max-width: 1000px; margin: 18px auto 14px; }
+.va-h { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 12.5px; letter-spacing: 0.07em;
+  text-transform: uppercase; padding: 12px 10px; border-radius: 999px; }
+.va-h-feature { background: rgba(255,255,255,0.07); color: #ffffff; }
+.va-h-llm { background: #1b2c48; color: #ffffff; border: 1px solid rgba(255,255,255,0.08); }
+.va-h-agent { background: linear-gradient(135deg, #2f6bff, #1240b0); color: #fff; box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
+.va-feat { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; color: #ffffff;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(120,150,210,0.32); border-radius: 999px; padding: 11px 12px; }
+.va-cell { display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12.5px; line-height: 1.4; border-radius: 16px; padding: 11px 16px; }
+.va-cell-llm { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); color: #ffffff; }
+.va-cell-agent { background: rgba(47,107,255,0.13); border: 1px solid rgba(96,165,250,0.38); color: #ffffff; }
+.va-conn { display: flex; align-items: center; justify-content: center; }
+.va-conn-dash { width: 60%; border-top: 2px dashed rgba(120,150,210,0.45); }
+.va-conn-arrow { color: #ffffff; font-size: 16px; font-weight: 700; line-height: 1; }
+.va-strategic { max-width: 1000px; margin: 4px auto 0; display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, rgba(47,107,255,0.2), rgba(12,35,64,0.55));
+  border: 1px solid rgba(96,165,250,0.3); border-radius: 12px; padding: 13px 20px;
+  font-size: 12.5px; line-height: 1.45; color: #ffffff; text-align: left; }
+.va-strategic .vs-ico { font-size: 17px; }
+.va-strategic b { color: #fff; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 0.04em; }
+
+/* Evolving role of an AI PM, layers + iceberg */
+.pm-split { display: grid; grid-template-columns: 1fr 0.92fr; gap: 30px; align-items: center; max-width: 980px; margin: 20px auto 0; }
+.pm-layers { display: flex; flex-direction: column; gap: 13px; }
+.pm-layer { display: flex; align-items: center; gap: 14px; text-align: left; }
+.pm-lnum { flex: none; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: #fff; border: 1.5px solid; }
+.pm-lbox { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 11px 16px; }
+.pm-lbox .pl-t { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; color: #fff; }
+.pm-lbox .pl-d { font-size: 12.5px; color: #ffffff; margin-top: 2px; line-height: 1.4; }
+.pm-iceberg { position: relative; }
+.pm-iceberg svg { width: 100%; height: auto; display: block; border-radius: 16px; box-shadow: 0 18px 44px rgba(0,0,0,0.45); }
+.pm-cap { margin-top: 12px; font-size: 12px; color: #ffffff; text-align: center; line-height: 1.45; }
+.pm-cap b { color: #ffffff; }
+
+/* Core Responsibility, 4 columns (description → dashed line → label pill) + Example callout */
+.cr-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; max-width: 1000px; margin: 20px auto 16px; align-items: stretch; }
+.cr-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cr-desc { font-size: 12.5px; color: #ffffff; line-height: 1.5; }
+.cr-conn { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 8px 0; min-height: 36px; }
+.cr-dot { width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; }
+.cr-dash { width: 0; border-left: 2px dashed rgba(120,150,210,0.5); flex: 1 1 auto; min-height: 22px; margin: 4px 0; }
+.cr-pill { width: 100%; background: linear-gradient(135deg, #1d2f52, #131f38); border: 1px solid rgba(96,165,250,0.42);
+  color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12.5px; border-radius: 11px; padding: 12px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+.cr-example { display: flex; align-items: center; gap: 16px; max-width: 1000px; margin: 0 auto; text-align: left;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 15px 20px; }
+.cr-ex-icon { flex: none; width: 46px; height: 46px; border-radius: 11px; background: #fff; color: #15233f;
+  display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; box-shadow: 0 4px 14px rgba(0,0,0,0.28); }
+.cr-ex-icon img { width: 30px; height: 30px; object-fit: contain; display: block; }
+.cr-ex-text { font-size: 13px; color: #ffffff; line-height: 1.5; }
+.cr-ex-text b { color: #fff; }
+
+/* Lab outcome, framed Langflow screenshot + workflow strip */
+.lab-shot { max-width: 900px; margin: 16px auto 0; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 24px 60px rgba(0,0,0,0.55); background: #0d1117; }
+.lab-shot-bar { display: flex; align-items: center; gap: 7px; padding: 9px 14px; background: #11161f; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.lab-shot-bar .lsb-dot { width: 11px; height: 11px; border-radius: 50%; }
+.lab-shot-bar .lsb-title { margin-left: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #ffffff; }
+.lab-shot img { display: block; width: 100%; height: auto; }
+.lab-flow { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin: 16px auto 0; max-width: 900px; }
+.lab-flow .lf-node { background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.4); color: #ffffff;
+  border-radius: 10px; padding: 8px 14px; font-size: 12.5px; font-weight: 700; font-family: 'Poppins', sans-serif; }
+.lab-flow .lf-tool { background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.42); color: #fde68a; }
+.lab-flow .lf-arr { color: #ffffff; font-weight: 800; font-size: 15px; }
+.lab-walkthrough { display: inline-flex; align-items: center; gap: 9px; margin-top: 18px; padding: 12px 24px;
+  background: linear-gradient(135deg, #2f6bff, #1240b0); color: #fff; font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 14px; border-radius: 10px; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.4); transition: transform 0.15s, box-shadow 0.15s; }
+.lab-walkthrough:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(37,99,235,0.5); }
+
+/* Before / After 3-column (Salesforce) */
+.ba-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 22px 0; }
+.ba-col { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; text-align: left; }
+.ba-dim { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; padding: 12px 16px; background: linear-gradient(135deg, rgba(59,130,246,0.22), transparent 80%); border-bottom: 1px solid rgba(59,130,246,0.25); }
+.ba-state { padding: 14px 16px; }
+.ba-state + .ba-state { border-top: 1px solid rgba(255,255,255,0.06); }
+.ba-state .bas-label { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+.ba-state.before .bas-label { color: #ffffff; }
+.ba-state.after .bas-label { color: #6ee7b7; }
+.ba-state p { font-size: 12.5px; color: #ffffff; line-height: 1.55; }
+
+/* Responsibility cards (3 domains + sub-items) */
+.resp-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 22px 0; text-align: left; }
+.resp-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; overflow: hidden; }
+.resp-head { padding: 16px 20px; background: linear-gradient(135deg, rgba(59,130,246,0.2), transparent 75%); border-bottom: 1px solid rgba(59,130,246,0.25); }
+.resp-head .rh-num { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 900; color: #60a5fa; line-height: 1; }
+.resp-head .rh-title { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 800; color: #fff; margin-top: 4px; }
+.resp-head .rh-sub { font-size: 12.5px; color: #ffffff; margin-top: 4px; line-height: 1.5; }
+.resp-body { padding: 14px 20px; }
+.resp-item { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.resp-item:last-child { border-bottom: none; }
+.resp-item b { color: #ffffff; font-weight: 700; font-size: 13.5px; }
+.resp-item span { display: block; font-size: 12.5px; color: #ffffff; line-height: 1.5; margin-top: 2px; }
+.resp-eg { background: rgba(34,211,238,0.05); border-left: 3px solid #22d3ee; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px auto 0; text-align: left; max-width: 820px; font-size: 13px; color: #ffffff; line-height: 1.55; }
+
+/* Agent spectrum ladder */
+.spectrum { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 24px 0; align-items: end; }
+.spec-step { background: rgba(255,255,255,0.03); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px 12px 0 0; border-bottom: 3px solid var(--spec, #3b82f6); padding: 16px; text-align: left; position: relative; }
+.spec-step .ss-lvl { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--spec, #60a5fa); }
+.spec-step .ss-name { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: #fff; margin: 4px 0 6px; }
+.spec-step .ss-desc { font-size: 12px; color: #ffffff; line-height: 1.5; }
+.spec-step .ss-focus { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11.5px; color: #ffffff; line-height: 1.5; }
+.spec-step .ss-focus b { color: var(--spec, #60a5fa); font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 3px; }
+.spec-rail { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #475569, #3b82f6, #60a5fa, #22d3ee); margin: 6px 0 0; }
+.spec-rail-labels { display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #ffffff; margin-top: 8px; }
+
+/* Level deep-dive card (3 labeled blocks) */
+.level-blocks { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 22px 0; text-align: left; }
+.lvl-block { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; }
+.lvl-block .lb-label { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; color: #60a5fa; margin-bottom: 8px; }
+.lvl-block p { font-size: 13px; color: #ffffff; line-height: 1.6; }
+.lvl-badge { display:inline-flex; align-items:center; gap:10px; background: rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); border-radius:999px; padding:8px 18px; margin-bottom: 14px; }
+.lvl-badge .lvb-num { font-family:'Poppins',sans-serif; font-weight:900; font-size:18px; color:#60a5fa; }
+.lvl-badge .lvb-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:14px; color:#fff; letter-spacing:0.04em; }
+/* Level deep-dive, visual two-column layout with product logos */
+.lvl-grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; text-align:left; margin:22px 0; align-items:stretch; }
+.lvl-col { display:flex; flex-direction:column; gap:14px; }
+.lvl-card { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px 20px; flex:1; }
+.lvl-card .lc-label { font-size:11px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:9px; display:flex; align-items:center; gap:7px; }
+.lvl-card p { font-size:13.5px; color:#ffffff; line-height:1.6; margin:0; }
+.lvl-examples { position:relative; background: linear-gradient(165deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px 20px; display:flex; flex-direction:column; overflow:hidden; }
+.lvl-examples::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--lvl-accent,#60a5fa); }
+.lvl-examples .lc-label { font-size:11px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+.lvl-logos { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 14px; }
+.lvl-chip { background:#fff; border-radius:10px; height:48px; padding:0 16px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(0,0,0,0.30); transition:transform .25s; }
+.lvl-chip:hover { transform:translateY(-2px); }
+.lvl-chip img { height:26px; width:auto; max-width:130px; object-fit:contain; display:block; }
+.lvl-ex-text { font-size:12.5px; color:#ffffff; line-height:1.55; margin:auto 0 0; }
+
+/* Decision question grid */
+.q-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 22px 0; text-align: left; }
+.q-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 20px; transition: all .3s; }
+.q-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.q-card .qc-q { display: flex; align-items: center; gap: 11px; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.q-card .qc-logo { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; }
+.q-card .qc-a { font-size: 13px; color: #ffffff; line-height: 1.55; }
+/* Checklist (decision questions) */
+.checklist { display: flex; flex-direction: column; gap: 12px; margin: 22px 0; text-align: left; }
+.check-row { display: flex; align-items: flex-start; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; transition: all .3s; }
+.check-row:hover { border-color: rgba(59,130,246,0.35); transform: translateX(3px); }
+.check-box { flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; border: 2px solid #3b82f6; background: rgba(59,130,246,0.12); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.check-box svg { width: 17px; height: 17px; }
+.check-text .ct-q { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 4px; }
+.check-text .ct-a { font-size: 13px; color: #ffffff; line-height: 1.55; }
+
+/* Flow steps (lab) */
+.flow-steps { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin: 22px 0; text-align: left; }
+.flow-step { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; }
+.flow-step .fs-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.flow-step .fs-num { width: 26px; height: 26px; border-radius: 7px; background: #1241B0; color: #fff; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.flow-step .fs-icon { font-size: 18px; }
+.flow-step .fs-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.flow-step .fs-text { font-size: 11.5px; color: #ffffff; line-height: 1.5; }
+
+/* Reflection grid */
+.reflection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 16px; margin: 22px 0; text-align: left; }
+.ref-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; display: flex; gap: 14px; }
+.ref-card .ref-num { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 900; color: #60a5fa; line-height: 1; }
+.ref-card .ref-q { font-size: 14px; color: #ffffff; line-height: 1.6; }
+
+/* Video frame */
+.video-frame { position: relative; width: 100%; max-width: 760px; margin: 18px auto 0; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; border: 1px solid rgba(96,165,250,0.3); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-cta { margin-top: 14px; }
+.tool-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1241B0, #3b82f6); color: #fff; text-decoration: none; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; padding: 11px 20px; border-radius: 10px; border: 1px solid #3b82f6; transition: transform .2s, box-shadow .2s; }
+.tool-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(59,130,246,0.32); }
+
+/* Cameras on photo strip */
+section.cameras-section { padding: 0; overflow: hidden; }
+.cameras-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 60px; }
+.cameras-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; max-width: 1000px; width: 100%; }
+.cameras-left { text-align: left; }
+.cameras-logo { height: 36px; margin-bottom: 24px; opacity: 0.95; }
+.cameras-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(59,130,246,0.25); border-radius: 16px; padding: 28px; }
+.cameras-card h2 { font-size: 30px; }
+.cameras-arrow { font-family: 'Poppins', sans-serif; font-weight: 800; color: #60a5fa; font-size: 18px; margin: 10px 0; }
+.cameras-photo-strip { display: flex; align-items: center; justify-content: center; }
+.cameras-photo-strip img { max-height: 72vh; max-width: 100%; width: auto; object-fit: contain; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
+
+/* Next session bar */
+.next-arrow-bar { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-left: 4px solid #3b82f6; border-radius: 12px; padding: 20px 24px; margin: 18px auto 0; max-width: 820px; text-align: left; }
+.next-arrow-bar .nab-meta { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #60a5fa; }
+.next-arrow-bar .nab-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; color: #fff; margin: 4px 0 8px; }
+.next-arrow-bar .nab-desc { font-size: 14px; color: #ffffff; line-height: 1.6; }
+
+/* Extra practice */
+.ep-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin: 22px 0; text-align: left; }
+.ep-card { position: relative; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-top: 3px solid var(--xp,#60a5fa); border-radius: 16px; padding: 24px 22px; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.ep-card:hover { transform: translateY(-4px); border-color: var(--xp,#60a5fa); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.ep-card:nth-child(1) { --xp: #60a5fa; }
+.ep-card:nth-child(2) { --xp: #d2a8ff; }
+.ep-card:nth-child(3) { --xp: #6ee7b7; }
+.ep-card .ep-num { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 11px; font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; color: #fff; background: var(--xp,#60a5fa); margin-bottom: 15px; }
+.ep-card .ep-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 8px; }
+.ep-card .ep-desc { font-size: 13.5px; color: rgba(255,255,255,0.82); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .vs-split { grid-template-columns: 1fr; }
+  .vs-badge { padding: 10px 0; }
+  .ba-grid, .resp-grid, .spectrum, .level-blocks, .q-grid, .ep-grid, .lvl-grid { grid-template-columns: 1fr; }
+  .agent-diagram { transform: scale(0.62); transform-origin: top center; margin-bottom: -150px; }
+  .va-matrix { grid-template-columns: 110px 14px 1fr 18px 1fr; }
+  .va-h { font-size: 10px; letter-spacing: 0.03em; }
+  .va-feat { font-size: 11.5px; }
+  .va-cell { font-size: 11px; padding: 9px 10px; }
+  .pm-split { grid-template-columns: 1fr; gap: 18px; }
+  .pm-iceberg { max-width: 360px; margin: 0 auto; }
+  .cr-cols { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .flow-steps { grid-template-columns: 1fr 1fr; }
+  .cameras-layout { grid-template-columns: 1fr; }
+}
+
+/* Centering frame for inline SVG diagrams */
+.dgm{display:flex;justify-content:center;margin:18px auto 6px;max-width:620px;}
+.dgm svg{width:100%;height:auto;}
+.dgm.wide{max-width:760px;}
+
+/* White logo chip + text wordmark chip + horizontal row */
+.logochip{background:#fff;border-radius:10px;height:42px;min-width:54px;padding:0 13px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.3);}
+.logochip img{height:22px;width:auto;max-width:110px;object-fit:contain;display:block;}
+.wordchip{display:inline-flex;align-items:center;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:11.5px;color:#ffffff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:8px 12px;}
+.logorow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+
+/* Final project, goal/deliverable/timing + INCLUDE panel */
+.fp-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:20px;align-items:stretch;
+  max-width:1000px;margin:22px auto 0;text-align:left;}
+.fp-left{display:flex;flex-direction:column;gap:12px;}
+.fp-meta{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.fp-lab{display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;
+  font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac,#60a5fa);margin-bottom:6px;}
+.fp-lab .fp-ic{font-size:15px;}
+.fp-txt{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.fp-txt b{color:#fff;}
+.fp-include{position:relative;border-radius:16px;padding:20px 24px;
+  background:linear-gradient(160deg,rgba(34,211,238,.12),rgba(7,22,44,.4));
+  border:1.5px solid rgba(34,211,238,.4);box-shadow:0 16px 40px rgba(34,211,238,.12);}
+.fp-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:13px;
+  letter-spacing:.14em;text-transform:uppercase;color:#22d3ee;margin-bottom:13px;}
+.fp-items{display:flex;flex-direction:column;gap:8px;}
+.fp-item{display:flex;align-items:center;gap:12px;}
+.fp-num{flex:none;width:26px;height:26px;border-radius:8px;background:#0e7490;color:#fff;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.fp-iname{font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:#ffffff;}
+@media (max-width:900px){.fp-grid{grid-template-columns:1fr;}}
+
+/* Old way vs new way, Feature Factory vs Value Driver */
+.oldnew{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch;max-width:1000px;margin:22px auto 0;text-align:left;}
+.on-card{border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;}
+.on-old{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.26);}
+.on-new{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.3);}
+.on-kick{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.on-old .on-kick{color:#fda4af;}
+.on-new .on-kick{color:#6ee7b7;}
+.on-h{font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:#fff;line-height:1.1;margin-top:-4px;}
+.on-li{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:18px;position:relative;}
+.on-old .on-li::before{content:'✕';position:absolute;left:0;top:0;color:#fb7185;font-weight:800;font-size:11px;}
+.on-new .on-li::before{content:'✓';position:absolute;left:0;top:0;color:#34d399;font-weight:800;font-size:11px;}
+.on-vs{align-self:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:#ffffff;
+  width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;flex:none;}
+@media (max-width:820px){.oldnew{grid-template-columns:1fr;}.on-vs{margin:0 auto;}}
+
+/* Pillars: venn diagram beside the three lenses */
+.pillar-grid{display:grid;grid-template-columns:1.02fr 0.98fr;gap:26px;align-items:center;max-width:1060px;margin:16px auto 0;}
+.pillar-list{display:flex;flex-direction:column;gap:11px;text-align:left;}
+.pillar{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  padding:13px 16px;border-left:3px solid var(--ac,#60a5fa);}
+.pillar h4{font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;color:#fff;margin-bottom:3px;}
+.pillar p{font-size:12px;color:#ffffff;line-height:1.5;}
+@media (max-width:900px){.pillar-grid{grid-template-columns:1fr;}}
+
+/* Skill stack, numbered rows */
+.skill-grid{display:flex;flex-direction:column;gap:11px;max-width:880px;margin:22px auto 0;text-align:left;}
+.skill-row{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:15px 18px;border-left:3px solid var(--ac,#60a5fa);}
+.skill-n{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(96,165,250,.14);color:var(--ac,#60a5fa);
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.skill-t{font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-bottom:3px;}
+.skill-d{font-size:12.5px;color:#ffffff;line-height:1.5;}
+
+/* Hub: diagram beside arbiter note */
+.hub-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:24px;align-items:center;max-width:1080px;margin:14px auto 0;}
+.hub-note{display:flex;flex-direction:column;gap:13px;text-align:left;}
+@media (max-width:900px){.hub-grid{grid-template-columns:1fr;}}
+
+/* B2C / B2B two-column */
+.aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:980px;margin:20px auto 0;text-align:left;}
+.aud-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 22px;border-top:3px solid var(--ac,#60a5fa);}
+.aud-h{font-family:'Poppins',sans-serif;font-weight:800;font-size:15.5px;color:#fff;margin-bottom:4px;}
+.aud-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;margin-bottom:11px;}
+.aud-q{font-size:12.5px;color:#ffffff;line-height:1.5;padding-left:16px;position:relative;margin-bottom:8px;}
+.aud-q::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac,#60a5fa);}
+.aud-eg{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);}
+.aud-eg .logochip{height:30px;min-width:auto;padding:0 9px;}
+.aud-eg .logochip img{height:15px;}
+@media (max-width:760px){.aud-grid{grid-template-columns:1fr;}}
+
+/* PDLC stage cards (3-up) */
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.stage-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:10px;}
+.stage-kick{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ac,#60a5fa);font-weight:700;}
+.stage-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:18px;color:#fff;line-height:1.1;margin-top:-3px;}
+.stage-phases{font-size:11px;color:#ffffff;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;}
+.stage-li{font-size:12px;color:#ffffff;line-height:1.5;padding-left:15px;position:relative;}
+.stage-li::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:2px;background:var(--ac,#60a5fa);}
+.stage-goal{margin-top:auto;font-size:11.5px;color:#ffffff;line-height:1.45;background:rgba(255,255,255,.04);border-radius:9px;padding:9px 12px;}
+.stage-goal b{color:#fff;}
+.stage-eg{font-size:11px;color:#ffffff;font-style:italic;line-height:1.45;padding-top:8px;border-top:1px solid rgba(255,255,255,.07);}
+@media (max-width:900px){.stage-grid{grid-template-columns:1fr;}}
+
+/* AI lifecycle, human vs AI split rows */
+.ailc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.ailc-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:18px 20px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:11px;}
+.ailc-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:17px;color:var(--ac,#60a5fa);}
+.ailc-split{display:flex;flex-direction:column;gap:8px;}
+.ailc-block{border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.45;}
+.ailc-human{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.24);color:#ffffff;}
+.ailc-ai{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.26);color:#ddd2f3;}
+.ailc-block .albl{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
+.ailc-human .albl{color:#7fb0ef;}
+.ailc-ai .albl{color:#b39ef5;}
+.ailc-out{font-size:11px;color:#ffffff;font-style:italic;line-height:1.4;}
+@media (max-width:900px){.ailc-grid{grid-template-columns:1fr;}}
+
+/* Scenario cards (final project) */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1000px;margin:22px auto 0;text-align:left;}
+.scn-card{position:relative;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:11px;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(7,22,44,.4));border:1px solid rgba(255,255,255,.1);
+  border-top:3px solid var(--ac,#60a5fa);}
+.scn-tag{display:inline-flex;align-self:flex-start;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--ac,#60a5fa);
+  background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.26);border-radius:999px;padding:5px 11px;}
+.scn-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:21px;color:#fff;line-height:1.1;}
+.scn-sub{font-size:12.5px;color:#ffffff;line-height:1.3;font-weight:700;}
+.scn-desc{font-size:12.5px;color:#ffffff;line-height:1.55;}
+.scn-risk{margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  font-weight:700;color:#fcd34d;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.28);border-radius:8px;padding:8px 11px;}
+@media (max-width:760px){.scenario-grid{grid-template-columns:1fr;}}
+
+/* Discovery methods matrix, 3 columns of method rows */
+.dm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1080px;margin:22px auto 0;text-align:left;}
+.dm-col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  padding:16px 16px 8px;border-top:3px solid var(--ac,#60a5fa);display:flex;flex-direction:column;gap:9px;}
+.dm-head{display:flex;align-items:center;gap:11px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);}
+.dm-ic{font-size:22px;}
+.dm-cat{font-family:'Poppins',sans-serif;font-weight:900;font-size:15px;color:#fff;line-height:1.1;}
+.dm-sub{font-size:10.5px;color:#ffffff;line-height:1.3;margin-top:2px;}
+.dm-method{display:flex;gap:10px;align-items:flex-start;padding:6px 0;}
+.dm-tag{flex:none;font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.05em;
+  border-radius:5px;padding:3px 6px;margin-top:2px;}
+.dm-att{background:rgba(96,165,250,.14);color:#7fb0ef;border:1px solid rgba(96,165,250,.3);}
+.dm-beh{background:rgba(52,211,153,.14);color:#6ee7b7;border:1px solid rgba(52,211,153,.3);}
+.dm-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:12.5px;color:#ffffff;}
+.dm-desc{font-size:11px;color:#ffffff;line-height:1.45;margin-top:1px;}
+@media (max-width:900px){.dm-grid{grid-template-columns:1fr;}}
+
+/* Quick vote, good / bad discovery questions */
+.qv-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;max-width:1000px;margin:22px auto 0;text-align:left;}
+.qv-card{border-radius:13px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.qv-good{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.28);}
+.qv-bad{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.26);}
+.qv-top{display:flex;gap:10px;align-items:flex-start;}
+.qv-badge{flex:none;font-family:'Poppins',sans-serif;font-weight:900;font-size:10px;letter-spacing:.08em;
+  border-radius:6px;padding:4px 8px;margin-top:1px;}
+.qv-good .qv-badge{background:#0e7c5a;color:#d1fae5;}
+.qv-bad .qv-badge{background:#9f1239;color:#ffe4e6;}
+.qv-q{font-family:'Poppins',sans-serif;font-weight:700;font-size:13.5px;color:#fff;line-height:1.35;}
+.qv-why{font-size:11.5px;color:#ffffff;line-height:1.5;}
+@media (max-width:760px){.qv-grid{grid-template-columns:1fr;}}
+
+/* Competitive intelligence, old vs new rows */
+.ci-table{display:flex;flex-direction:column;gap:12px;max-width:1060px;margin:22px auto 0;text-align:left;}
+.ci-row{display:grid;grid-template-columns:34px 0.7fr 1fr 34px 1fr;gap:12px;align-items:center;}
+.ci-num{width:34px;height:34px;border-radius:9px;background:rgba(96,165,250,.14);color:#60a5fa;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.ci-cap{font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;color:#fff;line-height:1.2;}
+.ci-old{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.22);border-radius:11px;
+  padding:11px 13px;font-size:11.5px;color:#cdb6bc;line-height:1.5;}
+.ci-new{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.28);border-radius:11px;
+  padding:11px 13px;font-size:11.5px;color:#bfe6d4;line-height:1.5;}
+.ci-lbl{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;font-weight:700;
+  text-transform:uppercase;margin-bottom:4px;}
+.ci-old .ci-lbl{color:#fda4af;}
+.ci-new .ci-lbl{color:#6ee7b7;}
+.ci-arr{text-align:center;color:#ffffff;font-weight:800;font-size:16px;}
+@media (max-width:900px){.ci-row{grid-template-columns:1fr;}.ci-arr{display:none;}
+  .ci-num{margin-bottom:-4px;}}
+
+/* Keep example logo chips from being squeezed inside insight cards */
+.stage-goal .logochip{flex:none;}
+.stage-goal span{flex:1;}
+
+/* Key Takeaways accents: color for emphasis, white body stays */
+.takeaway-list .takeaway-item { border-left: 3px solid var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item p strong { color: var(--tk-ac, #60a5fa) !important; }
+.takeaway-list .takeaway-item:hover { border-left-color: var(--tk-ac, #60a5fa); }
+.takeaway-list .takeaway-item:nth-child(3n+1) { --tk-ac: #34d399; }
+.takeaway-list .takeaway-item:nth-child(3n+2) { --tk-ac: #60a5fa; }
+.takeaway-list .takeaway-item:nth-child(3n+3) { --tk-ac: #fbbf24; }
+
+/* PS-READABILITY-PASS v1 - legibility + reduced-motion + print. Brand palette unchanged. */
+.card-item .card-desc, .expect-desc, .syl-card .syl-desc, .anat-card .anat-desc,
+.control-card .cc-feel, .flow-stage .flow-why, .diag-axis .da-q, .tf-body .tf-why,
+.waypoint-text .wt-desc, .lab-tip-text, .lab-deliverable, .loop-node .ln-sub,
+.res-card .rc-desc, .al-chip .al-chip-score, .sorter-subtitle,
+.case-act .ca-text, .two-col ul li { font-size: 13.5px; }
+.control-card .cc-who { font-size: 14.5px; }
+.ref-table td, .notice-table td { font-size: 15px; }
+.ref-table th, .notice-table th { font-size: 12px; }
+/* No grey text: decorative greys lifted straight to white. */
+.hero .scroll-hint { color: #ffffff; }
+.arc-arrow { color: #ffffff; }
+.section-break-inner .lab-desc { color: #ffffff; }
+.section-break-inner .lab-title { color: #ffffff; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  section { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0.001ms !important; }
+}
+
+@media print {
+  html { scroll-snap-type: none; scroll-behavior: auto; }
+  body { background: #ffffff !important; color: #24304d !important; }
+  section { min-height: auto !important; opacity: 1 !important; transform: none !important;
+            background: #ffffff !important; padding: 26px 30px !important;
+            page-break-after: always; border-bottom: 1px solid #d5dcec; }
+  .section-break-inner, .cameras-inner { position: static !important; background: #ffffff !important;
+            padding: 26px 30px !important; }
+  .section-break-inner .section-num, .section-break-inner .lab-name { color: #0b1f44 !important; }
+  .section-break-inner .lab-desc, .section-break-inner .lab-title { color: #3a4a6b !important; }
+  h1, h2, h3, strong, .card-title, .wt-title, .rc-title { color: #0b1f44 !important; }
+  p, li, .card-desc, .expect-desc, .ref-table td, .notice-table td { color: #26324f !important; }
+  .nav-dots, .progress-bar, .scroll-hint, .lab-timer { display: none !important; }
+}
+
+</style>
+<noscript><style>section{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="nav-dots" id="navDots"></div>
+<div class="skip-badge" id="skip-badge">SECTION SKIPPED · CLICK TO RESTORE</div>
+<div class="help-hint">↑ ↓ navigate · K skip section · M section sorter</div>
+<div class="slide-sorter" id="slide-sorter">
+  <div class="sorter-header">
+    <div><div class="sorter-title">Section sorter</div>
+    <div class="sorter-subtitle">Click a card to jump · skip what you don't need</div></div>
+    <button class="sorter-close" onclick="closeSorter()">✕ Close</button>
+  </div>
+  <div class="sorter-grid" id="sorter-grid"></div>
+</div>
+<section class="hero" data-title="Module 2"><div class="inner" style="text-align:center"><div class="hero-logo"><img src="../Design/Product-School-Logo.png" alt="Product School"></div><div class="section-label">Product Management · Module 2 of 6</div><h1>Discover Product Opportunities<br><span>via Qualitative Signals</span></h1><p class="subtitle">Uncover high-value opportunities through advanced discovery and user research. Learn to balance customer insight with business goals, and to act as the pilot who turns AI-scaled synthesis into products that solve real problems.</p><div class="waypoints"><div class="waypoint"><div class="waypoint-num">1</div><div class="waypoint-text"><div class="wt-title">Strategic discovery &amp; problem validation</div><div class="wt-desc">Filter signals through core values, choose the right research method, and turn raw feedback into behaviors, needs, and pain points.</div></div></div><div class="waypoint"><div class="waypoint-num">2</div><div class="waypoint-text"><div class="wt-title">Hands-on lab: AI synthesis for discovery</div><div class="wt-desc">Use a Lead-PM prompt to turn messy UXR notes and bug reports into an executive insights summary, then audit it for logic leaks.</div></div></div><div class="waypoint"><div class="waypoint-num">3</div><div class="waypoint-text"><div class="wt-title">Market &amp; competitive analysis</div><div class="wt-desc">Recognise the status quo as your #1 competitor and supercharge competitive intelligence with AI.</div></div></div><div class="waypoint"><div class="waypoint-num">4</div><div class="waypoint-text"><div class="wt-title">Hands-on lab: journey-map your edge</div><div class="wt-desc">Build a future-state journey map that makes your persona’s manual workarounds obsolete.</div></div></div></div><div class="scroll-hint">Individual format · two labs feed your project repo<span>↓</span></div></div></section><section class="centered" data-title="Class Expectations"><div class="inner"><div class="section-label">Cohort Norms</div><h2>Class expectations</h2><p class="subtitle">A solo-format cohort runs best on a few shared habits.</p><div class="expect-grid"><div class="expect-card"><div class="expect-icon">📹</div><div class="expect-title">Cameras On</div><div class="expect-desc">Be present and visible to stay engaged and keep the session valuable.</div></div><div class="expect-card"><div class="expect-icon">⏰</div><div class="expect-title">Arrive On Time</div><div class="expect-desc">Respect everyone’s time by joining promptly, we start on schedule.</div></div><div class="expect-card"><div class="expect-icon">🤝</div><div class="expect-title">Engage to Network</div><div class="expect-desc">Join the labs and discussions to build your professional learning network.</div></div><div class="expect-card"><div class="expect-icon">🛠️</div><div class="expect-title">Tool Readiness</div><div class="expect-desc">Have your tools and Claude account active before class, we won’t pause for setup.</div></div><div class="expect-card"><div class="expect-icon">🎓</div><div class="expect-title">Use Slack</div><div class="expect-desc">Keep questions, answers, and shares organised in the cohort Slack channel.</div></div><div class="expect-card"><div class="expect-icon">🎯</div><div class="expect-title">Class Momentum</div><div class="expect-desc">Deep-dive or individual questions move to after-class support to keep pace.</div></div></div></div></section><section class="centered" data-title="Syllabus"><div class="inner"><div class="section-label">Certification Syllabus</div><h2>Master the core skills to build products customers love</h2><p class="subtitle">Six modules take you from strategic thinking to a coordinated, measurable launch.</p><div class="cards-grid"><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 1</div><div class="card-title" style="margin-top:6px">Develop Strategic Product Thinking</div><div class="card-desc">Shift from executing tasks to driving outcomes, the core responsibilities, soft skills, and mindset of a modern PM.</div></div><div class="card-item" style="--card-accent:#22d3ee"><div class="card-title" style="color:#22d3ee;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 2 · You are here</div><div class="card-title" style="margin-top:6px">Discover Product Opportunities via Qualitative Signals</div><div class="card-desc">Uncover high-value opportunities through advanced discovery and user research, balancing customer insight with business goals.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 3</div><div class="card-title" style="margin-top:6px">Use Analytics and Metrics for Data-Driven Decisions</div><div class="card-desc">Go from gut feelings to evidence, craft hypotheses, define success metrics, and leverage analytics to drive growth.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 4</div><div class="card-title" style="margin-top:6px">Build High-Velocity Product Roadmaps</div><div class="card-desc">Bridge vision and execution, master the transition to PRDs and leverage AI for rapid prototyping and proof of value.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 5</div><div class="card-title" style="margin-top:6px">Run Effective Product Experimentation</div><div class="card-desc">Master A/B testing and evidence-based decisions to confidently ship, kill, or pivot based on what experiments reveal.</div></div><div class="card-item" style="--card-accent:#475569"><div class="card-title" style="color:#ffffff;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Module 6</div><div class="card-title" style="margin-top:6px">Launch Impactful GTM Plans</div><div class="card-desc">Orchestrate a launch checklist, coordinate cross-functional teams, define channels, and track post-launch metrics.</div></div></div></div></section><section class="centered" data-title="Agenda"><div class="inner"><div class="section-label">Agenda</div><h2>What we’ll cover today</h2><div class="waypoints" style="max-width:780px;margin:24px auto"><div class="waypoint"><div class="waypoint-num">01</div><div class="waypoint-text"><div class="wt-title">Strategic Discovery &amp; Problem Validation</div><div class="wt-desc">How the modern PM partners with AI, filters signals through core values, picks research methods, and reads behaviors, needs, and pain points.</div></div></div><div class="waypoint"><div class="waypoint-num">02</div><div class="waypoint-text"><div class="wt-title">Hands-On Lab: Leverage AI Synthesis for Discovery</div><div class="wt-desc">Turn messy UXR notes and bug reports into an executive insights summary, and audit the AI’s output against your own judgment.</div></div></div><div class="waypoint"><div class="waypoint-num">03</div><div class="waypoint-text"><div class="wt-title">Market &amp; Competitive Analysis</div><div class="wt-desc">Beat the status quo: prove the cost of doing nothing, find the strategic gap, and run AI-powered competitive intelligence.</div></div></div><div class="waypoint"><div class="waypoint-num">04</div><div class="waypoint-text"><div class="wt-title">Hands-On Lab: Journey-Map Your Competitive Edge</div><div class="wt-desc">Define your persona, document their workaround, and design a future-state journey map that makes manual hacks obsolete.</div></div></div></div></div></section><section class="section-break" data-title="Strategic Discovery &amp; Problem Validation"><div class="section-break-inner"><div class="section-num">01</div><div class="lab-title">Section 01</div><div class="lab-name">Strategic Discovery &amp; Problem Validation</div><div class="lab-desc">AI can summarise a thousand interviews in seconds. But synthesis isn’t strategy, your value is the discernment to decide which problems are actually worth solving.</div></div></section><section class="centered" data-title="Q&amp;A · Challenges with Product Discovery"><div class="inner"><span class="demo-tag tag-activity">Instructor-Led Q&amp;A · 10 min</span><h2>Challenges with product discovery</h2><p class="subtitle">Unmute and share, drop it in chat, or post in <code>#cohort-channel</code>.</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:800px;margin:22px auto"><div class="ref-card"><div class="ref-num">💬</div><div class="ref-q">Now that AI can help narrow down UXR, analytics, and other research, what are the main challenges you see PMs having when it comes to <strong>actually understanding user problems</strong>?</div></div></div><div class="takeaway"><h4>The takeaway</h4><p>AI provides the <strong>synthesis</strong>; the PM provides the <strong>discernment</strong>. Your value is in grounding insights in strategy so you’re solving a problem that actually moves the needle, not just the loudest complaint in the dataset.</p></div></div></section><section class="centered" data-title="The Evolution of Discovery"><div class="inner"><span class="demo-tag tag-lecture">The modern PM partnership</span><h2>The evolution of discovery</h2><p class="subtitle">To be a modern PM you must shift <em>how</em> you discover, moving from manual reporting to strategic synthesis. AI handles the heavy lifting so your energy goes to the strategic question.</p><div class="oldnew"><div class="on-card on-old"><div class="on-kick">🕰️ Old way · traditional discovery</div><div class="on-h">“What did they say?”</div><div class="on-li">Slow, high-effort, done in large infrequent batches</div><div class="on-li">Long cycles between an insight and any action</div><div class="on-li">PM time spent on “What did the users say?”</div><div class="on-li">Manual synthesis: reading every ticket and transcript</div></div><div class="on-vs">➔</div><div class="on-card on-new"><div class="on-kick">⚡ New way · AI-powered discovery</div><div class="on-h">“What does it mean?”</div><div class="on-li">Fast, iterative, raw data to synthesized insight in minutes</div><div class="on-li">Fosters a culture of continuous discovery</div><div class="on-li">PM time spent on “What does this mean for our product?”</div><div class="on-li">AI aggregates; you decide what matters</div></div></div><div class="takeaway"><h4>Co-pilot vs. pilot</h4><p><strong>AI (the co-pilot)</strong> scales the heavy lifting, synthesizing thousands of data points and mapping evidence into clear themes instantly. <strong>You (the pilot)</strong> own the strategic edge: curating high-quality inputs and applying empathy, domain knowledge, and judgment to decide what to build.</p></div></div></section><section class="centered" data-title="Core Values as a Discovery Filter"><div class="inner"><span class="demo-tag tag-framework">Core values as a discovery filter</span><h2>Discovery starts with your company’s soul</h2><p class="subtitle">Discovery doesn’t start with a user interview, it starts with knowing what your company stands for. Without that filter you’ll find thousands of problems and have no idea which ones to ignore.</p><div class="pillar-grid"><div class="dgm wide" style="margin:0;max-width:480px"><svg viewBox="0 0 660 330" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Discovery funnel narrowing raw signals through a core-values filter into one strategic bet"><polygon points="90.0,40 570.0,40 495.0,130 165.0,130" fill="#60a5fa" fill-opacity="0.14" stroke="#60a5fa" stroke-width="1.6"/><text x="330.0" y="83.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="13" fill="#fff">Raw signals</text><text x="330.0" y="100.0" text-anchor="middle" font-family="Lato,sans-serif" font-size="10.5" fill="#aab4cc">Interviews · tickets · reviews · analytics</text><polygon points="165.0,130 495.0,130 430.0,215 230.0,215" fill="#22d3ee" fill-opacity="0.14" stroke="#22d3ee" stroke-width="1.6"/><text x="330.0" y="170.5" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="13" fill="#fff">Themes</text><text x="330.0" y="187.5" text-anchor="middle" font-family="Lato,sans-serif" font-size="10.5" fill="#aab4cc">Behaviors · needs · pain points</text><polygon points="230.0,215 430.0,215 405.0,290 255.0,290" fill="#fbbf24" fill-opacity="0.14" stroke="#fbbf24" stroke-width="1.6"/><text x="330.0" y="250.5" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="13" fill="#fff">Core-values filter</text><text x="330.0" y="267.5" text-anchor="middle" font-family="Lato,sans-serif" font-size="10.5" fill="#aab4cc">Aligned & worth company resources?</text><rect x="255.0" y="290" width="150" height="40" rx="10" fill="#34d399" fill-opacity="0.16" stroke="#34d399" stroke-width="1.8"/><text x="330.0" y="308.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="12.5" fill="#6ee7b7">One strategic bet</text><text x="330.0" y="323.0" text-anchor="middle" font-family="Lato,sans-serif" font-size="10" fill="#aab4cc">The problem that moves the needle</text></svg></div><div class="pillar-list"><div class="pillar" style="--ac:#34d399"><h4>Strategic Alignment</h4><p>Values ensure the discovery effort moves the company toward its long-term destination, not just a short-term fix. Insights must be <em>strategically relevant</em>, not merely interesting.</p></div><div class="pillar" style="--ac:#fbbf24"><h4>The Problem Filter</h4><p>They establish the non-negotiables that distinguish a loud user complaint from a strategic problem worth company resources, your professional permission to ignore the noise.</p></div><div class="pillar" style="--ac:#60a5fa"><h4>Success Criteria</h4><p>They set the benchmark for a “win”, whether you’re optimizing for market share, profitability, or customer delight, so you look for the right opportunity from the start.</p></div></div></div><div class="takeaway"><h4>Filter to what moves the needle</h4><p>Core values taper your focus from the big picture down to specific outcomes, ensuring the problems you <strong>choose to solve</strong> are the ones that actually matter for the business.</p></div></div></section><section class="centered" data-title="Discovery Methods"><div class="inner"><span class="demo-tag tag-framework">Discovery methods</span><h2>Choose the right evidence for the question</h2><p class="subtitle">Three buckets, Foundational, Evaluative, Strategic. Balance <em>attitudinal</em> (what users <strong>say</strong>) with <em>behavioral</em> (what users <strong>do</strong>): rely on behavior to see what users actually do when faced with friction.</p><div class="dm-grid"><div class="dm-col"><div class="dm-head"><span class="dm-ic">🔭</span><div><div class="dm-cat">Foundational</div><div class="dm-sub">Explore needs before building</div></div></div><div class="dm-method"><span class="dm-tag dm-att">SAY</span><div><div class="dm-name">User Interviews</div><div class="dm-desc">1:1 conversations to uncover motivations, mental models, and pain points.</div></div></div><div class="dm-method"><span class="dm-tag dm-att">SAY</span><div><div class="dm-name">Focus Groups</div><div class="dm-desc">Group discussions to surface shared attitudes and early concept feedback.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Contextual Inquiry</div><div class="dm-desc">Observe users in their real environment. Uncovers invisible workarounds.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Diary Studies</div><div class="dm-desc">Participants log experiences over days/weeks. Great for longitudinal insight.</div></div></div></div><div class="dm-col"><div class="dm-head"><span class="dm-ic">🧪</span><div><div class="dm-cat">Evaluative</div><div class="dm-sub">Test designs &amp; prototypes</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Usability Testing</div><div class="dm-desc">Watch users attempt tasks. Identifies friction, confusion, and failure points.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Unmoderated Testing</div><div class="dm-desc">Remote async tasks via Maze / UserTesting. Fast, scalable, high volume.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Session Recordings</div><div class="dm-desc">Replay real sessions (Hotjar, FullStory). Find rage clicks and drop-offs.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">A/B Testing</div><div class="dm-desc">Compare variants at scale. Strong causal signal, tells you what, not why.</div></div></div></div><div class="dm-col"><div class="dm-head"><span class="dm-ic">📊</span><div><div class="dm-cat">Strategic</div><div class="dm-sub">Measure, prioritize &amp; validate</div></div></div><div class="dm-method"><span class="dm-tag dm-att">SAY</span><div><div class="dm-name">Surveys</div><div class="dm-desc">Structured questions at scale. Measure satisfaction (NPS, CSAT) and segment users.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Continuous Discovery</div><div class="dm-desc">Weekly lightweight interviews in the product cycle (Teresa Torres).</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Product Analytics</div><div class="dm-desc">Funnels, retention, adoption. Quantitative behavior data at scale.</div></div></div><div class="dm-method"><span class="dm-tag dm-beh">DO</span><div><div class="dm-name">Card Sorting / Tree Test</div><div class="dm-desc">Validate information architecture and how users mentally group content.</div></div></div></div></div><div class="takeaway"><h4>The gold is often behavioral</h4><p>Early Slack PMs <em>shadowed</em> users and saw them tracking tasks in spreadsheets to escape the chat UI, a workaround no feature request ever mentioned. Behavioral evidence reveals the problems attitudinal methods miss.</p></div></div></section><section class="centered" data-title="User Personas"><div class="inner"><span class="demo-tag tag-framework">Designing for specificity</span><h2>User personas: behavioral anchors, not bios</h2><p class="subtitle">Define a persona by age or location and you fall into the “average user” trap. Advanced discovery maps the ecosystem by <em>shared goals</em> and the <em>workarounds</em> users build to bypass friction. LinkedIn Learning found two behaviors that demanded different product decisions:</p><div class="aud-grid"><div class="aud-card" style="--ac:#34d399"><div class="aud-tag">Persona 1 · driven by progress</div><div class="aud-h">The Completionist</div><div class="aud-q">Driven by structured paths, linear progress, and formal recognition</div><div class="aud-q">Aligns with deep engagement and long-term retention</div><div class="resp-eg" style="margin-top:12px"><b>Product decision:</b> course-completion badges and granular progress tracking to reward the need for a finish line.</div><div class="aud-eg"><div class="logochip"><img src="../Design/logos/linkedin.png" alt="LinkedIn" loading="lazy"></div></div></div><div class="aud-card" style="--ac:#60a5fa"><div class="aud-tag">Persona 2 · driven by flexibility</div><div class="aud-h">The Explorer</div><div class="aud-q">Driven by flexibility and quick answers to a specific problem</div><div class="aud-q">Optimizes for efficiency over completion</div><div class="resp-eg" style="margin-top:12px"><b>Product decision:</b> customizable playlists and modular lessons so they skip the linear fluff and reach the “Aha!” fast.</div><div class="aud-eg"><div class="logochip"><img src="../Design/logos/linkedin.png" alt="LinkedIn" loading="lazy"></div></div></div></div><div class="takeaway"><h4>Prioritize via intentional trade-offs</h4><p>You’ve already filtered the problem through your core values, now decide <strong>which behavior to reward first</strong> based on pain severity and business impact, without becoming an everything-for-everyone mess.</p></div></div></section><section class="centered" data-title="Three Categories of Discovery Insights"><div class="inner"><span class="demo-tag tag-framework">Synthesis</span><h2>Three core categories of discovery insights</h2><p class="subtitle">Collecting data is half the battle, your value is in synthesis. Group raw feedback into three buckets so it becomes <em>actionable</em>.</p><div class="stage-grid"><div class="stage-card" style="--ac:#60a5fa"><div class="stage-kick">Actions</div><div class="stage-name">Behaviors</div><div class="stage-li">What users actually do, not what they say. Watch for drop-offs, repeat clicks, and the workarounds they’ve built.</div><div class="stage-goal" style="display:flex;gap:10px;align-items:center"><div class="logochip"><img src="../Design/logos/duolingo.png" alt="Duolingo" loading="lazy"></div><span>Users returned daily but churned when progress plateaued. This behavior insight led to gamified <b>Streaks</b> that sustain a daily habit.</span></div></div><div class="stage-card" style="--ac:#34d399"><div class="stage-kick">Goals</div><div class="stage-name">Needs</div><div class="stage-li">The functional or emotional “job” the user is trying to get done, the ultimate outcome they’re chasing.</div><div class="stage-goal" style="display:flex;gap:10px;align-items:center"><div class="logochip"><img src="../Design/logos/dropbox.png" alt="Dropbox" loading="lazy"></div><span>Teams were hacking shared folders to collaborate. This goal-oriented insight led to <b>Dropbox for Business</b>.</span></div></div><div class="stage-card" style="--ac:#fb7185"><div class="stage-kick">Friction</div><div class="stage-name">Pain Points</div><div class="stage-li">The “moments of misery”, the repetitive, manual tasks that make users sigh with frustration.</div><div class="stage-goal" style="display:flex;gap:10px;align-items:center"><div class="logochip"><img src="../Design/logos/canva.png" alt="Canva" loading="lazy"></div><span>Users manually recreated the same sizes repeatedly. This friction insight led to pre-set formats and <b>Magic Resize</b>: publish 10× faster.</span></div></div></div></div></section><section class="centered" data-title="Quick Vote · Discovery Questions"><div class="inner"><span class="demo-tag tag-activity">Quick Vote · 10 min</span><h2>Good or bad discovery questions?</h2><p class="subtitle">For each question, vote <em>good</em> or <em>bad</em>, then we’ll discuss why.</p><div class="qv-grid"><div class="qv-card"><div class="qv-top"><span class="qv-q">“Talk me through the last time that problem happened.”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“Do you think it’s a good idea?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“What else have you tried to fix this?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“Would you buy a product which did X?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“How are you dealing with this problem right now?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“How much would you pay for a solution like this?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“Would you pay $50 a month for this app?”</span></div></div><div class="qv-card"><div class="qv-top"><span class="qv-q">“What would your dream product look like?”</span></div></div></div></div></section><section class="section-break" data-title="Hands-On Lab: Leverage AI Synthesis for Discovery"><div class="section-break-inner"><div class="section-num">02</div><div class="lab-title">Section 02</div><div class="lab-name">Hands-On Lab: Leverage AI Synthesis for Discovery</div><div class="lab-desc">AI will happily smooth a thousand raw complaints into a tidy summary. Your job is to catch where it buried a critical “moment of misery”, or invented a solution you never asked for.</div></div></section><section class="centered" data-title="Lab · Leverage AI Synthesis for Discovery"><div class="inner"><div class="lab-timer">⏱ 15 min</div><span class="demo-tag tag-exercise">Hands-on Lab · Individual</span><h2>Leverage AI synthesis for discovery</h2><p class="subtitle">Use Claude to process unstructured data, UXR transcripts and chaotic bug reports, into a prioritized <em>Product Health &amp; Insights Summary</em> for your chosen scenario. The goal: use the LLM as a discovery filter that surfaces deep qualitative insight <strong>without losing the human nuance</strong>.</p><div class="flow-steps"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">📑</div></div><div class="fs-title">Establish your baseline</div><div class="fs-text">Read the raw UXR notes &amp; bug reports for your scenario for 5 minutes. Write down three “moments of misery” before you touch the AI.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">🤖</div></div><div class="fs-title">Deploy the Lead-PM prompt</div><div class="fs-text">Open Claude, paste the pre-built Lead-PM prompt, then paste your raw transcripts and bug logs where indicated and send.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">🔍</div></div><div class="fs-title">Audit the synthesis</div><div class="fs-text">Compare the AI’s themes to your three standouts. Did it catch your moment of misery, or smooth it into a generic bullet?</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">🚩</div></div><div class="fs-title">Catch the logic leaks</div><div class="fs-text">Flag where the AI overstepped, inventing a roadmap, suggesting features, or hallucinating beyond the constraints.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">📣</div></div><div class="fs-title">Share your takeaway</div><div class="fs-text">Post one line in <code>#cohort-channel</code>: where did the AI need <em>your</em> judgment to stay honest to the data?</div></div></div><div class="takeaway"><h4>Trust, but verify</h4><p>The AI maps the crime scene, you decide which fire to put out first. Evidence ≠ execution: by omitting the roadmap, the prompt forces you to sit in the moment of misery and <strong>own the strategic call</strong>.</p></div><a class="lab-walkthrough" href="Module 2 - Exercise 1 Guide.html">📘 Open the Exercise 1 guide &amp; prompts →</a><a class="lab-walkthrough" href="Module 2 - Exercise 1 Guide.html#uxr-data">🗂️ Open the UXR Notes &amp; Bugs Data →</a></div></section><section class="centered" data-title="Quick Debrief · AI Synthesis"><div class="inner"><span class="demo-tag tag-debrief">Quick debrief · 2 min</span><h2>Your key learning statement</h2><p class="subtitle">In one sentence, unmute or post in <code>#cohort-channel</code>:</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:740px;margin:22px auto"><div class="ref-card"><div class="ref-num">🧭</div><div class="ref-q">Why do you think the prompt <strong>intentionally left out the roadmap</strong>: and what’s the strategic value in that?</div></div></div><div class="takeaway"><h4>What to listen for</h4><p>Evidence ≠ execution. If the AI builds the roadmap, it’s pattern-matching, not strategy. Omitting solutions keeps <strong>ownership</strong> with the PM, you decide which fire to fight first based on business goals, budget, and team capacity.</p></div></div></section><section class="centered" data-title="Journey Mapping"><div class="inner"><span class="demo-tag tag-framework">Journey mapping</span><h2>From pain point to solution</h2><p class="subtitle">A journey map is a visual representation of a user’s experience over time, what they do, think, and feel at every touchpoint. Its value: it reveals the <em>experience gaps</em> where users get stuck or drop off, giving you a clear target for what to improve next.</p><div class="flow-steps" style="grid-template-columns:repeat(6,1fr)"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">🎯</div></div><div class="fs-title">Set the goal</div><div class="fs-text">Establish the specific start and end points of the task you’re analyzing.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">🧍</div></div><div class="fs-title">Choose a persona</div><div class="fs-text">Focus on one specific user type to keep the journey narrow and accurate.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">📐</div></div><div class="fs-title">Define the scope</div><div class="fs-text">Decide if you’re mapping the current state or a future, idealized experience.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">🪜</div></div><div class="fs-title">Outline the steps</div><div class="fs-text">List the sequential actions, and what the user is doing, thinking, and feeling.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">📍</div></div><div class="fs-title">Add touchpoints</div><div class="fs-text">Identify every place the user interacts with your product or support team.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">6</div><div class="fs-icon">⚡</div></div><div class="fs-title">Spot key moments</div><div class="fs-text">Pinpoint the stages of high frustration or delight, your experience gaps.</div></div></div><div class="takeaway"><h4>Map the emotion, not just the steps</h4><p>Assess the finished map through the lens of your research. The emotional highs and lows, driven by a poor interface, a confusing flow, or a moment of value, shouldn’t just be observed; they should <strong>guide your next product decision</strong>.</p></div></div></section><section class="centered" data-title="Spotify Journey Map"><div class="inner"><span class="demo-tag tag-case">Real-world example</span><h2>Spotify’s music-sharing journey map</h2><p class="subtitle">Spotify mapped the journey from opening the app to a friend’s reply across seven phases. The emotional curve exposes exactly where the experience breaks down.</p><div class="dgm wide" style="max-width:720px"><svg viewBox="0 0 720 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Customer journey emotion curve across seven phases, with a frustration low point at the Receive stage"><line x1="70" y1="60.0" x2="690" y2="60.0" stroke="rgba(255,255,255,.08)" stroke-width="1"/><text x="60" y="64.0" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#6ee7b7">Delight</text><line x1="70" y1="155.0" x2="690" y2="155.0" stroke="rgba(255,255,255,.08)" stroke-width="1"/><line x1="70" y1="250.0" x2="690" y2="250.0" stroke="rgba(255,255,255,.08)" stroke-width="1"/><text x="60" y="254.0" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#fda4af">Friction</text><polyline points="70.0,145.5 173.3,88.5 276.7,170.2 380.0,98.0 483.3,132.2 586.7,215.8 690.0,101.8" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="70.0" cy="145.5" r="6" fill="#8da0c0" stroke="#07162C" stroke-width="2"/><text x="70.0" y="132.5" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#8da0c0">Neutral</text><text x="70.0" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Visit</text><circle cx="173.3" cy="88.5" r="6" fill="#34d399" stroke="#07162C" stroke-width="2"/><text x="173.3" y="75.5" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#34d399">Excited</text><text x="173.3" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Listen</text><circle cx="276.7" cy="170.2" r="6" fill="#fbbf24" stroke="#07162C" stroke-width="2"/><text x="276.7" y="157.2" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#fbbf24">Annoyed</text><text x="276.7" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Discover</text><circle cx="380.0" cy="98.0" r="6" fill="#34d399" stroke="#07162C" stroke-width="2"/><text x="380.0" y="85.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#34d399">Excited</text><text x="380.0" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Share</text><circle cx="483.3" cy="132.2" r="6" fill="#60a5fa" stroke="#07162C" stroke-width="2"/><text x="483.3" y="119.2" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#60a5fa">Curious</text><text x="483.3" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Discuss</text><circle cx="586.7" cy="215.8" r="6" fill="#fb7185" stroke="#07162C" stroke-width="2"/><text x="586.7" y="202.8" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#fb7185">Frustrated</text><text x="586.7" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Receive</text><circle cx="690.0" cy="101.8" r="6" fill="#34d399" stroke="#07162C" stroke-width="2"/><text x="690.0" y="88.8" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="10.5" fill="#34d399">Happy</text><text x="690.0" y="274.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#9fb0cc">Respond</text><line x1="586.7" y1="223.8" x2="586.7" y2="288.0" stroke="rgba(251,113,133,.55)" stroke-width="1.2" stroke-dasharray="3 3"/><rect x="486.7" y="288.0" width="200" height="46" rx="9" fill="rgba(251,113,133,.12)" stroke="rgba(251,113,133,.5)" stroke-width="1.2"/><text x="586.7" y="307.0" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="10.5" fill="#fda4af">EXPERIENCE GAP</text><text x="586.7" y="323.0" text-anchor="middle" font-family="Lato,sans-serif" font-size="9.5" fill="#ffffff">“Why must I open it in Spotify?”</text></svg></div><div class="takeaway"><h4>The dip is the opportunity</h4><p>At <em>Receive</em>, users hit a low point, “Why must I open it in Spotify? That’s annoying.” That emotional dip is the <strong>experience gap</strong>. By fixing the Share → Receive flow, Spotify turned frustrated moments into happy ones. The journey map shows you precisely <strong>where</strong> the experience is failing.</p></div></div></section><section class="centered" data-title="Break"><div class="inner"><span class="demo-tag tag-break">Break · 5 min</span><h2 style="font-size:64px">Take a beat ☕</h2><p class="subtitle">Five-minute break, you’ve earned it.</p></div></section><section class="cameras-section" data-title="Cameras On"><div class="cameras-inner"><div class="cameras-layout"><div class="cameras-left"><img class="cameras-logo" src="../Design/Product-School-Logo.png" alt="Product School"><div class="cameras-card"><h2>Reminder! 🚨</h2><div class="cameras-arrow">→ Cameras On</div><p>It’s always better to see your smiling face. Be present and visible to stay engaged and keep interactions valuable.</p></div></div><div class="cameras-photo-strip"><img src="../Design/cameras-on.png" alt="Cameras On"></div></div></div></section><section class="section-break" data-title="Market &amp; Competitive Analysis"><div class="section-break-inner"><div class="section-num">03</div><div class="lab-title">Section 03</div><div class="lab-name">Market &amp; Competitive Analysis</div><div class="lab-desc">Your most dangerous competitor isn’t a rival app, it’s the user who decides their messy spreadsheet is safer than the risk of trying something new.</div></div></section><section class="centered" data-title="Your #1 Competitor is the Status Quo"><div class="inner"><span class="demo-tag tag-lecture">The status quo</span><h2>Your #1 competitor is the status quo</h2><p class="subtitle">The biggest threat to your product isn’t a rival, it’s <em>“no decision.”</em> Users stick with familiar friction because change feels riskier than staying the same. To move them, your discovery must prove two things:</p><div class="aud-grid"><div class="aud-card" style="--ac:#fbbf24"><div class="aud-tag">1 · The breaking point</div><div class="aud-h">Make inaction the liability</div><div class="aud-q">Solve a problem so critical that the cumulative cost of “doing nothing” finally outweighs the pain of switching</div><div class="resp-eg" style="margin-top:12px">A team tolerates slow manual data entry for months, until it causes a breach or a quarterly revenue hit. Pinpoint that exact threshold.</div></div><div class="aud-card" style="--ac:#60a5fa"><div class="aud-tag">2 · The strategic gap</div><div class="aud-h">Render the workaround obsolete</div><div class="aud-q">Provide a solution that doesn’t just add features but explicitly makes the user’s manual hacks and external workarounds unnecessary</div><div class="resp-eg" style="margin-top:12px">A user exports to Excel, runs three macros, then uploads elsewhere for a report. <b>That spreadsheet is your real competitor.</b></div></div></div><div class="takeaway"><h4>Stop guessing features</h4><p>Identify the breaking point and the strategic gap and you stop guessing what to build, you start solving the <strong>actual friction</strong> keeping users stuck.</p></div></div></section><section class="centered" data-title="Competitive Intelligence + AI"><div class="inner"><span class="demo-tag tag-framework">Competitive intelligence</span><h2>Three best practices, now supercharged with AI</h2><p class="subtitle">The fundamentals of CI haven’t changed, but your <em>time to insight</em> has. The shift moves the PM from “researcher” to “orchestrator,” acting on market changes in real time.</p><div class="ci-table"><div class="ci-row"><div class="ci-num">1</div><div class="ci-cap">Identify competitors</div><div class="ci-old"><span class="ci-lbl">🕒 Old · manual</span>Manual Google searches, analyst reports, asking Sales. Slow and prone to blind spots.</div><div class="ci-arr">➔</div><div class="ci-new"><span class="ci-lbl">⚡ New · AI-powered</span>Prompt AI with your ICP, pricing tier, and use case, get a tiered competitor list with rationale in minutes.</div></div><div class="ci-row"><div class="ci-num">2</div><div class="ci-cap">Create CI assets</div><div class="ci-old"><span class="ci-lbl">🕒 Old · manual</span>Write one-pagers and comparison docs from scratch. Takes weeks, goes stale fast.</div><div class="ci-arr">➔</div><div class="ci-new"><span class="ci-lbl">⚡ New · AI-powered</span>Feed AI a competitor’s site and G2 reviews, get a structured comparison doc ready to edit, not write.</div></div><div class="ci-row"><div class="ci-num">3</div><div class="ci-cap">Get intel from sources</div><div class="ci-old"><span class="ci-lbl">🕒 Old · manual</span>Read help docs and press releases manually. Hard to scale across competitors.</div><div class="ci-arr">➔</div><div class="ci-new"><span class="ci-lbl">⚡ New · AI-powered</span>Set AI agents to alert you when competitors change pricing, ship features, or get new reviews.</div></div></div><div class="takeaway"><h4>From writing to editing</h4><p>AI drafts the competitor list, the comparison doc, and the monitoring, your job shifts to <strong>refining and deciding</strong>, not collecting.</p></div></div></section><section class="section-break" data-title="Hands-On Lab: Journey-Map Your Competitive Edge"><div class="section-break-inner"><div class="section-num">04</div><div class="lab-title">Section 04</div><div class="lab-name">Hands-On Lab: Journey-Map Your Competitive Edge</div><div class="lab-desc">Your real competition is the status quo. In this lab you’ll design a future-state journey that strips away the manual hacks, and proves why a user would finally abandon them.</div></div></section><section class="centered" data-title="Lab · Journey-Map Your Competitive Edge"><div class="inner"><div class="lab-timer">⏱ 25 min</div><span class="demo-tag tag-exercise">Hands-on Lab · Individual</span><h2>Journey-map your product’s competitive edge</h2><p class="subtitle">Return to Claude and use your executive summary plus competitive intel to identify market gaps for your scenario. Your goal: choose a core persona and build a journey map that defines your product’s <strong>competitive advantage</strong> over the status quo.</p><div class="flow-steps"><div class="flow-step"><div class="fs-head"><div class="fs-num">1</div><div class="fs-icon">🧍</div></div><div class="fs-title">Define your persona</div><div class="fs-text">Return to your Claude summary. Pull the user’s role, goal, and primary friction, filtered through your Module 1 Problem Hook.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">2</div><div class="fs-icon">🛠️</div></div><div class="fs-title">Document the workaround</div><div class="fs-text">Find the manual methods or external tools your persona uses to bypass current product failures, the status quo you must beat.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">3</div><div class="fs-icon">🗺️</div></div><div class="fs-title">Map the future state</div><div class="fs-text">Generate a 4-stage future-state journey for your initiative that eliminates those manual hacks, in an Action → Benefit format.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">4</div><div class="fs-icon">🏆</div></div><div class="fs-title">Name your edge</div><div class="fs-text">Capture the 3 competitive advantages your journey delivers over the manual workaround, your reason a user switches.</div></div><div class="flow-step"><div class="fs-head"><div class="fs-num">5</div><div class="fs-icon">📸</div></div><div class="fs-title">Save the deliverable</div><div class="fs-text">Screenshot or download your visual journey map, it’s a core artifact for your project repo.</div></div></div><div class="takeaway"><h4>You’re beating a habit, not an app</h4><p>The workaround step is about habits and hacks, messy spreadsheets, manual steps, not a direct competitor. Make those obsolete and the switch becomes obvious.</p></div><a class="lab-walkthrough" href="Module 2 - Exercise 2 Guide.html">📘 Open the Exercise 2 guide &amp; prompts →</a></div></section><section class="centered" data-title="Quick Debrief · Journey Map"><div class="inner"><span class="demo-tag tag-debrief">Quick debrief · 2 min</span><h2>Your key learning statement</h2><p class="subtitle">In one sentence, unmute or post in <code>#cohort-channel</code>:</p><div class="reflection-grid" style="grid-template-columns:1fr;max-width:740px;margin:22px auto"><div class="ref-card"><div class="ref-num">🔎</div><div class="ref-q">What is the single biggest <strong>opportunity gap</strong> you discovered that the current product is completely missing?</div></div></div><div class="takeaway"><h4>What to listen for</h4><p>Different learners prioritized different signals, and that’s the point. The gap you choose to attack is a <strong>strategic bet</strong>, anchored in evidence and your core values.</p></div></div></section><section class="centered" data-title="Key Takeaways"><div class="inner"><span class="demo-tag tag-complete">Key takeaways</span><h2>Module 2 in four lines</h2><div class="takeaway-list"><div class="takeaway-item"><p><strong>AI scales synthesis; the PM stays the pilot.</strong> AI transforms unstructured data into themed qualitative insight, but you curate the inputs and apply judgment to decide what to build.</p></div><div class="takeaway-item"><p><strong>Core values are your discovery filter.</strong> They’re the non-negotiables that separate a loud complaint from a problem worth company resources, and they set what a “win” looks like.</p></div><div class="takeaway-item"><p><strong>Personas and journey maps are behavioral anchors.</strong> Mapping the experience over time reveals the specific friction points where current manual workarounds can be made obsolete.</p></div><div class="takeaway-item"><p><strong>Your #1 competitor is the status quo.</strong> Competitive analysis finds where existing solutions fail, you must make the cost of doing nothing outweigh the effort of switching.</p></div></div></div></section><section class="centered" data-title="Extra Practice &amp; Next Session"><div class="inner"><span class="demo-tag tag-debrief">Extra practice · Optional</span><h2>Dig deeper on your own</h2><div class="ep-grid"><div class="ep-card"><div class="ep-num">01</div><div class="ep-title">Synthesize your own feedback</div><div class="ep-desc">Upload a CSV of real user reviews, support tickets, or interview notes from your role into Claude. Use the executive-summary prompt to surface the top three friction points and a stakeholder-ready summary.</div></div><div class="ep-card"><div class="ep-num">02</div><div class="ep-title">Expand your journey map</div><div class="ep-desc">Return to your generated map and prompt the AI to add team actions and technical requirements per touchpoint. Use it to see which parts need the most resources vs. what AI can automate.</div></div></div><div class="next-arrow-bar"><div class="nab-meta">⏩ Next session · Module 3</div><div class="nab-title">Use Analytics and Metrics for Data-Driven Decisions</div><div class="nab-desc">Replace gut feeling with a hierarchy of metrics that defines success through quantitative evidence, and use cohort heatmaps and data-backed hypotheses to turn raw analytics into strategic product bets.</div></div><div class="takeaway"><h4>📍 Project deliverable check</h4><p>Add your <strong>Competitive Analysis artifacts</strong>: workaround summary and future-state journey map, to your final project repo so you stay on track.</p></div></div></section><section class="centered" data-title="Resources &amp; Templates"><div class="inner"><span class="demo-tag tag-lecture">Resources &amp; Templates</span><h2>Everything from today, in one place</h2><p class="subtitle">Deepen what we covered and feed your final-project deliverables.</p><div class="cards-grid" style="grid-template-columns:repeat(2,1fr);max-width:760px;margin-left:auto;margin-right:auto"><a class="card-item" href="../Final Project Brief.html" style="--card-accent:#22d3ee;text-decoration:none;display:block"><div class="card-icon">📋</div><div class="card-title">Final Project Brief &amp; Deliverables</div><div class="card-desc">The StreamLine / RouteLogic scenarios, the repo + deck submission workflow, and FAQs for your project.</div></a><a class="card-item" href="Product Management Repo Template.html" style="--card-accent:#2dd4bf;text-decoration:none;display:block"><div class="card-icon">🗄️</div><div class="card-title">Project Repo Template</div><div class="card-desc">Fork the template repo, README dashboard + one folder per module. Your M2 work lives in <code>02-discovery/</code>.</div></a><a class="card-item" href="Module 2 - Exercise 1 Guide.html#uxr-data" style="--card-accent:#f59e0b;text-decoration:none;display:block"><div class="card-icon">🗂️</div><div class="card-title">UXR Notes &amp; Bugs Data</div><div class="card-desc">The raw research notes + bug reports for both scenarios, built into the Exercise 1 lab with copy &amp; download.</div></a><a class="card-item" href="Module 2 - Exercise 1 Guide.html" style="--card-accent:#60a5fa;text-decoration:none;display:block"><div class="card-icon">🧭</div><div class="card-title">Exercise 1 Guide</div><div class="card-desc">AI-synthesis walkthrough, turn raw UXR notes into an executive insights summary.</div></a><a class="card-item" href="Module 2 - Exercise 2 Guide.html" style="--card-accent:#22d3ee;text-decoration:none;display:block"><div class="card-icon">🧭</div><div class="card-title">Exercise 2 Guide</div><div class="card-desc">Persona, workaround &amp; future-state journey-map walkthrough.</div></a><a class="card-item" href="Module 2 - Persona & Journey Builder.html" style="--card-accent:#34d399;text-decoration:none;display:block"><div class="card-icon">🗺️</div><div class="card-title">Persona &amp; Journey Builder</div><div class="card-desc">Interactive worksheet to draft your persona, workaround, and future-state journey, export to markdown.</div></a><a class="card-item" href="Module 2 - Notes (Shareable).html" style="--card-accent:#a78bfa;text-decoration:none;display:block"><div class="card-icon">🗂️</div><div class="card-title">Notes, Glossary &amp; Reference Card</div><div class="card-desc">Shareable notes, the module glossary, and the discovery reference card.</div></a></div></div></section><section class="centered" data-title="Q&amp;A"><div class="inner"><span class="demo-tag tag-activity">Q&amp;A</span><h2>Questions?</h2><p class="subtitle">A chance to dive deeper into anything we covered today. Async learners: drop your questions in <code>#cohort-channel</code> and the instructor responds in-thread.</p></div></section>
+<script>
+const sections = Array.from(document.querySelectorAll('section'));
+const navDotsContainer = document.getElementById('navDots');
+let currentIdx = 0;
+let sorterVisible = false;
+
+const STORAGE_KEY = 'skip-sections-' + document.title.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 60);
+const skippedSections = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+
+function saveSkips() { localStorage.setItem(STORAGE_KEY, JSON.stringify([...skippedSections])); }
+
+function applySkips() {
+  sections.forEach((sec, i) => sec.classList.toggle('skipped', skippedSections.has(i)));
+  rebuildDots();
+}
+
+function rebuildDots() {
+  navDotsContainer.innerHTML = '';
+  sections.forEach((sec, i) => {
+    if (skippedSections.has(i)) return;
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    const title = sec.dataset.title || 'Section';
+    dot.innerHTML = `<span class="tooltip">${title}</span>`;
+    dot.dataset.idx = i;
+    dot.onclick = () => sections[i].scrollIntoView({ behavior: 'smooth' });
+    navDotsContainer.appendChild(dot);
+  });
+}
+
+function getActiveSections() { return sections.map((s, i) => i).filter(i => !skippedSections.has(i)); }
+
+function updateProgress(idx) {
+  currentIdx = idx;
+  const active = getActiveSections();
+  const posInActive = active.indexOf(idx);
+  const progress = posInActive >= 0 ? (posInActive + 1) / active.length * 100 : 0;
+  document.getElementById('progressBar').style.width = progress + '%';
+  const dots = navDotsContainer.querySelectorAll('.nav-dot');
+  dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.idx) === idx));
+  document.getElementById('skip-badge').classList.toggle('visible', skippedSections.has(idx));
+}
+
+function toggleSkip(idx) {
+  if (skippedSections.has(idx)) skippedSections.delete(idx);
+  else skippedSections.add(idx);
+  saveSkips();
+  applySkips();
+  updateProgress(currentIdx);
+  if (sorterVisible) renderSorter();
+}
+
+function nextActive(from, dir) {
+  let i = from + dir;
+  while (i >= 0 && i < sections.length) {
+    if (!skippedSections.has(i)) return i;
+    i += dir;
+  }
+  return -1;
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const idx = sections.indexOf(entry.target);
+      updateProgress(idx);
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(sec => observer.observe(sec));
+
+function renderSorter() {
+  const grid = document.getElementById('sorter-grid');
+  grid.innerHTML = '';
+  sections.forEach((sec, i) => {
+    const isSkipped = skippedSections.has(i);
+    const isCurrent = i === currentIdx;
+    const div = document.createElement('div');
+    div.className = 'sorter-item' + (isSkipped ? ' sorter-skipped' : '') + (isCurrent ? ' sorter-active' : '');
+    const title = sec.dataset.title || 'Section';
+    div.innerHTML = `
+      <div class="sorter-num">Section ${i + 1}</div>
+      <div class="sorter-label">${title}</div>
+      <button class="sorter-skip-btn ${isSkipped ? 'skip-on' : 'skip-off'}"
+              onclick="event.stopPropagation(); toggleSkip(${i})">
+        ${isSkipped ? '↩ Unskip' : '⊘ Skip'}
+      </button>`;
+    div.addEventListener('click', () => { sections[i].scrollIntoView({ behavior: 'smooth' }); closeSorter(); });
+    grid.appendChild(div);
+  });
+}
+function openSorter() { sorterVisible = true; renderSorter(); document.getElementById('slide-sorter').classList.add('visible'); }
+function closeSorter() { sorterVisible = false; document.getElementById('slide-sorter').classList.remove('visible'); }
+
+document.getElementById('skip-badge').addEventListener('click', () => toggleSkip(currentIdx));
+
+document.addEventListener('keydown', (e) => {
+  if (sorterVisible) {
+    if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') { e.preventDefault(); closeSorter(); }
+    return;
+  }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, 1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const n = nextActive(currentIdx, -1);
+    if (n >= 0) sections[n].scrollIntoView({ behavior: 'smooth' });
+  }
+  else if (e.key === 'k' || e.key === 'K') { toggleSkip(currentIdx); }
+  else if (e.key === 'm' || e.key === 'M') { openSorter(); }
+});
+
+applySkips();
+sections[0].classList.add('visible');
+</script>
+<!-- deck-sync: links an instructor deck with its (Shareable) twin in the same browser -->
+<script>
+/* Presenter sync: same-browser, same-module instructor + (Shareable) decks scroll
+   together, so notes can be read privately while the clean deck is screen-shared.
+   Deck-agnostic and self-contained; does nothing if no peer window is open. */
+(function () {
+  if (!('BroadcastChannel' in window)) return;
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section'));
+  if (sections.length < 2) return;
+  var path = location.pathname;
+  var dir = path.slice(0, path.lastIndexOf('/'));
+  var name = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1))
+    .replace(/\.html?$/i, '')
+    .replace(/\(shareable\)/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  var ch;
+  try { ch = new BroadcastChannel('deck-sync::' + dir + '::' + name); }
+  catch (e) { return; }
+  var current = 0, suppressUntil = 0, raf = 0;
+  function currentIndex() {
+    var mid = window.innerHeight / 2, best = 0, bestDist = Infinity;
+    for (var i = 0; i < sections.length; i++) {
+      var r = sections[i].getBoundingClientRect();
+      if (r.bottom <= 0 || r.top >= window.innerHeight) continue;
+      var d = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (d < bestDist) { bestDist = d; best = i; }
+    }
+    return best;
+  }
+  window.addEventListener('scroll', function () {
+    if (raf) return;
+    raf = requestAnimationFrame(function () {
+      raf = 0;
+      if (Date.now() < suppressUntil) return;
+      var idx = currentIndex();
+      if (idx !== current) { current = idx; ch.postMessage({ t: 'goto', i: idx }); }
+    });
+  }, { passive: true });
+  ch.onmessage = function (e) {
+    var m = e.data || {};
+    if (m.t === 'hello') { ch.postMessage({ t: 'goto', i: current }); return; }
+    if (m.t === 'goto' && typeof m.i === 'number' && m.i !== current) {
+      current = Math.max(0, Math.min(sections.length - 1, m.i));
+      suppressUntil = Date.now() + 900;
+      var el = sections[current];
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+  setTimeout(function () { current = currentIndex(); ch.postMessage({ t: 'hello' }); }, 300);
+})();
+</script>
+</body>
+</html>

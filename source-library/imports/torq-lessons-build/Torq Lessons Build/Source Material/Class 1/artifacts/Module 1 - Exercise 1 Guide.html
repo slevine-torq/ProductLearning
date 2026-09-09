@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 · Exercise 1 Guide, Product Management</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', -apple-system, sans-serif; background: #07162C; color: #ffffff; -webkit-font-smoothing: antialiased; line-height: 1.6; min-height: 100vh;
+    background-image: radial-gradient(ellipse at 25% 0%, rgba(59,130,246,0.16) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  h1 { font-size: clamp(30px, 4vw, 44px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+  h1 span { color: #22d3ee; }
+  p { color: #ffffff; }
+  strong { color: #fff; font-weight: 700; }
+  em { color: #22d3ee; font-style: normal; font-weight: 600; }
+  code { background: rgba(18,65,176,0.18); padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #93c5fd; font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 40px 28px 100px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .crumbs { display: flex; align-items: center; gap: 14px; }
+  .crumbs img { height: 34px; opacity: 0.95; }
+  .back-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(96,165,250,0.22); background: rgba(96,165,250,0.06); transition: all .2s; }
+  .back-link:hover { color: #22d3ee; border-color: rgba(34,211,238,0.5); }
+  .meta-chip { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: #22d3ee; font-weight: 800; padding: 6px 14px; border: 1px solid rgba(34,211,238,0.35); border-radius: 999px; background: rgba(34,211,238,0.08); display: inline-block; margin-bottom: 18px; }
+  .lead { font-size: 17px; color: #ffffff; max-width: 800px; margin: 18px 0 8px; }
+
+  .scenario { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); border-radius: 16px; padding: 24px 26px; margin: 26px 0; }
+  .scenario h2 { font-size: 19px; color: #fff; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .scenario ul { list-style: none; margin: 12px 0 0; }
+  .scenario ul li { font-size: 14.5px; color: #ffffff; padding: 5px 0 5px 22px; position: relative; }
+  .scenario ul li::before { content: '▸'; position: absolute; left: 0; color: #22d3ee; }
+  .scenario .stat { color: #fff; font-weight: 700; }
+  .scn-pick { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px; }
+  .scn-pick > div { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:16px 18px; }
+  .scn-pick h3 { font-size:15px; color:#fff; margin-bottom:6px; }
+  .scn-pick .tag { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#22d3ee; }
+  @media (max-width:680px){ .scn-pick{ grid-template-columns:1fr; } }
+
+  .phase { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 26px; margin: 22px 0; border-left: 4px solid var(--acc, #22d3ee); }
+  .phase-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .phase-badge { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 13px; color: #07162C; background: var(--acc, #22d3ee); padding: 5px 12px; border-radius: 999px; }
+  .phase-head h2 { font-size: 21px; color: #fff; }
+  .phase > p { margin: 4px 0 10px; }
+
+  .qtable { width: 100%; border-collapse: collapse; margin: 14px 0 4px; }
+  .qtable td { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.07); font-size: 13.5px; color: #ffffff; vertical-align: top; }
+  .qtable td.q { background: rgba(255,255,255,0.02); color: #fff; font-weight: 600; width: 58%; }
+  .qtable td.a { color: #ffffff; font-style: italic; }
+
+  .promptbox { background: #0a1a33; border: 1px solid rgba(96,165,250,0.22); border-radius: 12px; padding: 18px 20px; margin: 14px 0; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.65; color: #9fd0ff; white-space: pre-wrap; }
+  .prompt-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #22d3ee; display: block; margin-bottom: 10px; }
+
+  .callout { border-radius: 12px; padding: 16px 18px; margin: 16px 0; font-size: 14px; line-height: 1.6; }
+  .callout.warn { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.22); color: #fca5a5; }
+  .callout.warn strong { color: #fff; }
+  .callout.tip { background: rgba(110,231,183,0.06); border: 1px solid rgba(110,231,183,0.2); color: #ffffff; }
+  .callout.tip strong { color: #6ee7b7; }
+
+  /* Fillable answer fields + export toolbar */
+  .fill { width: 100%; background: rgba(8,18,36,0.6); border: 1px solid rgba(96,165,250,0.22); border-radius: 8px; color: #ffffff; font-family: 'Lato', sans-serif; font-size: 13.5px; line-height: 1.5; padding: 9px 11px; resize: vertical; min-height: 46px; transition: border-color .2s; }
+  input.fill { min-height: 0; }
+  .fill:focus { outline: none; border-color: #22d3ee; }
+  .fill::placeholder { color: #ffffff; }
+  .lab-toolbar { position: sticky; bottom: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; padding: 14px; margin: 34px -28px 0; background: linear-gradient(0deg, #07162C 72%, transparent); z-index: 30; }
+  .lab-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13.5px; padding: 11px 20px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: transform .15s, box-shadow .15s, border-color .2s, color .2s; }
+  .lab-btn.primary { background: linear-gradient(135deg, #0e7490, #22d3ee); color: #06222b; box-shadow: 0 8px 22px rgba(34,211,238,0.32); }
+  .lab-btn.primary:hover { transform: translateY(-2px); }
+  .lab-btn.alt { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #ffffff; }
+  .lab-btn.alt:hover { border-color: rgba(34,211,238,0.5); color: #fff; }
+  .lab-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6ee7b7; opacity: 0; transition: opacity .3s; }
+  .lab-saved.show { opacity: 1; }
+  .lab-toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0c2340; border: 1px solid rgba(110,231,183,0.4); color: #6ee7b7; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 50; }
+  .lab-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #ffffff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a:hover { color: #22d3ee; }
+</style>
+</head><body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="crumbs">
+      <img src="../Design/Product-School-Logo.png" alt="Product School"/>
+      <a href="Module 1 - Slides (Shareable).html" class="back-link">← Module 1 deck</a>
+    </div>
+    <div class="meta-chip">Individual · ~30 min total</div>
+  </div>
+
+
+  <span class="section-label">Module 1 · Exercise 1 Guide</span>
+  <h1>Build a strategic discovery map</h1>
+  <p class="lead">Run a sequence of three prompts in any AI tool (Figma AI, Claude, ChatGPT…) to build a product mindmap that evolves from generic noise into a viable strategic framework. Run each prompt in its <strong>own fresh tab/chat</strong> so the AI doesn’t build on old context. The goal is to find the failure points of AI-generated maps, and see where your judgment makes the output useful.</p>
+
+  <!-- EXERCISE 1 -->
+  <div class="phase" style="--acc:#60a5fa;">
+    <div class="phase-head"><span class="phase-badge">Exercise 1 · 15 min</span></div>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 1 · Generate the generic baseline</h3>
+    <div class="promptbox"><span class="prompt-label">Prompt 1 · shallow</span>Create a mindmap for a water tracking app.</div>
+    <table class="qtable">
+      <tr><td class="q">Write one feature from the map that, if an engineer asked “why is this a priority for our 12-week roadmap?”, you honestly could not give a strategic answer for.</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <div class="callout tip"><strong>💡 Remember:</strong> if you can’t justify a feature with a specific customer need or business goal, you’re just passing along AI-generated noise. That’s your first feature-factory trap.</div>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 2 · Execute a structural upgrade</h3>
+    <div class="promptbox"><span class="prompt-label">Prompt 2 · structured</span>You are a product manager. Create a mindmap for a mobile app that helps people
+track daily water intake. Include features, user needs, and potential problems.</div>
+    <table class="qtable">
+      <tr><td class="q">Write one feature that looks “correct” for the app but has zero strategic weight, you have no idea if it helps the company make money or whether a single user actually asked for it.</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <div class="callout tip"><strong>💡 Remember:</strong> organization isn’t strategy. Just because the AI can create groups doesn’t mean it knows what’s a good use of engineering’s time.</div>
+
+    <h3 style="font-size:15px;color:#60a5fa;margin:18px 0 4px;">Step 3 · Execute the final polish</h3>
+    <div class="promptbox"><span class="prompt-label">Prompt 3 · strategic</span>You are a senior product manager at a health-tech startup preparing for a
+discovery sprint. Create a structured brainstorm mindmap for a mobile
+water-tracking app targeting busy adults aged 25 to 40 who know they should drink
+more but forget. Organize branches around: (1) core user jobs-to-be-done,
+(2) key friction points in existing behavior, (3) feature ideas ranked by effort
+vs. impact, (4) monetization paths with tradeoffs, (5) retention risks and how to
+address them. Flag any area where there's a real strategic tension to debate.</div>
+    <table class="qtable">
+      <tr><td class="q">Compare V3 to your Step 1 baseline. What changed, and is the output objectively better, did the AI get smarter, or did your added PM knowledge (JTBD, effort/impact, retention) force it to be useful?</td><td class="a">✍️ Your answer…</td></tr>
+      <tr><td class="q">Key takeaway: how does this prove the PM’s role is to <em>think</em> while the AI’s role is to <em>execute</em>?</td><td class="a">✍️ Your answer…</td></tr>
+    </table>
+    <div class="callout warn">Take screenshots of your V1 vs. V3 maps and post them in <code>#cohort-channel</code> with your one-line takeaway.</div>
+  </div>
+
+  <div class="lab-toolbar">
+    <button class="lab-btn primary" onclick="labCopyMd()">📋 Copy as Markdown</button>
+    <button class="lab-btn alt" onclick="labDownloadMd()">⬇ Download .md</button>
+    <button class="lab-btn alt" onclick="labReset()">↺ Reset</button>
+    <span class="lab-saved" id="labSaved">✓ Saved</span>
+  </div>
+
+  <footer>
+    <span>Product School · Product Management · Module 1</span>
+    <a href="Module 1 - Slides (Shareable).html">← Back to the Module 1 deck</a>
+  </footer>
+</div>
+<div class="lab-toast" id="labToast"></div>
+
+<script>
+(function () {
+  const KEY = 'pm-m1-labguide-ex1';
+  const TITLE = 'Strategic Discovery Map (Module 1)';
+  const DLNAME = 'strategic-map.md';
+
+  const wrap = document.querySelector('.wrap');
+
+  const clean = s => (s || '').replace(/✍️/g, '').replace(/…+/g, '').replace(/\s+/g, ' ').trim().replace(/[:：]+$/, '').trim();
+  const isLabelCell = c => /\b(q|conn|prompt)\b/.test(c.className || '');
+  const isFieldCell = c => {
+    if (c.querySelector('.fill')) return false;
+    if (isLabelCell(c)) return false;
+    if (c.tagName === 'TH') return c.textContent.includes('✍️');
+    const cls = (c.className || '').trim();
+    if (/\b(ans|a)\b/.test(cls)) return c.textContent.includes('✍️');
+    if (!cls) return c.textContent.trim().startsWith('✍️');
+    return false;
+  };
+  const cells = Array.from(wrap.querySelectorAll('td, th')).filter(isFieldCell);
+  cells.forEach((cell, i) => {
+    const isHead = cell.tagName === 'TH';
+    const ph = cell.textContent.trim();
+    const row = cell.closest('tr');
+    const q = row && row.querySelector('.q');
+    let label = '';
+    if (isHead) {
+      label = clean(cell.textContent);
+    } else if (q && q !== cell) {
+      label = clean(q.textContent);
+    } else if (row) {
+      const sib = Array.from(row.children).find(td => td !== cell && td.textContent.trim());
+      label = sib ? clean(sib.textContent) : '';
+    }
+    if (!label) label = 'Response ' + (i + 1);
+    const el = document.createElement(isHead ? 'input' : 'textarea');
+    el.className = 'fill';
+    if (isHead) el.type = 'text';
+    el.dataset.k = 'f' + i;
+    el.dataset.label = label;
+    el.placeholder = ph;
+    cell.textContent = '';
+    cell.appendChild(el);
+  });
+
+  const fields = Array.from(wrap.querySelectorAll('.fill'));
+
+  function sectionFor(field) {
+    const phase = field.closest('.phase');
+    if (phase) { const h = phase.querySelector('.phase-head h2'); if (h) return h.textContent.trim(); }
+    return 'Responses';
+  }
+
+  function load() {
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    fields.forEach(f => { if (d[f.dataset.k] != null) f.value = d[f.dataset.k]; });
+  }
+  let t;
+  function save() {
+    const d = {};
+    fields.forEach(f => d[f.dataset.k] = f.value);
+    localStorage.setItem(KEY, JSON.stringify(d));
+    const s = document.getElementById('labSaved');
+    s.classList.add('show');
+    clearTimeout(t);
+    t = setTimeout(() => s.classList.remove('show'), 1200);
+  }
+  fields.forEach(f => f.addEventListener('input', save));
+  load();
+
+  function md() {
+    const v = x => (x && x.trim()) ? x.trim() : '_(not filled in)_';
+    const order = [];
+    const map = {};
+    fields.forEach(f => {
+      const s = sectionFor(f);
+      if (!map[s]) { map[s] = []; order.push(s); }
+      map[s].push(f);
+    });
+    let out = '# ' + TITLE + '\n';
+    order.forEach(g => {
+      out += '\n## ' + g + '\n';
+      map[g].forEach(f => { out += '- **' + f.dataset.label + ':** ' + v(f.value) + '\n'; });
+    });
+    return out;
+  }
+  function toast(m) {
+    const el = document.getElementById('labToast');
+    el.textContent = m; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1800);
+  }
+  window.labCopyMd = async function () {
+    try { await navigator.clipboard.writeText(md()); toast('Copied to clipboard ✓'); }
+    catch (e) { toast('Copy failed, try Download'); }
+  };
+  window.labDownloadMd = function () {
+    const b = new Blob([md()], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = DLNAME;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Downloaded ' + DLNAME + ' ✓');
+  };
+  window.labReset = function () {
+    if (!confirm('Clear everything you’ve typed in this guide?')) return;
+    localStorage.removeItem(KEY);
+    fields.forEach(f => f.value = '');
+    toast('Cleared');
+  };
+})();
+</script>
+</body>
+</html>
