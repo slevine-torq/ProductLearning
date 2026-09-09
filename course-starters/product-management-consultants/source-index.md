@@ -4,6 +4,8 @@ The canonical sources live in the private [ProductLearning repository](https://g
 
 | Need | Canonical source |
 |---|---|
+| Resume state and exact next action | [Product Management build handoff](https://github.com/slevine-torq/ProductLearning/blob/main/programs/product-management-for-consultants/BUILD-HANDOFF.md) |
+| TorqHub hierarchy and production flow | [How Torq learning is structured](https://github.com/slevine-torq/ProductLearning/blob/main/TORQ-LEARNING-STRUCTURE.md) |
 | Tier routing and sequence | [Torq Consultant Learning Path](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Torq%20Consultant%20Learning%20Path.md) |
 | Consultant capability map and known gaps | [Torq Scoping Response](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Torq%20Scoping%20Response.md) |
 | Product Practice completed build | [Torq Rebuild](https://github.com/slevine-torq/ProductLearning/tree/main/source-library/imports/torq-lessons-build/Torq%20Lessons%20Build/Torq%20Rebuild) |

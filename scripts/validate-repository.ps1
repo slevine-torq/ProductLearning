@@ -51,8 +51,12 @@ $requiredFiles = @(
     'CLAUDE.md',
     'SOURCE-USE.md',
     'IMPORT-INVENTORY.md',
+    'PICK-UP-HERE.md',
+    'TORQ-LEARNING-STRUCTURE.md',
     'programs\product-management-for-consultants\README.md',
+    'programs\product-management-for-consultants\BUILD-HANDOFF.md',
     'programs\technical-fluency\README.md',
+    'programs\technical-fluency\BUILD-HANDOFF.md',
     'course-starters\product-management-consultants\AGENTS.md',
     'course-starters\technical-fluency\AGENTS.md',
     '.github\CODEOWNERS'

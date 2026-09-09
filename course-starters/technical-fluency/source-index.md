@@ -4,6 +4,8 @@ The canonical sources live in the private [ProductLearning repository](https://g
 
 | Need | Canonical source |
 |---|---|
+| Resume state and exact next action | [Technical Fluency build handoff](https://github.com/slevine-torq/ProductLearning/blob/main/programs/technical-fluency/BUILD-HANDOFF.md) |
+| TorqHub hierarchy and production flow | [How Torq learning is structured](https://github.com/slevine-torq/ProductLearning/blob/main/TORQ-LEARNING-STRUCTURE.md) |
 | Authoritative 7-course/39-task coverage map | [Technical Fluency program specification](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Technical%20Fluency%20%E2%80%94%20Program%20Spec.md) |
 | Required concepts and tier interpretations | [Technical Fluency reference guide](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Technical%20Fluency%20Reference%20Guide.md) |
 | Per-course build prompts | [Course-session prompts](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Technical%20Fluency%20%E2%80%94%20Course%20Session%20Prompts.md) |

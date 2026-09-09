@@ -4,6 +4,8 @@ Technical Fluency is its own standalone program. It is not a module within Produ
 
 The program is non-gated: every learner can see the Tier 1, Tier 2, and Tier 3 interpretation of the same technical facts.
 
+> **Continuing Scott's work?** Start with the [Technical Fluency build handoff](BUILD-HANDOFF.md). The Program Spec is the syllabus; the handoff identifies the exact next unbuilt Task.
+
 ## Seven-course map
 
 ```mermaid
@@ -46,6 +48,7 @@ The complete design is **7 courses, 39 tasks, approximately 95 TorqHub blocks, a
 - [Built Courses 0–2](<../../source-library/imports/technical-fluency-build/Technical Fluency Build/Build/>)
 - [Tiered task template](<../../source-library/imports/technical-fluency-build/Technical Fluency Build/_TASK-TEMPLATE-TIERED.html>)
 - [Shared L&D build method](<../../source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/_LD-BUILD-METHOD.md>)
+- [How Torq learning is structured](../../TORQ-LEARNING-STRUCTURE.md)
 
 ## Build or extend the program
 

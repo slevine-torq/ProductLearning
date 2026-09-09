@@ -3,9 +3,10 @@
 ## Before drafting
 
 1. Read the workspace instructions and course plan.
-2. Read only the source files relevant to the selected module.
-3. Summarize source coverage, conflicts, missing material, and required attribution.
-4. Propose the module map in `course-plan.md` before producing final lessons.
+2. Read the PM build handoff and Torq learning structure linked from `source-index.md`.
+3. Read only the source files relevant to the selected module.
+4. Summarize source coverage, conflicts, missing material, and required attribution.
+5. Propose the module map in `course-plan.md` before producing final lessons.
 
 ## During drafting
 

@@ -24,6 +24,8 @@ flowchart LR
 
 Before using AI with client information, complete Torq's AI prerequisite and confirm the engagement's approved tools and data-handling policy.
 
+> **Continuing Scott's work?** Start with the [Product Management build handoff](BUILD-HANDOFF.md). It identifies the existing syllabi, current state of every course line, and the exact next action.
+
 ## Choose your route
 
 | Tier | Typical roles | What the client expects | Learning sequence |
@@ -62,3 +64,4 @@ Useful program-level references:
 - [Product Practices](<../../source-library/imports/supplemental-library/Torq - Product Practices.md>)
 - [Torq rebuild method](<../../source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/_LD-BUILD-METHOD.md>)
 - [Torq company context](<../../source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/_TORQ-COMPANY-CONTEXT.md>)
+- [How Torq learning is structured](../../TORQ-LEARNING-STRUCTURE.md)

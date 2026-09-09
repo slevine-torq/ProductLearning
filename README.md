@@ -29,6 +29,8 @@ flowchart TD
 |---|---|
 | Follow the consultant product-management route | [Product Management for Consultants](programs/product-management-for-consultants/README.md) |
 | Follow the standalone technical-fluency program | [Technical Fluency for Transform Practice](programs/technical-fluency/README.md) |
+| Pick up the curriculum build where Scott stopped | [Pick up here](PICK-UP-HERE.md) |
+| Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |
 | Build a PM course from a protected source copy | [PM course starter](course-starters/product-management-consultants/README.md) |
 | Build or extend the Technical Fluency course | [Technical Fluency course starter](course-starters/technical-fluency/README.md) |
 | Understand what was imported | [Import inventory](IMPORT-INVENTORY.md) |

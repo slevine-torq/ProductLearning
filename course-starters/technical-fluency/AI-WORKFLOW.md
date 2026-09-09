@@ -3,9 +3,10 @@
 ## Before drafting
 
 1. Read the workspace instructions and course plan.
-2. Read the program specification, the relevant reference-guide section, the task template, and an adjacent completed lesson.
-3. Produce a coverage checklist for the selected task.
-4. Confirm that the same technical fact supports all three tier interpretations.
+2. Read the Technical Fluency build handoff and Torq learning structure linked from `source-index.md`.
+3. Read the program specification, the relevant reference-guide section, the task template, and an adjacent completed lesson.
+4. Produce a coverage checklist for the selected task.
+5. Confirm that the same technical fact supports all three tier interpretations.
 
 ## During drafting
 
