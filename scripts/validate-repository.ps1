@@ -49,10 +49,18 @@ $requiredFiles = @(
     'README.md',
     'AGENTS.md',
     'CLAUDE.md',
+    'CURRICULUM-AUDIT.md',
     'SOURCE-USE.md',
     'IMPORT-INVENTORY.md',
     'PICK-UP-HERE.md',
     'TORQ-LEARNING-STRUCTURE.md',
+    'source-library\STATUS.md',
+    'prompt-library\README.md',
+    'prompt-library\INVENTORY.md',
+    'prompt-library\product-practice.md',
+    'prompt-library\claude-code-for-pm.md',
+    'prompt-library\ai-product-management.md',
+    'prompt-library\product-leadership.md',
     'programs\product-management-for-consultants\README.md',
     'programs\product-management-for-consultants\BUILD-HANDOFF.md',
     'programs\technical-fluency\README.md',
@@ -70,15 +78,16 @@ foreach ($required in $requiredFiles) {
 
 $navigationFiles = Get-ChildItem -LiteralPath $repoRoot -Recurse -Force -File -Filter '*.md' | Where-Object {
     (-not $_.FullName.StartsWith((Join-Path $repoRoot 'source-library') + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-     $_.FullName -ieq (Join-Path $repoRoot 'source-library\README.md')) -and
+     $_.FullName -ieq (Join-Path $repoRoot 'source-library\README.md') -or
+     $_.FullName -ieq (Join-Path $repoRoot 'source-library\STATUS.md')) -and
     -not $_.FullName.StartsWith((Join-Path $repoRoot '.git') + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)
 } | Select-Object -ExpandProperty FullName
 
-$linkPattern = [regex]'\[[^\]]+\]\((?:<)?([^)>]+)(?:>)?\)'
+$linkPattern = [regex]'\[[^\]]+\]\((?:<([^>]+)>|([^)]+))\)'
 foreach ($document in $navigationFiles) {
     $text = Get-Content -LiteralPath $document -Raw
     foreach ($match in $linkPattern.Matches($text)) {
-        $target = $match.Groups[1].Value
+        $target = if ($match.Groups[1].Success) { $match.Groups[1].Value } else { $match.Groups[2].Value }
         if ($target -match '^(https?://|mailto:|#)') { continue }
         $pathOnly = ($target -split '#', 2)[0]
         $decoded = [Uri]::UnescapeDataString($pathOnly)
@@ -94,6 +103,41 @@ if ($rootReadme -notmatch '```mermaid') {
     Add-ValidationError 'Root README does not contain a Mermaid map.'
 }
 
+$productPracticeBuild = Join-Path $repoRoot 'source-library\imports\torq-lessons-build\Torq Lessons Build\Torq Rebuild\Build'
+$productPracticeTasks = @(Get-ChildItem -LiteralPath $productPracticeBuild -Recurse -File -Filter '*.html')
+if ($productPracticeTasks.Count -ne 37) {
+    Add-ValidationError "Expected 37 built Product Practice HTML tasks; found $($productPracticeTasks.Count)."
+}
+
+$technicalFluencyBuild = Join-Path $repoRoot 'source-library\imports\technical-fluency-build\Technical Fluency Build\Build'
+$technicalFluencyTasks = @(Get-ChildItem -LiteralPath $technicalFluencyBuild -Recurse -File -Filter '*.html')
+if ($technicalFluencyTasks.Count -ne 15) {
+    Add-ValidationError "Expected 15 built Technical Fluency HTML tasks; found $($technicalFluencyTasks.Count)."
+}
+
+$auditText = Get-Content -LiteralPath (Join-Path $repoRoot 'CURRICULUM-AUDIT.md') -Raw
+$requiredAuditStatements = @(
+    '37 built HTML tasks',
+    '15 built / 24 planned',
+    'Assist / Copilot / Agent',
+    'Prompt → Model → Data → Architecture',
+    '2–3 minutes per learner',
+    'Parts 5–8',
+    'REST and CRUD'
+)
+foreach ($statement in $requiredAuditStatements) {
+    if (-not $auditText.Contains($statement)) {
+        Add-ValidationError "Curriculum audit is missing required resolution: $statement"
+    }
+}
+
+$promptInventory = Get-Content -LiteralPath (Join-Path $repoRoot 'prompt-library\INVENTORY.md') -Raw
+foreach ($course in @('Product Practice', 'Claude Code for PM', 'AI Product Management', 'Product Leadership')) {
+    if (-not $promptInventory.Contains($course)) {
+        Add-ValidationError "Prompt inventory is missing course line: $course"
+    }
+}
+
 if ($errors.Count -gt 0) {
     $errors | ForEach-Object { Write-Error $_ }
     throw "Repository validation failed with $($errors.Count) error(s)."
@@ -103,4 +147,6 @@ Write-Host 'Repository validation passed.'
 Write-Host "Archive imports: $($expectedImports.Count)"
 Write-Host "Retained source files: $($sourceFiles.Count)"
 Write-Host "Navigation documents checked: $($navigationFiles.Count)"
+Write-Host "Product Practice tasks: $($productPracticeTasks.Count) built"
+Write-Host "Technical Fluency tasks: $($technicalFluencyTasks.Count) built / 24 planned"
 Write-Host 'Forbidden-file scan: passed'

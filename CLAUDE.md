@@ -1,3 +1,3 @@
 # Claude Code instructions
 
-Follow `AGENTS.md`. This is the private, canonical ProductLearning library, not a learner's editable course workspace. Answer questions by using the root and program maps, treat `source-library/` as immutable evidence, and direct course-building work to a copied starter. Only change the canonical repository when a maintainer explicitly requests a reviewed repository update.
+Follow `AGENTS.md`. This is the private, canonical ProductLearning library, not a learner's editable course workspace. Answer questions by using the root and program maps. Before detailed captures, read `CURRICULUM-AUDIT.md`, `source-library/STATUS.md`, and `prompt-library/README.md`. Treat `source-library/` as immutable evidence and direct course-building work to a copied starter. Only change the canonical repository when a maintainer explicitly requests a reviewed repository update.

@@ -45,6 +45,20 @@ The evidence and longer rationale for this routing are in the supplied [Torq Con
 | **AI Product Management** | **Partial capture:** six modules; session state reports five missing standalone pre-reads; no Torq distillation supplied. | [Session state and gap log](<../../source-library/imports/ai-product-management/AI Product Management/Source Material/_SESSION-STATE.md>) | [Captured source](<../../source-library/imports/ai-product-management/AI Product Management/Source Material/>) |
 | **Product Leadership** | **Captured:** six modules; no Torq rebuild supplied. | [Captured source](<../../source-library/imports/product-leadership/Product Leadership/Source Material/>) | [Scoping cross-reference](<../../source-library/imports/supplemental-library/Torq Scoping Response.md>) |
 
+## Where the course lines overlap
+
+Repeated foundations are deliberate. A learner who can demonstrate mastery may skip the repeated explanation, but should still complete the later applied exercise or executive treatment.
+
+| Concept | First taught | Reinforced | Added value later | Safe to skip |
+|---|---|---|---|---|
+| Core PM execution | [Product Practice](<../../source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/Syllabus/Syllabus.md>) | [Product Leadership](<../../source-library/imports/product-leadership/Product Leadership/Source Material/>) | Strategy, roadmapping, influence, financials, and executive pressure | Introductory PM definitions in Leadership; not its leadership exercise |
+| Research methods | Product Practice Course 2 | [Claude Code for PM Part 2](<../../source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p2-know-your-users>) | Repository-aware synthesis, competitive research, and traceable outputs | Research-method recap; not the Claude workflow |
+| PRDs and prototypes | Product Practice Course 4 | [Claude Parts 3–4](<../../source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p3-build-and-learn-fast>) and [AI PM M3–4](<../../source-library/imports/ai-product-management/AI Product Management/Source Material/Class 3/>) | Codebase collaboration and verification; AI architecture, UX, and trust gaps | Generic PRD anatomy; not codebase or AI-specific fields |
+| Technical AI fluency | [Technical Fluency](../technical-fluency/README.md) | AI PM, Claude Code, and Product Leadership | Product decisions, tool operation, and organizational governance | Definition recap; not the applied decision or governance work |
+| Quality | Product Practice acceptance criteria | [Claude QA](<../../source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p4l4-qa-and-launch>) and [AI PM evals](<../../source-library/imports/ai-product-management/AI Product Management/Source Material/Class 6/>) | Implementation/handoff readiness versus probabilistic output quality | Repeated definition; neither applied checklist |
+
+See the [curriculum coherence audit](../../CURRICULUM-AUDIT.md) for source contradictions and canonical rebuild decisions, and the [prompt library](../../prompt-library/README.md) for classified prompt assets.
+
 ## Learn from it
 
 1. Pick the tier based on current client responsibility, not tenure alone.

@@ -30,6 +30,17 @@ flowchart LR
 
 The complete design is **7 courses, 39 tasks, approximately 95 TorqHub blocks, and no saved task artifacts**. The supplied build currently contains the first 15 lesson HTML files across Courses 0–2.
 
+## Reinforcement and adjacent programs
+
+| Concept | First taught | Reinforced | Added value later | Safe to skip |
+|---|---|---|---|---|
+| CSS | [Course 1](<../../source-library/imports/technical-fluency-build/Technical Fluency Build/Build/Course 1 - How Software Is Built/>) as a language | Frontend/backend split | Connects syntax vocabulary to where presentation work lives | The second definition after mastery; keep the context comparison |
+| REST and CRUD | [Course 2](<../../source-library/imports/technical-fluency-build/Technical Fluency Build/Build/Course 2 - How Systems Talk/>) | Data-system discussions | Maps API verbs to operations on stored data | Definition recap; keep the cross-reference |
+| AI vocabulary and implications | Technical Fluency Course 5 plan | [AI Product Management](../product-management-for-consultants/README.md), Claude Code for PM, and Product Leadership | Product decisions, tool operation, and organizational governance | Vocabulary recap after mastery; not later applied work |
+| QA and delivery implications | Technical Fluency Course 4 plan | Product Practice and Claude Code for PM | Turns recognition into acceptance criteria, verification, and handoff practice | Recognition recap; not applied QA |
+
+Technical Fluency supplies vocabulary and implications; it does not replace the later course's product decision, operating, or governance exercise. See the [curriculum coherence audit](../../CURRICULUM-AUDIT.md) for the cross-program map.
+
 ## Learn from it
 
 1. Start with Course 0 to understand the fluency ladder and tier framing.

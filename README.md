@@ -7,6 +7,25 @@ ProductLearning is Torq's private, read-only learning library for two independen
 
 The repository contains captured references, completed Torq lessons, plans for unfinished material, and clean starter workspaces. The source library is evidence—not an editable course workspace. Build in a copied starter, never inside `source-library/`.
 
+## Understand this repository with an AI assistant
+
+Open this repository in a repository-aware assistant and start with this tool-neutral orientation prompt:
+
+```text
+I'm a product manager getting oriented to this repository. Do not modify files.
+Give me a PM-level tour:
+1. What this repository is for in one sentence.
+2. How the two programs differ and who each is for.
+3. What each major folder contains.
+4. Which files are current guidance versus immutable source or history.
+5. Where work is complete, partial, or planned.
+6. The best next step for [learning / building / continuing Scott's work].
+Cite repository paths for every recommendation. If I want to create content,
+direct me to a copied course starter.
+```
+
+The source course also includes an exact, feature-specific [Habitica/Streakly GitHub codebase-tour prompt](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p4l1-codebase-tour>). It is reproduced with provenance in the [Claude Code for PM prompt catalog](prompt-library/claude-code-for-pm.md#cc-16--pm-level-github-codebase-tour).
+
 ## Start here
 
 ```mermaid
@@ -23,6 +42,14 @@ flowchart TD
     TFB --> CP
     CP --> G[Initialize your own private Git repository]
     G --> AI[Open it in a repository-aware AI assistant]
+    click PM "programs/product-management-for-consultants/README.md" "Open Product Management for Consultants"
+    click TF "programs/technical-fluency/README.md" "Open Technical Fluency"
+    click PML "programs/product-management-for-consultants/README.md#choose-your-route" "Choose the PM learning route"
+    click TFL "programs/technical-fluency/README.md#seven-course-map" "Open the Technical Fluency map"
+    click PMB "course-starters/product-management-consultants/README.md" "Open the PM course starter"
+    click TFB "course-starters/technical-fluency/README.md" "Open the Technical Fluency starter"
+    click R "source-library/STATUS.md" "Read source status"
+    click CP "course-starters/README.md" "Choose a starter"
 ```
 
 | I want to… | Go here |
@@ -30,10 +57,13 @@ flowchart TD
 | Follow the consultant product-management route | [Product Management for Consultants](programs/product-management-for-consultants/README.md) |
 | Follow the standalone technical-fluency program | [Technical Fluency for Transform Practice](programs/technical-fluency/README.md) |
 | Pick up the curriculum build where Scott stopped | [Pick up here](PICK-UP-HERE.md) |
+| See what is current, contradictory, or historical | [Curriculum coherence audit](CURRICULUM-AUDIT.md) |
+| Find captured prompts by course and type | [Prompt library](prompt-library/README.md) |
 | Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |
 | Build a PM course from a protected source copy | [PM course starter](course-starters/product-management-consultants/README.md) |
 | Build or extend the Technical Fluency course | [Technical Fluency course starter](course-starters/technical-fluency/README.md) |
 | Understand what was imported | [Import inventory](IMPORT-INVENTORY.md) |
+| Know which captured files to surface | [Source library status](source-library/STATUS.md) |
 | Understand source-use restrictions | [Source-use policy](SOURCE-USE.md) |
 | Configure safe learner access | [Access and protection](ACCESS.md) |
 

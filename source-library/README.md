@@ -2,6 +2,8 @@
 
 This directory contains the preserved contents of the six supplied archive packages, minus the exclusions recorded in the [import inventory](../IMPORT-INVENTORY.md).
 
+Start with the [source status overlay](STATUS.md). It identifies authoritative files, historical artifacts, superseded captures, and broken links without changing the imported evidence.
+
 ## Boundaries
 
 - Read and cite these files as internal references.
