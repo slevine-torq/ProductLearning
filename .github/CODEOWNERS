@@ -1,5 +1,5 @@
 # Replace this placeholder with the maintainer team used by the Torq organization.
-# Branch protection should require a CODEOWNER review before merging to main.
+# This file is advisory until the owner/plan supports protection for private branches.
 * @slevine-torq
 
 /source-library/ @slevine-torq

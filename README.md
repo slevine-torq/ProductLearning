@@ -33,6 +33,7 @@ flowchart TD
 | Build or extend the Technical Fluency course | [Technical Fluency course starter](course-starters/technical-fluency/README.md) |
 | Understand what was imported | [Import inventory](IMPORT-INVENTORY.md) |
 | Understand source-use restrictions | [Source-use policy](SOURCE-USE.md) |
+| Configure safe learner access | [Access and protection](ACCESS.md) |
 
 ## Content states
 
@@ -46,7 +47,9 @@ flowchart TD
 
 ## Read-only operating model
 
-Selected collaborators receive **Read** access to this private repository. They may clone and pull it, but they should not build directly in the clone or push to this repository. To create or adapt a course:
+The intended model is for selected collaborators to receive **Read** access. They may clone and pull, but should not build directly in the clone or push to this repository. The repository's current GitHub plan does not support private-repository branch protection, so do not add learners until a read-only role can be verified; see [Access and protection](ACCESS.md).
+
+To create or adapt a course:
 
 ```powershell
 .\scripts\new-course.ps1 -Program product-management-consultants -Name "My PM Course" -Destination "C:\work\my-pm-course"
@@ -65,6 +68,6 @@ After creation, open the new folder in your chosen AI assistant and ask:
 ## Maintainer controls
 
 - Keep the GitHub repository private.
-- Grant learners the **Read** role through the Torq organization or a read-only team.
-- Protect `main`, require owner review, and use [CODEOWNERS](.github/CODEOWNERS) for the source library and navigation.
+- Grant learners the **Read** role only after the repository is on a GitHub owner/plan that supports granular private-repository permissions.
+- Protect `main`, require owner review, and enforce [CODEOWNERS](.github/CODEOWNERS) after branch protection becomes available.
 - Do not add a public/open-source license: this repository contains mixed-provenance internal reference material.

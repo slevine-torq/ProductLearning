@@ -8,3 +8,4 @@ ProductLearning is a private canonical learning library with two independent pro
 - Do not expose captured content outside authorized Torq users or introduce client-confidential data.
 - Only modify the canonical repository when a maintainer explicitly requests repository maintenance, curation, or a reviewed content update.
 - Never configure a learner workspace to push to `slevine-torq/ProductLearning`.
+- Read `ACCESS.md` before recommending collaborator permissions; the current private repository cannot enforce branch protection on its present GitHub plan.
