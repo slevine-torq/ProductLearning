@@ -4,6 +4,8 @@ These Torq-authored prompts help product practitioners use ProductLearning with 
 
 These prompts do not reproduce Product School material. Treat `source-library/imports/` as restricted builder reference, not learner-facing content. Before using client information, confirm the approved AI tool, repository access, and data-handling rules.
 
+For ongoing client work, first create a persistent workspace using [Set up an AI product-work workspace](WORKSPACE-QUICKSTART.md).
+
 ## Begin every client task with this context
 
 ```text

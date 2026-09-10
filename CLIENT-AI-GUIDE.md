@@ -4,7 +4,7 @@ Start with the **client outcome**, not the name of an AI tool or source course. 
 
 The methods here are tool-neutral. Use them with an engagement-approved repository-aware assistant such as Claude Code, Codex, Kiro, Cursor, or a comparable tool. Product School captures remain restricted builder reference; they are not assigned Torq curriculum and must not be reproduced for learners or clients.
 
-If you already know what you need, go directly to the copy-ready [Starter prompts](STARTER-PROMPTS.md).
+For ongoing engagement work, first create an independent workspace with [Set up an AI product-work workspace](WORKSPACE-QUICKSTART.md). If you already have an approved workspace and know what you need, go directly to the copy-ready [Starter prompts](STARTER-PROMPTS.md).
 
 ## Choose by need
 
@@ -12,7 +12,7 @@ If you already know what you need, go directly to the copy-ready [Starter prompt
 |---|---|
 | Become a stronger product manager | Follow the completed [Torq Product Practice](programs/product-management-for-consultants/README.md) route for your responsibility level. |
 | Understand client technology conversations | Use [Technical Fluency for Transform Practice](programs/technical-fluency/README.md). |
-| Use AI with a repository, research, a PRD, QA, analysis, or a decision | Use the original [Torq AI workflow prompts](prompt-library/README.md) in an approved client workspace. |
+| Use AI with a repository, research, a PRD, QA, analysis, or a decision | Create an approved [product-work workspace](WORKSPACE-QUICKSTART.md), then use the original [Torq AI workflow prompts](prompt-library/README.md). |
 | Make AI-product, strategy, influence, financial, or governance decisions | Start with the available Torq foundations and workflow prompts. Treat the relevant source-course captures as a build backlog until reviewed Torq adaptations exist. |
 | Continue building the curriculum | Follow [Pick up here](PICK-UP-HERE.md) and work in a copied [course starter](course-starters/README.md). |
 
@@ -105,7 +105,7 @@ Tool-specific commands may differ, but the assistant should always:
 ## Where work should happen
 
 - Ask read-only questions inside a local ProductLearning clone.
-- Perform client work only inside an approved client repository or workspace.
+- Perform client work only inside an approved client repository or a workspace created from the [product-work starter](workspace-starters/product-work/README.md).
 - Build new learning content only inside a copied course starter.
 - Never configure ProductLearning as the writable remote for client or learner work.
 - Never copy the entire ProductLearning source library into a client repository.

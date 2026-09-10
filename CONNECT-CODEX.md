@@ -1,6 +1,6 @@
 # Connect Codex to ProductLearning
 
-Use this guide to let Codex answer questions about ProductLearning or help continue a course build safely.
+Use this guide to let Codex answer questions about ProductLearning, work from an independent product workspace, or help continue a course build safely.
 
 The key idea is simple: **Git connects a folder to GitHub; Codex opens that local folder as a project.** Codex does not need to own the canonical repository. It reads the checked-out files and automatically loads the root `AGENTS.md` instructions.
 
@@ -65,7 +65,27 @@ To receive later library updates without changing local history:
 git pull --ff-only
 ```
 
-## Path 2: Continue building in your own repository
+## Path 2: Use Codex for ongoing product work
+
+Do not use the canonical ProductLearning clone as the client workspace. Create an independent product-work folder:
+
+```powershell
+.\scripts\new-product-workspace.ps1 `
+  -Name "Client Product Workspace" `
+  -Destination "$env:USERPROFILE\Documents\client-product-workspace"
+```
+
+Open the new folder in Codex and start with:
+
+```text
+Read AGENTS.md, WORKSPACE.md, and AI-WORKFLOW.md. Do not modify files yet.
+Explain the workspace boundaries, the context I need to complete, the evidence
+you may use, and the first safe product-work step.
+```
+
+Follow the complete [Workspace quickstart](WORKSPACE-QUICKSTART.md) to establish product context, strategy, stakeholders, evidence, decisions, working notes, deliverables, and an optional private GitHub remote.
+
+## Path 3: Continue building a course in your own repository
 
 Do not draft inside the canonical clone. Create an independent workspace from one of its starters.
 

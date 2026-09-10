@@ -5,7 +5,21 @@ ProductLearning is Torq's private, read-only learning library for two independen
 1. [Product Management for Consultants](programs/product-management-for-consultants/README.md)
 2. [Technical Fluency for Transform Practice](programs/technical-fluency/README.md)
 
-The repository contains captured references, completed Torq lessons, plans for unfinished material, and clean starter workspaces. The source library is evidence—not an editable course workspace. Build in a copied starter, never inside `source-library/`.
+The repository contains captured references, completed Torq lessons, plans for unfinished material, and clean starter workspaces. The source library is evidence—not an editable workspace. Do product or course work in the appropriate copied starter, never inside `source-library/`.
+
+## First time here? Set up your product workspace
+
+If you want to test this repository on real, approved product work, begin with [Set up an AI product-work workspace](WORKSPACE-QUICKSTART.md). It creates a persistent workspace for context, strategy, stakeholders, evidence, decisions, working notes, and deliverables.
+
+```powershell
+.\scripts\new-product-workspace.ps1 -Name "My Product Workspace" -Destination "C:\work\my-product-workspace"
+```
+
+```bash
+./scripts/new-product-workspace.sh "My Product Workspace" "$HOME/work/my-product-workspace"
+```
+
+The new folder is an independent Git repository with no remote. Open that folder in Claude Code, Codex, Kiro, Cursor, or another approved repository-aware assistant and ask it to read `AGENTS.md`, `WORKSPACE.md`, and `AI-WORKFLOW.md`.
 
 ## Understand this repository with an AI assistant
 
@@ -33,6 +47,7 @@ If you want to use AI in product work, start with the [Torq AI workflow prompts]
 | Completed Torq Product Practice lessons | **Yes** | Learner-ready product-management curriculum |
 | Completed Technical Fluency lessons and program map | **Yes** | Learner-ready lessons plus the approved plan for unfinished courses |
 | Torq AI workflow prompts | **Yes** | Practical, tool-neutral support for approved client work |
+| Product-work workspace starter | **Yes** | Persistent context and a safe place to do approved client work |
 | Product School captures | **No—not as the Torq learning path** | Restricted builder reference for creating future original Torq adaptations |
 
 The presence of a source capture does not make it assigned Torq curriculum. The program guides label what is completed, planned, or reference-only.
@@ -47,6 +62,7 @@ Start with the client outcome—not “teach me the Claude Code course.” The p
 | Understand technology and collaborate with engineers | [Technical Fluency for Transform Practice](programs/technical-fluency/README.md) |
 | Use AI for repository orientation, research, PRDs, QA, analysis, or decisions | [Torq AI workflow prompts](prompt-library/README.md) |
 | Browse copy-ready prompts for common product tasks | [Starter prompts](STARTER-PROMPTS.md) |
+| Set up persistent context for ongoing product work | [Workspace quickstart](WORKSPACE-QUICKSTART.md) |
 | Get a guided recommendation for a real client outcome | [Use ProductLearning with AI on client work](CLIENT-AI-GUIDE.md) |
 
 Everyday starting prompt:
@@ -68,8 +84,9 @@ New to Codex? Follow [Connect Codex to ProductLearning](CONNECT-CODEX.md). It co
 
 ```mermaid
 flowchart TD
-    A[Choose a program] --> PM[Product Management for Consultants]
+    A[Choose what you want to do] --> PM[Product Management for Consultants]
     A --> TF[Technical Fluency for Transform Practice]
+    A --> PW[Set up an AI product workspace]
     PM --> PML[Follow the tiered learning path]
     PM --> PMB[Build or adapt a PM course]
     TF --> TFL[Follow the seven-course program]
@@ -78,6 +95,8 @@ flowchart TD
     TFL --> L
     PMB --> CP[Copy the matching course starter]
     TFB --> CP
+    PW --> WS[Copy the product-work starter]
+    WS --> G
     CP --> G[Initialize your own private Git repository]
     G --> AI[Open it in a repository-aware AI assistant]
     click PM "programs/product-management-for-consultants/README.md" "Open Product Management for Consultants"
@@ -86,6 +105,8 @@ flowchart TD
     click TFL "programs/technical-fluency/README.md#seven-course-map" "Open the Technical Fluency map"
     click PMB "course-starters/product-management-consultants/README.md" "Open the PM course starter"
     click TFB "course-starters/technical-fluency/README.md" "Open the Technical Fluency starter"
+    click PW "WORKSPACE-QUICKSTART.md" "Open the workspace quickstart"
+    click WS "workspace-starters/product-work/README.md" "Open the product-work starter"
     click L "#what-collaborators-should-use" "See what collaborators should use"
     click CP "course-starters/README.md" "Choose a starter"
 ```
@@ -98,6 +119,7 @@ flowchart TD
 | See what is current, contradictory, or historical | [Curriculum coherence audit](CURRICULUM-AUDIT.md) |
 | Use an AI assistant in product or client work | [Torq AI workflow prompts](prompt-library/README.md) |
 | Copy a starter prompt for a common product task | [Starter prompts](STARTER-PROMPTS.md) |
+| Set up a persistent AI product-work workspace | [Workspace quickstart](WORKSPACE-QUICKSTART.md) |
 | Get a guided client-work route and starting prompt | [Use ProductLearning with AI on client work](CLIENT-AI-GUIDE.md) |
 | Connect Codex and start asking questions | [Connect Codex to ProductLearning](CONNECT-CODEX.md) |
 | Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |
@@ -123,6 +145,14 @@ flowchart TD
 The intended model is for selected collaborators to receive **Read** access. They may clone and pull, but should not build directly in the clone or push to this repository. The repository's current GitHub plan does not support private-repository branch protection, so do not add learners until a read-only role can be verified; see [Access and protection](ACCESS.md).
 
 Codex works from a local folder: clone this repository with Git, then open that folder as a Codex project. See the complete [Codex connection guide](CONNECT-CODEX.md).
+
+To create an independent workspace for ongoing product work:
+
+```powershell
+.\scripts\new-product-workspace.ps1 -Name "My Product Workspace" -Destination "C:\work\my-product-workspace"
+```
+
+The product-work starter is separate from the course-building starters below.
 
 To create or adapt a course:
 

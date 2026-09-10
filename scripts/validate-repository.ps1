@@ -57,6 +57,9 @@ $requiredFiles = @(
     'PICK-UP-HERE.md',
     'STARTER-PROMPTS.md',
     'TORQ-LEARNING-STRUCTURE.md',
+    'WORKSPACE-QUICKSTART.md',
+    'scripts\new-product-workspace.ps1',
+    'scripts\new-product-workspace.sh',
     'source-library\STATUS.md',
     'prompt-library\README.md',
     'programs\product-management-for-consultants\README.md',
@@ -65,6 +68,21 @@ $requiredFiles = @(
     'programs\technical-fluency\BUILD-HANDOFF.md',
     'course-starters\product-management-consultants\AGENTS.md',
     'course-starters\technical-fluency\AGENTS.md',
+    'workspace-starters\README.md',
+    'workspace-starters\product-work\README.md',
+    'workspace-starters\product-work\AGENTS.md',
+    'workspace-starters\product-work\CLAUDE.md',
+    'workspace-starters\product-work\AI-WORKFLOW.md',
+    'workspace-starters\product-work\WORKSPACE.md',
+    'workspace-starters\product-work\product-context.md',
+    'workspace-starters\product-work\strategy.md',
+    'workspace-starters\product-work\stakeholders.md',
+    'workspace-starters\product-work\evidence-index.md',
+    'workspace-starters\product-work\decisions.md',
+    'workspace-starters\product-work\change-log.md',
+    'workspace-starters\product-work\workflows\README.md',
+    'workspace-starters\product-work\.github\copilot-instructions.md',
+    'workspace-starters\product-work\.gitignore',
     '.github\CODEOWNERS'
 )
 
@@ -165,6 +183,29 @@ $starterPrompts = Get-Content -LiteralPath (Join-Path $repoRoot 'STARTER-PROMPTS
 foreach ($statement in @('## Learn', '## Apply', '## Lead', '## Build', 'approved AI tool', 'restricted builder reference')) {
     if (-not $starterPrompts.Contains($statement)) {
         Add-ValidationError "Starter prompt catalog is missing required guidance: $statement"
+    }
+}
+
+$workspaceQuickstart = Get-Content -LiteralPath (Join-Path $repoRoot 'WORKSPACE-QUICKSTART.md') -Raw
+foreach ($statement in @('product-context.md', 'evidence-index.md', 'decisions.md', 'change-log.md', 'configures no remote', 'refuses to overwrite')) {
+    if (-not $workspaceQuickstart.Contains($statement)) {
+        Add-ValidationError "Workspace quickstart is missing required guidance: $statement"
+    }
+}
+
+foreach ($scriptPath in @('scripts\new-product-workspace.ps1', 'scripts\new-product-workspace.sh')) {
+    $scriptText = Get-Content -LiteralPath (Join-Path $repoRoot $scriptPath) -Raw
+    foreach ($statement in @('Destination already exists', 'outside the canonical ProductLearning repository', 'No Git remote was configured')) {
+        if (-not $scriptText.Contains($statement)) {
+            Add-ValidationError "$scriptPath is missing workspace safety behavior: $statement"
+        }
+    }
+}
+
+$productWorkspaceAgent = Get-Content -LiteralPath (Join-Path $repoRoot 'workspace-starters\product-work\AGENTS.md') -Raw
+foreach ($statement in @('approved engagement', 'Separate facts, inference, assumptions', 'Never configure or push to `slevine-torq/ProductLearning`')) {
+    if (-not $productWorkspaceAgent.Contains($statement)) {
+        Add-ValidationError "Product-work AGENTS.md is missing required guidance: $statement"
     }
 }
 

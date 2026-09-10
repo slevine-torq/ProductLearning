@@ -2,6 +2,8 @@
 
 These folders are templates for learner-owned workspaces. Do not edit them in place for an individual course.
 
+These are for building learning content. For everyday product work on an engagement, use the separate [product-work workspace starter](../WORKSPACE-QUICKSTART.md).
+
 - [Product Management for Consultants](product-management-consultants/README.md)
 - [Technical Fluency](technical-fluency/README.md)
 

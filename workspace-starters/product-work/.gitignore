@@ -1,0 +1,27 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Operating-system and editor artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+~$*
+
+# Tool-local configuration and caches
+.codex/
+.cursor/
+.cache/
+.claude/settings.local.json
+
+# Common dependency and generated-output folders
+node_modules/
+__pycache__/
+.venv/
+dist/
+build/
