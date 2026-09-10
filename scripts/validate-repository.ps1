@@ -49,6 +49,7 @@ $requiredFiles = @(
     'README.md',
     'AGENTS.md',
     'CLAUDE.md',
+    'CLIENT-AI-GUIDE.md',
     'CONNECT-CODEX.md',
     'CURRICULUM-AUDIT.md',
     'SOURCE-USE.md',
@@ -149,6 +150,13 @@ $productProgramGuide = Get-Content -LiteralPath (Join-Path $repoRoot 'programs\p
 foreach ($statement in @('restricted builder references', 'Reference only; do not assign as Torq curriculum', 'Planned Torq coverage—not yet assigned')) {
     if (-not $productProgramGuide.Contains($statement)) {
         Add-ValidationError "Product program guide is missing learner/reference boundary: $statement"
+    }
+}
+
+$clientGuide = Get-Content -LiteralPath (Join-Path $repoRoot 'CLIENT-AI-GUIDE.md') -Raw
+foreach ($statement in @('client outcome', 'Claude Code, Codex, Kiro, Cursor', 'Learn:', 'Apply:', 'Build:', 'Lead:', 'restricted builder reference')) {
+    if (-not $clientGuide.Contains($statement)) {
+        Add-ValidationError "Client AI guide is missing required guidance: $statement"
     }
 }
 

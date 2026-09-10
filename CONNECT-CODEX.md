@@ -43,18 +43,21 @@ Codex reads [AGENTS.md](AGENTS.md) automatically when the project starts. That f
 ### 3. Start with this prompt
 
 ```text
-Read AGENTS.md, README.md, CURRICULUM-AUDIT.md, and source-library/STATUS.md.
-Do not modify files. Give me a short tour of the two learning programs, tell me
-what is complete versus planned, and recommend where I should start based on my
-role and goal. Cite repository paths for every recommendation.
+Read AGENTS.md, README.md, CLIENT-AI-GUIDE.md, and the two program guides.
+Do not modify files or open source-library/imports. Give me a short tour of the
+learner-ready Torq material and recommend where I should start based on my role,
+client outcome, approved AI tool, and permitted data. Cite repository paths for
+every recommendation.
 ```
 
 Then ask normal questions such as:
 
 - “What should a Tier 2 consultant complete before owning a product workstream?”
 - “Where is product research first taught and where is it reinforced?”
-- “Show me the prompts for becoming familiar with a GitHub repository.”
+- “Use the Torq repository-orientation workflow to help me understand an approved client repository.”
 - “What is the next unfinished Technical Fluency lesson?”
+
+If the goal is a real engagement deliverable, use the full starting prompt in [Use ProductLearning with AI on client work](CLIENT-AI-GUIDE.md). It asks about approved tools and data, then routes the practitioner by outcome rather than by source-course name.
 
 To receive later library updates without changing local history:
 
