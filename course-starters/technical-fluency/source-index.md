@@ -4,6 +4,7 @@ The canonical sources live in the private [ProductLearning repository](https://g
 
 | Need | Canonical source |
 |---|---|
+| Connect this workspace to Codex and GitHub safely | [Codex connection guide](https://github.com/slevine-torq/ProductLearning/blob/main/CONNECT-CODEX.md) |
 | Resume state and exact next action | [Technical Fluency build handoff](https://github.com/slevine-torq/ProductLearning/blob/main/programs/technical-fluency/BUILD-HANDOFF.md) |
 | TorqHub hierarchy and production flow | [How Torq learning is structured](https://github.com/slevine-torq/ProductLearning/blob/main/TORQ-LEARNING-STRUCTURE.md) |
 | Authoritative 7-course/39-task coverage map | [Technical Fluency program specification](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Technical%20Fluency%20%E2%80%94%20Program%20Spec.md) |

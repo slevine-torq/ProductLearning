@@ -4,6 +4,7 @@ The canonical sources live in the private [ProductLearning repository](https://g
 
 | Need | Canonical source |
 |---|---|
+| Connect this workspace to Codex and GitHub safely | [Codex connection guide](https://github.com/slevine-torq/ProductLearning/blob/main/CONNECT-CODEX.md) |
 | Resume state and exact next action | [Product Management build handoff](https://github.com/slevine-torq/ProductLearning/blob/main/programs/product-management-for-consultants/BUILD-HANDOFF.md) |
 | TorqHub hierarchy and production flow | [How Torq learning is structured](https://github.com/slevine-torq/ProductLearning/blob/main/TORQ-LEARNING-STRUCTURE.md) |
 | Tier routing and sequence | [Torq Consultant Learning Path](https://github.com/slevine-torq/ProductLearning/blob/main/source-library/imports/supplemental-library/Torq%20Consultant%20Learning%20Path.md) |

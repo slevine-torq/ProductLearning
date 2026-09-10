@@ -26,6 +26,8 @@ direct me to a copied course starter.
 
 The source course also includes an exact, feature-specific [Habitica/Streakly GitHub codebase-tour prompt](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p4l1-codebase-tour>). It is reproduced with provenance in the [Claude Code for PM prompt catalog](prompt-library/claude-code-for-pm.md#cc-16--pm-level-github-codebase-tour).
 
+New to Codex? Follow [Connect Codex to ProductLearning](CONNECT-CODEX.md). It covers cloning the private library, opening it as a Codex project, asking read-only questions, and moving course-building work into a separate learner-owned repository.
+
 ## Start here
 
 ```mermaid
@@ -59,6 +61,7 @@ flowchart TD
 | Pick up the curriculum build where Scott stopped | [Pick up here](PICK-UP-HERE.md) |
 | See what is current, contradictory, or historical | [Curriculum coherence audit](CURRICULUM-AUDIT.md) |
 | Find captured prompts by course and type | [Prompt library](prompt-library/README.md) |
+| Connect Codex and start asking questions | [Connect Codex to ProductLearning](CONNECT-CODEX.md) |
 | Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |
 | Build a PM course from a protected source copy | [PM course starter](course-starters/product-management-consultants/README.md) |
 | Build or extend the Technical Fluency course | [Technical Fluency course starter](course-starters/technical-fluency/README.md) |
@@ -80,6 +83,8 @@ flowchart TD
 ## Read-only operating model
 
 The intended model is for selected collaborators to receive **Read** access. They may clone and pull, but should not build directly in the clone or push to this repository. The repository's current GitHub plan does not support private-repository branch protection, so do not add learners until a read-only role can be verified; see [Access and protection](ACCESS.md).
+
+Codex works from a local folder: clone this repository with Git, then open that folder as a Codex project. See the complete [Codex connection guide](CONNECT-CODEX.md).
 
 To create or adapt a course:
 

@@ -16,6 +16,8 @@ The intended learner permission is **Read**: clone and pull, with no push access
 
 Do not assume that inviting someone directly to a private personal repository creates a read-only collaborator. Verify the role shown by GitHub before sending the invitation.
 
+After access is verified, send the learner the [Codex connection guide](CONNECT-CODEX.md). It separates read-only use of ProductLearning from work in a learner-owned repository.
+
 ## Protection settings to apply when available
 
 For `main`:

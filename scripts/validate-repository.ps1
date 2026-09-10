@@ -49,6 +49,7 @@ $requiredFiles = @(
     'README.md',
     'AGENTS.md',
     'CLAUDE.md',
+    'CONNECT-CODEX.md',
     'CURRICULUM-AUDIT.md',
     'SOURCE-USE.md',
     'IMPORT-INVENTORY.md',
