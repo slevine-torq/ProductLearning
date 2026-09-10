@@ -55,6 +55,7 @@ $requiredFiles = @(
     'SOURCE-USE.md',
     'IMPORT-INVENTORY.md',
     'PICK-UP-HERE.md',
+    'STARTER-PROMPTS.md',
     'TORQ-LEARNING-STRUCTURE.md',
     'source-library\STATUS.md',
     'prompt-library\README.md',
@@ -157,6 +158,13 @@ $clientGuide = Get-Content -LiteralPath (Join-Path $repoRoot 'CLIENT-AI-GUIDE.md
 foreach ($statement in @('client outcome', 'Claude Code, Codex, Kiro, Cursor', 'Learn:', 'Apply:', 'Build:', 'Lead:', 'restricted builder reference')) {
     if (-not $clientGuide.Contains($statement)) {
         Add-ValidationError "Client AI guide is missing required guidance: $statement"
+    }
+}
+
+$starterPrompts = Get-Content -LiteralPath (Join-Path $repoRoot 'STARTER-PROMPTS.md') -Raw
+foreach ($statement in @('## Learn', '## Apply', '## Lead', '## Build', 'approved AI tool', 'restricted builder reference')) {
+    if (-not $starterPrompts.Contains($statement)) {
+        Add-ValidationError "Starter prompt catalog is missing required guidance: $statement"
     }
 }
 

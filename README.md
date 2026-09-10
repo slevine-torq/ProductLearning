@@ -46,6 +46,7 @@ Start with the client outcome—not “teach me the Claude Code course.” The p
 | Strengthen core product-management practice | [Product Management for Consultants](programs/product-management-for-consultants/README.md) |
 | Understand technology and collaborate with engineers | [Technical Fluency for Transform Practice](programs/technical-fluency/README.md) |
 | Use AI for repository orientation, research, PRDs, QA, analysis, or decisions | [Torq AI workflow prompts](prompt-library/README.md) |
+| Browse copy-ready prompts for common product tasks | [Starter prompts](STARTER-PROMPTS.md) |
 | Get a guided recommendation for a real client outcome | [Use ProductLearning with AI on client work](CLIENT-AI-GUIDE.md) |
 
 Everyday starting prompt:
@@ -59,7 +60,7 @@ keep human decisions explicit. Do not use restricted source captures as
 learner-facing content.
 ```
 
-The [client AI guide](CLIENT-AI-GUIDE.md) contains the full orientation prompt, Learn / Apply / Build / Lead routes, tool guidance, and a short message you can send when inviting another Torq product person.
+The [starter prompt catalog](STARTER-PROMPTS.md) has copy-ready prompts for learning, repository orientation, research, PRDs, pressure testing, engineering conversations, AI evaluation, decisions, and curriculum building. The [client AI guide](CLIENT-AI-GUIDE.md) contains the full guided intake, Learn / Apply / Build / Lead routes, tool guidance, and a short message you can send when inviting another Torq product person.
 
 New to Codex? Follow [Connect Codex to ProductLearning](CONNECT-CODEX.md). It covers cloning the private library, opening it as a Codex project, asking read-only questions, and moving course-building work into a separate learner-owned repository.
 
@@ -96,6 +97,7 @@ flowchart TD
 | Pick up the curriculum build where Scott stopped | [Pick up here](PICK-UP-HERE.md) |
 | See what is current, contradictory, or historical | [Curriculum coherence audit](CURRICULUM-AUDIT.md) |
 | Use an AI assistant in product or client work | [Torq AI workflow prompts](prompt-library/README.md) |
+| Copy a starter prompt for a common product task | [Starter prompts](STARTER-PROMPTS.md) |
 | Get a guided client-work route and starting prompt | [Use ProductLearning with AI on client work](CLIENT-AI-GUIDE.md) |
 | Connect Codex and start asking questions | [Connect Codex to ProductLearning](CONNECT-CODEX.md) |
 | Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |

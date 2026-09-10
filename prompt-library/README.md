@@ -6,6 +6,8 @@ This is intentionally **not** a catalog or reproduction of Product School prompt
 
 Before using client material, confirm the engagement's approved AI tools, repository permissions, and data-handling rules. Never paste secrets, credentials, personal data, or client-confidential content into an unapproved tool.
 
+Looking for a quick copy-and-paste starting point? Use the top-level [Starter prompts](../STARTER-PROMPTS.md). This guide contains the longer reusable workflows.
+
 ## 1. Choose a useful route
 
 Use this when you are not sure where to begin.

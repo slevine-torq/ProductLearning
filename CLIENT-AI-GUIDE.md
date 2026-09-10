@@ -4,6 +4,8 @@ Start with the **client outcome**, not the name of an AI tool or source course. 
 
 The methods here are tool-neutral. Use them with an engagement-approved repository-aware assistant such as Claude Code, Codex, Kiro, Cursor, or a comparable tool. Product School captures remain restricted builder reference; they are not assigned Torq curriculum and must not be reproduced for learners or clients.
 
+If you already know what you need, go directly to the copy-ready [Starter prompts](STARTER-PROMPTS.md).
+
 ## Choose by need
 
 | Your need | Current route |
@@ -25,6 +27,7 @@ First read only:
 - AGENTS.md
 - README.md
 - CLIENT-AI-GUIDE.md
+- STARTER-PROMPTS.md
 - programs/product-management-for-consultants/README.md
 - programs/technical-fluency/README.md
 - prompt-library/README.md
