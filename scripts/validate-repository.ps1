@@ -57,11 +57,6 @@ $requiredFiles = @(
     'TORQ-LEARNING-STRUCTURE.md',
     'source-library\STATUS.md',
     'prompt-library\README.md',
-    'prompt-library\INVENTORY.md',
-    'prompt-library\product-practice.md',
-    'prompt-library\claude-code-for-pm.md',
-    'prompt-library\ai-product-management.md',
-    'prompt-library\product-leadership.md',
     'programs\product-management-for-consultants\README.md',
     'programs\product-management-for-consultants\BUILD-HANDOFF.md',
     'programs\technical-fluency\README.md',
@@ -132,10 +127,28 @@ foreach ($statement in $requiredAuditStatements) {
     }
 }
 
-$promptInventory = Get-Content -LiteralPath (Join-Path $repoRoot 'prompt-library\INVENTORY.md') -Raw
-foreach ($course in @('Product Practice', 'Claude Code for PM', 'AI Product Management', 'Product Leadership')) {
-    if (-not $promptInventory.Contains($course)) {
-        Add-ValidationError "Prompt inventory is missing course line: $course"
+$promptLibraryPath = Join-Path $repoRoot 'prompt-library'
+$promptFiles = @(Get-ChildItem -LiteralPath $promptLibraryPath -File)
+if ($promptFiles.Count -ne 1 -or $promptFiles[0].Name -ne 'README.md') {
+    Add-ValidationError 'Prompt library must contain only the Torq-authored README.md workflow guide.'
+}
+
+$promptGuide = Get-Content -LiteralPath (Join-Path $promptLibraryPath 'README.md') -Raw
+foreach ($statement in @('Torq-authored', 'restricted builder reference', 'do not extract')) {
+    if (-not $promptGuide.Contains($statement)) {
+        Add-ValidationError "Torq prompt guide is missing source-boundary statement: $statement"
+    }
+}
+foreach ($sourceSpecificText in @('HabitRPG', 'Verbatim capture', 'Streakly')) {
+    if ($promptGuide.Contains($sourceSpecificText)) {
+        Add-ValidationError "Torq prompt guide contains source-specific material: $sourceSpecificText"
+    }
+}
+
+$productProgramGuide = Get-Content -LiteralPath (Join-Path $repoRoot 'programs\product-management-for-consultants\README.md') -Raw
+foreach ($statement in @('restricted builder references', 'Reference only; do not assign as Torq curriculum', 'Planned Torq coverage—not yet assigned')) {
+    if (-not $productProgramGuide.Contains($statement)) {
+        Add-ValidationError "Product program guide is missing learner/reference boundary: $statement"
     }
 }
 

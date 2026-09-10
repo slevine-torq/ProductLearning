@@ -24,7 +24,18 @@ Cite repository paths for every recommendation. If I want to create content,
 direct me to a copied course starter.
 ```
 
-The source course also includes an exact, feature-specific [Habitica/Streakly GitHub codebase-tour prompt](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md#p4l1-codebase-tour>). It is reproduced with provenance in the [Claude Code for PM prompt catalog](prompt-library/claude-code-for-pm.md#cc-16--pm-level-github-codebase-tour).
+If you want to use AI in product work, start with the [Torq AI workflow prompts](prompt-library/README.md). They work with Claude Code, Codex, Kiro, Cursor, and similar tools. They are Torq-authored working aids—not extracted Product School course content.
+
+## What collaborators should use
+
+| Material | Use it now? | Purpose |
+|---|---|---|
+| Completed Torq Product Practice lessons | **Yes** | Learner-ready product-management curriculum |
+| Completed Technical Fluency lessons and program map | **Yes** | Learner-ready lessons plus the approved plan for unfinished courses |
+| Torq AI workflow prompts | **Yes** | Practical, tool-neutral support for approved client work |
+| Product School captures | **No—not as the Torq learning path** | Restricted builder reference for creating future original Torq adaptations |
+
+The presence of a source capture does not make it assigned Torq curriculum. The program guides label what is completed, planned, or reference-only.
 
 New to Codex? Follow [Connect Codex to ProductLearning](CONNECT-CODEX.md). It covers cloning the private library, opening it as a Codex project, asking read-only questions, and moving course-building work into a separate learner-owned repository.
 
@@ -60,7 +71,7 @@ flowchart TD
 | Follow the standalone technical-fluency program | [Technical Fluency for Transform Practice](programs/technical-fluency/README.md) |
 | Pick up the curriculum build where Scott stopped | [Pick up here](PICK-UP-HERE.md) |
 | See what is current, contradictory, or historical | [Curriculum coherence audit](CURRICULUM-AUDIT.md) |
-| Find captured prompts by course and type | [Prompt library](prompt-library/README.md) |
+| Use an AI assistant in product or client work | [Torq AI workflow prompts](prompt-library/README.md) |
 | Connect Codex and start asking questions | [Connect Codex to ProductLearning](CONNECT-CODEX.md) |
 | Understand TorqHub's learning structure | [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) |
 | Build a PM course from a protected source copy | [PM course starter](course-starters/product-management-consultants/README.md) |

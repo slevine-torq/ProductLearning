@@ -2,6 +2,8 @@
 
 This is the curator's overlay for the two ProductLearning programs. It does not replace or rewrite a captured syllabus. It tells a learner or successor which supplied files are authoritative, how repeated concepts progress, and which preserved files are historical.
 
+**Boundary:** Torq Product Practice and the completed Technical Fluency lessons are learner-facing Torq work. Claude Code for PM, AI Product Management, and Product Leadership are restricted Product School captures used only as builder evidence until original Torq adaptations are completed and reviewed. The detailed source analysis below is a build aid, not a learner assignment.
+
 For file-level warnings, see [Source library status](source-library/STATUS.md). For Torq's instructional pattern, see [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md).
 
 ## Authority order
@@ -21,14 +23,14 @@ Never “fix” a contradiction by editing `source-library/imports/`. Record a n
 | Course line | Status on 2026-09-09 | Current authority | Known gap or next action |
 |---|---|---|---|
 | **Torq Product Practice** | **Completed:** Course 0 and Courses 1–6; **37 built HTML tasks** | [Syllabus](<source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/Syllabus/Syllabus.md>), [coverage map](<source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/_MODULE-COVERAGE.md>), [completed build](<source-library/imports/torq-lessons-build/Torq Lessons Build/Torq Rebuild/Build/>), and [PM handoff](programs/product-management-for-consultants/BUILD-HANDOFF.md) | Review for TorqHub publishing; do not follow older “in progress” notes. |
-| **Claude Code for PM** | **Captured:** four confirmed live classes, 17 lessons; no Torq rebuild supplied | [Class captures](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/>), [Streakly scenario](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md>), and [workspace scaffold](<source-library/imports/claude-code-for-pm/Claude Code For PM/pm-workspace/README.md>) | Build a Torq adaptation. The six-stage arc is conceptual; Streakly Parts 5–8 are extended artifacts, not confirmed live classes. |
-| **AI Product Management** | **Partial capture:** six modules; five standalone pre-reads are missing; no Torq rebuild supplied | [Capture state](<source-library/imports/ai-product-management/AI Product Management/Source Material/_SESSION-STATE.md>), module slides, builders, and the resolutions below | Build the Torq distillation using the canonical choices below. |
-| **Product Leadership** | **Captured:** six modules; no Torq rebuild supplied | [Module captures](<source-library/imports/product-leadership/Product Leadership/Source Material/>), [final project brief](<source-library/imports/product-leadership/Product Leadership/Source Material/Final Project Brief/artifacts/Final Project Brief (digest).md>), and [PM handoff](programs/product-management-for-consultants/BUILD-HANDOFF.md) | Build a Torq adaptation; retain executive-altitude treatment rather than merging it into Product Practice. |
+| **Claude Code for PM** | **Restricted reference capture:** four confirmed live classes, 17 lessons; no Torq rebuild supplied | [Class captures](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/>), [scenario artifact](<source-library/imports/claude-code-for-pm/Claude Code For PM/Source Material/The Streakly Scenario.md>), and [workspace scaffold](<source-library/imports/claude-code-for-pm/Claude Code For PM/pm-workspace/README.md>) | Do not assign directly. Build an original Torq adaptation; the six-stage arc is conceptual and source Parts 5–8 are not confirmed live classes. |
+| **AI Product Management** | **Restricted partial reference capture:** six modules; five standalone pre-reads are missing; no Torq rebuild supplied | [Capture state](<source-library/imports/ai-product-management/AI Product Management/Source Material/_SESSION-STATE.md>), module slides, builders, and the resolutions below | Do not assign directly. Build an original Torq distillation using the canonical choices below. |
+| **Product Leadership** | **Restricted reference capture:** six modules; no Torq rebuild supplied | [Module captures](<source-library/imports/product-leadership/Product Leadership/Source Material/>), [final project brief](<source-library/imports/product-leadership/Product Leadership/Source Material/Final Project Brief/artifacts/Final Project Brief (digest).md>), and [PM handoff](programs/product-management-for-consultants/BUILD-HANDOFF.md) | Do not assign directly. Build an original Torq adaptation that retains executive-altitude treatment. |
 | **Technical Fluency** | **15 built / 24 planned:** Courses 0–2 built; Courses 3–6 planned | [Program specification](<source-library/imports/supplemental-library/Technical Fluency — Program Spec.md>), [reference guide](<source-library/imports/supplemental-library/Technical Fluency Reference Guide.md>), [built lessons](<source-library/imports/technical-fluency-build/Technical Fluency Build/Build/>), and [TF handoff](programs/technical-fluency/BUILD-HANDOFF.md) | Begin with Course 3, Task 1. Preserve the independent 7-course, 39-task design. |
 
-## Intended progression and safe skipping
+## Intended progression for future Torq adaptations
 
-“Safe to skip” means the learner may skip the repeated explanation after demonstrating mastery; the applied exercise or higher-altitude treatment remains required for the chosen route.
+This is design guidance for the builder of a future Torq adaptation. “Safe to skip” means a future Torq course may allow a learner to bypass a repeated explanation after demonstrating mastery; the applied exercise or higher-altitude treatment should remain.
 
 | Concept | First taught | Reinforced | What the later treatment adds | Safe to skip |
 |---|---|---|---|---|
@@ -48,7 +50,7 @@ These decisions govern a future Torq rebuild. The conflicting captures remain un
 
 - **Schedule:** four live classes are confirmed. The six-stage arc is a conceptual learning model.
 - **Scenario:** the eight-part Streakly scenario is an extended learning artifact. Parts 5–8 are useful self-directed continuation, but are not confirmed as live classes.
-- **Build implication:** preserve all eight parts in the prompt catalog; label Parts 5–8 as extended/async until scheduling evidence is added.
+- **Build implication:** use the captured structure only as restricted builder reference. A future Torq course must be independently written and should label any self-directed continuation clearly; do not publish or reproduce the eight-part source prompt sequence.
 
 ### AI Product Management
 
@@ -99,7 +101,7 @@ Do not use the following as current build guidance. The exact list and safer rep
 | Course boundaries | Preserved: four PM course lines plus independent Technical Fluency |
 | Contradictions | Every identified contradiction is resolved above; missing captures are explicitly gaps |
 | Overlap | Every major overlap states later value and a safe-skip rule |
-| Prompt-bearing Product School documents | Reviewed and dispositioned in [Prompt inventory](prompt-library/INVENTORY.md) |
+| Product School prompts | Retained only inside the restricted source capture; no learner-facing extraction or catalog |
 | Imported files | Remain immutable; validation compares the 258-file source set and a pre-change hash snapshot was used for this audit |
 | Historical broken links | Recorded in [Source library status](source-library/STATUS.md); imports were not edited |
 

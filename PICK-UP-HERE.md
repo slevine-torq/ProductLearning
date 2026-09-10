@@ -13,7 +13,7 @@ Before building either program, read these in order:
 
 1. [Curriculum coherence audit](CURRICULUM-AUDIT.md) — current truth, overlap, source contradictions, and historical warnings.
 2. [How Torq learning is structured](TORQ-LEARNING-STRUCTURE.md) — the instructional model to preserve.
-3. [Prompt library](prompt-library/README.md) — classified, provenance-linked prompt assets.
+3. [Torq AI workflow prompts](prompt-library/README.md) — original, tool-neutral working aids; source-course prompts remain restricted reference.
 4. The selected program's build handoff — the exact next action.
 
 ## Source-of-truth order
